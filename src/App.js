@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from 'react';
+import { Routes, Route, Navigate, Link } from 'react-router-dom';
+import Login from './components/Login';
+import Home from './components/Home';
+import SignUp from './components/SignUp'; // Import SignUp component
+import CustomScrollbar from 'react-custom-scrollbars';
 
 function App() {
+  const [user, setUser] = useState(null);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CustomScrollbar style={{ width: '100%', height: '100vh' }}>
+        <Routes>
+          {/* Home route */}
+          <Route
+            exact
+            path="/"
+            element={
+              <div>
+                <Link to="/login" style={{ position: 'absolute', top: '10px', right: '10px', textDecoration: 'none' }}>
+                  <button>Login</button>
+                </Link>
+                <Home />
+              </div>
+            }
+          />
+
+          {/* Login route */}
+          <Route path="/login" element={<Login />} />
+
+          {/* SignUp route */}
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </CustomScrollbar>
     </div>
   );
 }
