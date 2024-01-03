@@ -13,6 +13,10 @@ import GoogleIcon from '@mui/icons-material/Google';
 import Image from '../assets/Logo.png';
 import { useNavigate } from 'react-router-dom';
 import Scrollbar from 'react-scrollbar';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import SignUpPc from './SignUpPc';
+import SignUpMobile from './SignUpMobile';
 
 export default function SignUp() {
   const theme = useTheme();
@@ -46,6 +50,37 @@ export default function SignUp() {
     console.log('Sign Up clicked', { firstName, lastName, email, phoneNumber, password, reenterPassword });
   };
 
+  const validationSchema = Yup.object().shape({
+    password: Yup.string()
+      .required('Password is required')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@_])[A-Za-z0-9@_]+$/,
+        'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@ or _)'
+      ),
+    reenterPassword: Yup.string()
+      .required('Re-enter Password is required')
+      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+  });
+
+  // Formik setup
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      password: '',
+      reenterPassword: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log('Sign Up clicked', values);
+      // Implement your sign-up logic using the form values
+      navigate('/login');
+    },
+  });
+
+
   return (
     <>
       <CssBaseline />
@@ -65,176 +100,53 @@ export default function SignUp() {
             Sign Up
           </Typography>
           <Scrollbar style={{ height: 'calc(80vh - 200px)' }}>
-            {isMobile ? (
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <TextField
-                  label="First Name"
-                  variant="standard"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  fullWidth
-                />
-                <TextField
-                  label="Last Name"
-                  variant="standard"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  fullWidth
-                />
-                <TextField
-                  label="Email"
-                  variant="standard"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  fullWidth
-                />
-                <TextField
-                  label="Phone Number"
-                  variant="standard"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  fullWidth
-                />
-                <TextField
-                  label="Password"
-                  variant="standard"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          edge="end"
-                          sx={{mr: 0.2}}
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  fullWidth
-                />
-                <TextField
-                  label="Re-enter Password"
-                  variant="standard"
-                  type={showReenterPassword ? 'text' : 'password'}
-                  value={reenterPassword}
-                  onChange={(e) => setReenterPassword(e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowReenterPassword}
-                          edge="end"
-                          sx={{mr: 0.2}}
-                        >
-                          {showReenterPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  fullWidth
-                />
-              </Box>
-            ) : (
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    label="First Name"
-                    variant="standard"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    size="large"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    label="Last Name"
-                    variant="standard"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    size="large"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    label="Email"
-                    variant="standard"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    size="large"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    label="Phone Number"
-                    variant="standard"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    size="large"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    label="Password"
-                    variant="standard"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    size="large"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    label="Re-enter Password"
-                    variant="standard"
-                    type={showReenterPassword ? 'text' : 'password'}
-                    value={reenterPassword}
-                    onChange={(e) => setReenterPassword(e.target.value)}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowReenterPassword}
-                            edge="end"
-                          >
-                            {showReenterPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    size="large"
-                  />
-                </Grid>
-              </Grid>
-            )}
+            {isMobile ? < SignUpMobile  
+              firstName={firstName}
+              setFirstName={setFirstName}
+              lastName={lastName}
+              setLastName={setLastName}
+              email={email}
+              setEmail={setEmail}
+              phoneNumber={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
+              showPassword={showPassword}
+              password={password}
+              setPassword={setPassword}
+              handleClickShowPassword={handleClickShowPassword}
+              showReenterPassword={showReenterPassword}
+              reenterPassword={reenterPassword}
+              setReenterPassword={setReenterPassword}
+              handleClickShowReenterPassword={handleClickShowReenterPassword}
+              formik={formik}
+              /> 
+              :
+              < SignUpPc  
+              firstName={firstName}
+              setFirstName={setFirstName}
+              lastName={lastName}
+              setLastName={setLastName}
+              email={email}
+              setEmail={setEmail}
+              phoneNumber={phoneNumber}
+              setPhoneNumber={setPhoneNumber}
+              showPassword={showPassword}
+              password={password}
+              setPassword={setPassword}
+              handleClickShowPassword={handleClickShowPassword}
+              showReenterPassword={showReenterPassword}
+              reenterPassword={reenterPassword}
+              setReenterPassword={setReenterPassword}
+              handleClickShowReenterPassword={handleClickShowReenterPassword}
+              formik={formik}
+              />}
           </Scrollbar>
           <Button variant="contained" color="primary" onClick={handleSignUp} sx={{ marginTop: 'auto' }}>
             Sign Up
           </Button>
-          <Divider sx={{ mt: '20px', mb: '20px' }} />
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 1 }}>
-            {/* <Button variant="outlined" startIcon={<GoogleIcon />} sx={{ mb: 1 }}>
+            <Button variant="outlined" startIcon={<GoogleIcon />} sx={{ mb: 1 }}>
               Sign Up with Google
-            </Button> */}
+            </Button>
             <Link component="button" variant="body2" onClick={handleLoginClick}>
               Already have an account? Login
             </Link>
