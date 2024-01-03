@@ -1,38 +1,70 @@
 // App.js
-import React, { useState } from 'react';
-import { Routes, Route, Navigate, Link } from 'react-router-dom';
-import Login from './components/Login';
-import Home from './components/Home';
-import SignUp from './components/SignUp'; // Import SignUp component
-import CustomScrollbar from 'react-custom-scrollbars';
+import React from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import Login from "./components/Login";
+import Home from "./components/Home";
+import SignUp from "./components/SignUp";
+import CustomScrollbar from "react-custom-scrollbars";
+
+const pageTransition = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
 
 function App() {
-  const [user, setUser] = useState(null);
-
   return (
     <div>
-      <CustomScrollbar style={{ width: '100%', height: '100vh' }}>
-        <Routes>
-          {/* Home route */}
-          <Route
-            exact
-            path="/"
-            element={
-              <div>
-                <Link to="/login" style={{ position: 'absolute', top: '10px', right: '10px', textDecoration: 'none' }}>
-                  <button>Login</button>
-                </Link>
-                <Home />
-              </div>
-            }
-          />
+      <CustomScrollbar style={{ width: "100%", height: "100vh" }}>
+        {/* Wrap Routes with AnimatePresence */}
+        <AnimatePresence>
+          <Routes>
+            {/* Home route */}
+            <Route
+              exact
+              path="/"
+              element={
+                <motion.div {...pageTransition}>
+                  <div>
+                    <Link
+                      to="/login"
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        textDecoration: "none",
+                      }}
+                    >
+                      <button>Login</button>
+                    </Link>
+                    <Home />
+                  </div>
+                </motion.div>
+              }
+            />
 
-          {/* Login route */}
-          <Route path="/login" element={<Login />} />
+            {/* Login route */}
+            <Route
+              path="/login"
+              element={
+                <motion.div {...pageTransition}>
+                  <Login />
+                </motion.div>
+              }
+            />
 
-          {/* SignUp route */}
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
+            {/* SignUp route */}
+            <Route
+              path="/signup"
+              element={
+                <motion.div {...pageTransition}>
+                  <SignUp />
+                </motion.div>
+              }
+            />
+          </Routes>
+        </AnimatePresence>
       </CustomScrollbar>
     </div>
   );
