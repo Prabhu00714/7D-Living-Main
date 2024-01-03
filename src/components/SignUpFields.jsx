@@ -135,6 +135,7 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
           label="First Name"
           variant="outlined"
           value={state.firstName}
+          placeholder="Enter First Name"
           onChange={(e) =>
             dispatch({ type: "SET_FIRST_NAME", payload: e.target.value })
           }
@@ -166,6 +167,7 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
           label="Last Name"
           variant="outlined"
           value={state.lastName}
+          placeholder="Enter Last Name"
           onChange={(e) =>
             dispatch({ type: "SET_LAST_NAME", payload: e.target.value })
           }
@@ -197,6 +199,7 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
           label="Email"
           variant="outlined"
           value={state.email}
+          placeholder="Enter Email"
           onChange={(e) =>
             dispatch({ type: "SET_EMAIL", payload: e.target.value })
           }
@@ -228,6 +231,7 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
           label="Phone Number"
           variant="outlined"
           value={state.phoneNumber}
+          placeholder="Enter Phone Number"
           onChange={(e) =>
             dispatch({ type: "SET_PHONE_NUMBER", payload: e.target.value })
           }
@@ -260,6 +264,7 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
           variant="outlined"
           type={state.showPassword ? "text" : "password"}
           value={state.password}
+          placeholder="Enter Password"
           onChange={handlePasswordChange}
           onFocus={() => validatePassword(state.password)} // Validate on focus
           InputProps={{
@@ -307,6 +312,7 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
           variant="outlined"
           type={state.showReenterPassword ? "text" : "password"}
           value={state.reenterPassword}
+          placeholder="Enter Password Again"
           onChange={(e) =>
             dispatch({ type: "SET_REENTER_PASSWORD", payload: e.target.value })
           }
@@ -400,7 +406,11 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
                 component="span"
                 variant="body2"
                 onClick={handleTermsDialogOpen}
-                style={{ cursor: "pointer", color: "white" }}
+                style={{
+                  cursor: "pointer",
+                  color: "white",
+                  textDecoration: "underline",
+                }}
               >
                 Terms of Service
               </Link>{" "}
@@ -409,7 +419,11 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
                 component="span"
                 variant="body2"
                 onClick={handlePrivacyDialogOpen}
-                style={{ cursor: "pointer", color: "white" }}
+                style={{
+                  cursor: "pointer",
+                  color: "white",
+                  textDecoration: "underline",
+                }}
               >
                 Privacy Policy
               </Link>

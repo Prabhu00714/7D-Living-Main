@@ -1,5 +1,5 @@
-// SignUp.jsx
-import React, { useEffect, useReducer } from "react";
+import React, { useReducer } from "react";
+import { motion } from "framer-motion";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
@@ -8,7 +8,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/material/styles/useTheme";
 import Logo from "../assets/Logo.png";
 import BackgroundImage from "../assets/background.jpg";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SignUpFields from "./SignUpFields";
 
@@ -46,19 +46,18 @@ const reducer = (state, action) => {
   }
 };
 
-export default function SignUp() {
+const SignUp = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(() => {
-    // Pre-load the background image
-    const img = new Image();
-    img.src = BackgroundImage;
-  }, []);
-
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.5 }}
+    >
       <img
         className="background-image"
         src={BackgroundImage}
@@ -84,23 +83,26 @@ export default function SignUp() {
           marginLeft: isMobile ? 10 : "",
           width: "80%",
           maxWidth: isMobile ? "300px" : "600px",
-          marginTop: isMobile ? 6 : "8px",
-          backgroundColor: "rgba(0, 0, 0, 0.5)", // Darken the background color
-          backdropFilter: "blur(10px)", // Add blur effect
-          color: "#FFF", // Set text color to white
+          marginTop: isMobile ? 6 : 2,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backdropFilter: "blur(10px)",
+          color: "#FFF",
         }}
       >
         <Avatar
           alt="Logo"
           src={Logo}
           sx={{ width: 100, height: 100, margin: "auto" }}
-        ></Avatar>
+        />
         <Typography
-          variant="h5"
+          variant="h3"
           component="div"
-          sx={{ marginBottom: isMobile ? "10px" : "20px" }}
+          sx={{
+            marginBottom: isMobile ? "10px" : "20px",
+            fontFamily: "Sans serif fonts",
+          }}
         >
-          Sign Up
+          Create an account
         </Typography>
         <SignUpFields state={state} dispatch={dispatch} isMobile={isMobile} />
       </Paper>
@@ -115,6 +117,8 @@ export default function SignUp() {
         draggable
         pauseOnHover
       />
-    </>
+    </motion.div>
   );
-}
+};
+
+export default SignUp;
