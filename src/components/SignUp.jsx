@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+// SignUp.jsx
 import React, { useReducer } from "react";
 import { motion } from "framer-motion";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -6,8 +8,6 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/material/styles/useTheme";
-import Logo from "../assets/Logo.png";
-import BackgroundImage from "../assets/background.jpg";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SignUpFields from "./SignUpFields";
@@ -60,7 +60,7 @@ const SignUp = () => {
     >
       <img
         className="background-image"
-        src={BackgroundImage}
+        src={`${process.env.PUBLIC_URL}/images/background.jpg`}
         alt="Background"
         style={{
           position: "fixed",
@@ -72,6 +72,7 @@ const SignUp = () => {
           zIndex: -1,
         }}
       />
+
       <CssBaseline />
       <Paper
         elevation={24}
@@ -80,7 +81,7 @@ const SignUp = () => {
           padding: isMobile ? "10px" : "20px",
           margin: "auto",
           mb: 2,
-          marginLeft: isMobile ? 10 : "",
+          marginLeft: isMobile ? 6 : "",
           width: "80%",
           maxWidth: isMobile ? "300px" : "600px",
           marginTop: isMobile ? 6 : 2,
@@ -91,7 +92,7 @@ const SignUp = () => {
       >
         <Avatar
           alt="Logo"
-          src={Logo}
+          src={`${process.env.PUBLIC_URL}/images/Logo.png`}
           sx={{ width: 100, height: 100, margin: "auto" }}
         />
         <Typography

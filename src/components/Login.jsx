@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // Login.jsx
 import React, { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,12 +11,15 @@ import MailIcon from "@mui/icons-material/Mail";
 import LockIcon from "@mui/icons-material/Lock";
 import TextField from "@mui/material/TextField";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IconButton, InputAdornment, Button, Link } from "@mui/material";
-import Image from "../assets/Logo.png";
+import {
+  IconButton,
+  InputAdornment,
+  Button,
+  Link,
+  Divider,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion"; // Import motion components
-import BackgroundImage from "../assets/background.jpg";
-import GoogleIcon from "../assets/google.png";
+import { motion } from "framer-motion";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,19 +35,28 @@ export default function Login() {
     navigate("/signup");
   };
 
-  const handleSignUp = () => {
+  const handleSignUpGoogle = () => {
     console.log();
   };
+
+  const handleSignUp = () => {
+    if (email === "admin" && password === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 0 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 50 }}
       transition={{ duration: 0.5 }}
     >
       <img
         className="background-image"
-        src={BackgroundImage}
+        src={`${process.env.PUBLIC_URL}/images/background.jpg`}
         alt="Background"
         style={{
           position: "fixed",
@@ -55,6 +68,7 @@ export default function Login() {
           zIndex: -1,
         }}
       />
+
       <CssBaseline />
       <Container
         maxWidth="xs"
@@ -79,7 +93,7 @@ export default function Login() {
         >
           <Avatar
             alt="Logo"
-            src={Image}
+            src={`${process.env.PUBLIC_URL}/images/Logo.png`}
             sx={{
               width: 100,
               height: 100,
@@ -94,7 +108,7 @@ export default function Login() {
             component="div"
             sx={{ marginTop: "70px", fontFamily: "Sans serif fonts" }}
           >
-            Login
+            Welcome
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
             <TextField
@@ -181,32 +195,58 @@ export default function Login() {
               color="primary"
               onClick={handleSignUp}
               sx={{
+                borderRadius: 28,
                 backgroundColor: "white",
                 color: "black",
-                fontSize: "1rem", // Adjust the font size as needed
-                padding: "10px 20px", // Adjust the padding to increase the button size
+                fontSize: "1rem",
+                padding: "10px 20px",
+                "&:hover": {
+                  backgroundColor: "white",
+                },
+              }}
+            >
+              Sign Up
+            </Button>
+            <Divider
+              orientation="horizontal"
+              flexItem
+              sx={{
+                backgroundColor: "white",
+                height: "2px",
+                margin: "18px 0",
+              }}
+            />{" "}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSignUpGoogle}
+              sx={{
+                backgroundColor: "white",
+                color: "black",
+                fontSize: "1rem",
+                padding: "10px 20px",
                 "&:hover": {
                   backgroundColor: "white",
                 },
               }}
             >
               <img
-                src={GoogleIcon} // Replace with the actual path to your image
+                src={`${process.env.PUBLIC_URL}/images/google.png`}
                 alt="Google Icon"
                 style={{
                   width: "30px",
                   height: "30px",
                   marginRight: "10px",
                   borderRadius: "50%",
-                }} // Adjust width and height as needed
+                }}
               />
-              Sign Up with Google
+              Sign in with Google
             </Button>
             <Typography
               variant="body2"
               sx={{ color: "white", mt: 1, alignItems: "center" }}
             >
-              Or sign up with{" "}
+              Don't have an account?{" "}
               <Link
                 component="button"
                 variant="body2"
@@ -217,7 +257,7 @@ export default function Login() {
                   textDecoration: "underline",
                 }}
               >
-                Email
+                Sign Up
               </Link>
             </Typography>
           </Box>

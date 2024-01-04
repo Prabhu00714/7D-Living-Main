@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // SignUpFields.jsx
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
@@ -116,6 +117,12 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
       toast.error("Password and Re-enter Password do not match.");
       return;
     }
+
+    if (!isCheckboxChecked) {
+      toast.error("Please agree to the Terms of Service and Privacy Policy.");
+      return;
+    }
+
     navigate("/");
   };
 
@@ -369,23 +376,6 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
         }}
       >
         <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSignUp}
-            sx={{
-              borderRadius: 28,
-              backgroundColor: "white",
-              color: "black",
-              fontSize: "1rem",
-              padding: "10px 20px",
-              "&:hover": {
-                backgroundColor: "white",
-              },
-            }}
-          >
-            Sign Up
-          </Button>
           <Box
             onClick={handleCheckboxChange}
             sx={{ display: "flex", alignItems: "center" }}
@@ -429,6 +419,23 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
               </Link>
             </Typography>
           </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSignUp}
+            sx={{
+              borderRadius: 28,
+              backgroundColor: "white",
+              color: "black",
+              fontSize: "1rem",
+              padding: "10px 20px",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+          >
+            Sign Up
+          </Button>
         </Grid>
         {/* Dialogs */}
         <TermsDialog

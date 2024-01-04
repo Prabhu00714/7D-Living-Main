@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // App.js
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
@@ -6,6 +7,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import SignUp from "./components/SignUp";
 import CustomScrollbar from "react-custom-scrollbars";
+import Admin from "./components/Admin";
 
 const pageTransition = {
   initial: { opacity: 0 },
@@ -60,6 +62,16 @@ function App() {
               element={
                 <motion.div {...pageTransition}>
                   <SignUp />
+                </motion.div>
+              }
+            />
+
+            {/* SignUp route */}
+            <Route
+              path="/admin"
+              element={
+                <motion.div {...pageTransition}>
+                  <Admin />
                 </motion.div>
               }
             />
