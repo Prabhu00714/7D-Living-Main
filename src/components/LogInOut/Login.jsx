@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-// Login.jsx
+// src/components/Login/Login.jsx
 import React, { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
@@ -20,8 +20,11 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAuth } from "../../AuthContext";
 
 const Login = () => {
+
+  const { login } = useAuth(); // useAuth hook
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -40,13 +43,23 @@ const Login = () => {
     console.log();
   };
 
-  const handleSignUp = () => {
-    if (email === "admin" && password === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/");
-    }
-  };
+ const handleSignUp = () => {
+  console.log('Before assigning email:', email);
+  
+  if (email === "admin" && password === "admin") {
+ const userData = { username: email };
+    login(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+
+    navigate("/admin");
+  } else {
+ const userData = { username: email };
+    login(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+    navigate("/");
+  }
+};
+
 
   return (
     <motion.div

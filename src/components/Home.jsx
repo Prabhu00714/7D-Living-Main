@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
 // Home.jsx
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import Header from "./LogInOut/Header";
 
 const Home = () => {
   return (
@@ -26,10 +25,9 @@ const Home = () => {
           zIndex: -1,
         }}
       />
-      Welcome to the Homepage!
-      <Link to="/login" style={{ textDecoration: "none" }}>
-        <button>Login</button>
-      </Link>
+      <header>
+        <Header />
+      </header>
     </motion.div>
   );
 };
