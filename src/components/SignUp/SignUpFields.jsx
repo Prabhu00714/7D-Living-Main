@@ -22,7 +22,7 @@ import Typography from "@mui/material/Typography";
 import TermsDialog from "./TermsDialog";
 import PrivacyDialog from "./PrivacyDialog";
 
-export default function SignUpFields({ state, dispatch, isMobile }) {
+const SignUpFields = ({ state, dispatch, isMobile }) => {
   const navigate = useNavigate();
   const [isTermsDialogOpen, setIsTermsDialogOpen] = useState(false);
   const [isPrivacyDialogOpen, setIsPrivacyDialogOpen] = useState(false);
@@ -449,4 +449,6 @@ export default function SignUpFields({ state, dispatch, isMobile }) {
       </Box>
     </Grid>
   );
-}
+};
+
+export default SignUpFields;

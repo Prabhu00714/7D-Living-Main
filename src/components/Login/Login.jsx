@@ -21,7 +21,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export default function Login() {
+const Login = () => {
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -68,7 +69,6 @@ export default function Login() {
           zIndex: -1,
         }}
       />
-
       <CssBaseline />
       <Container
         maxWidth="xs"
@@ -188,6 +188,7 @@ export default function Login() {
               flexDirection: "column",
               alignItems: "center",
               mt: 3,
+              mb: -5,
             }}
           >
             <Button
@@ -199,10 +200,11 @@ export default function Login() {
                 backgroundColor: "white",
                 color: "black",
                 fontSize: "1rem",
-                padding: "10px 20px",
+                padding: "9px 18px",
                 "&:hover": {
                   backgroundColor: "white",
                 },
+                mt: -1,
               }}
             >
               Sign Up
@@ -265,4 +267,6 @@ export default function Login() {
       </Container>
     </motion.div>
   );
-}
+};
+
+export default Login;

@@ -3,9 +3,9 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import Login from "./components/Login";
+import Login from "./components/Login/Login";
 import Home from "./components/Home";
-import SignUp from "./components/SignUp";
+import SignUp from "./components/SignUp/SignUp";
 import CustomScrollbar from "react-custom-scrollbars";
 import Admin from "./components/Admin";
 
@@ -19,7 +19,6 @@ function App() {
   return (
     <div>
       <CustomScrollbar style={{ width: "100%", height: "100vh" }}>
-        {/* Wrap Routes with AnimatePresence */}
         <AnimatePresence>
           <Routes>
             {/* Home route */}
@@ -29,17 +28,6 @@ function App() {
               element={
                 <motion.div {...pageTransition}>
                   <div>
-                    <Link
-                      to="/login"
-                      style={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "10px",
-                        textDecoration: "none",
-                      }}
-                    >
-                      <button>Login</button>
-                    </Link>
                     <Home />
                   </div>
                 </motion.div>
@@ -66,7 +54,7 @@ function App() {
               }
             />
 
-            {/* SignUp route */}
+            {/* Admin route */}
             <Route
               path="/admin"
               element={
