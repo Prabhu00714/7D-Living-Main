@@ -1,6 +1,6 @@
 // Home.jsx
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -61,7 +61,9 @@ const DrawerFooter = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
-  flexGrow: 1,  // Added to push the content to the bottom
+  position: 'absolute',
+  bottom: 0,
+  width: '100%',
 }));
 
 const AppBar = styled(MuiAppBar, {
@@ -72,7 +74,7 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  backgroundColor: '#fff', // Set background color to white
+  backgroundColor: '#fff',
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -129,27 +131,26 @@ const Home = () => {
         <CssBaseline />
         <AppBar position="fixed" open={open} >
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: 'none' }),
-              }}
-            >
-            </IconButton>
+             <AnimatePresence>
+              {!open && (
+                <motion.img
+                  key="logo"
+                  src={`${process.env.PUBLIC_URL}/images/Logo.png`}
+                  alt="Logo"
+                  style={{
+                    width: '50px',
+                    height: 'auto',
+                    opacity: open ? 1 : 0,
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+              )}
+            </AnimatePresence>
             <Typography variant="h6" noWrap component="div" sx={{ marginLeft: open ? drawerWidth : 0 }}>
-              <img
-                src={`${process.env.PUBLIC_URL}/images/Logo.png`}
-                alt="Logo"
-                style={{
-                  width: '40px', // Adjust as needed
-                  height: 'auto',
-                  marginRight: '10px', // Adjust as needed
-                }}
-              />
-              Mini variant drawer
+              {/* conent you need in header section */}
               <Header />
             </Typography>
           </Toolbar>
@@ -160,7 +161,7 @@ const Home = () => {
               src={`${process.env.PUBLIC_URL}/images/Logo.png`}
               alt="Logo"
               style={{
-                width: '35%', // Adjust as needed
+                width: '35%',
                 height: 'auto',
                 objectFit: 'fit',
               }}
@@ -170,7 +171,7 @@ const Home = () => {
             </Typography>
           </DrawerHeader>
           <Divider sx={{ mt: -1 }} />
-          <List>
+          <List sx={{ mt: -1 }}>
             <ListItemButton
               onClick={() => handleComponentChange('QuestionForm')}
               selected={selectedComponent === 'QuestionForm'}
@@ -217,13 +218,13 @@ const Home = () => {
           </List>
           <DrawerFooter>
            {open ? (
-              <IconButton onClick={handleDrawerClose} sx={{ width: drawerWidth }}>
+              <ListItemButton onClick={handleDrawerClose} sx={{ width: drawerWidth, justifyContent: 'center' }}>
                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-              </IconButton>
+              </ListItemButton>
             ) : (
-              <IconButton onClick={handleDrawerOpen} sx={{ width: drawerWidth }}>
+              <ListItemButton onClick={handleDrawerOpen} sx={{ width: drawerWidth, justifyContent: 'center' }}>
                 {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-              </IconButton>
+              </ListItemButton>
             )}
           </DrawerFooter>
         </Drawer>

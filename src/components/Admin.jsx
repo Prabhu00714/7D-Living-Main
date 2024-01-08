@@ -21,6 +21,12 @@ import ListIcon from '@mui/icons-material/List';
 import Header from "./LogInOut/Header";
 import QuestionForm from "./QuestionForm";
 import QuestionList from "./QuestionList ";
+import AddIcon from '@mui/icons-material/Add';
+import AddCategoryModal from "./AdminComponent/AddCategoryModal";
+import DoneIcon from '@mui/icons-material/Done';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+
 
 const drawerWidth = 240;
 
@@ -104,6 +110,9 @@ const Admin = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState('QuestionForm');
+  const [isAddCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
+  const [newCategory, setNewCategory] = useState('');
+  const [categories, setCategories] = useState(['QuestionForm', 'QuestionList']);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -116,6 +125,24 @@ const Admin = () => {
   const handleComponentChange = (component) => {
     setSelectedComponent(component);
     setOpen(false);
+  };
+
+  const handleAddCategory = () => {
+    setAddCategoryModalOpen(true);
+  };
+
+  const handleSaveCategory = () => {
+    if (newCategory && !categories.includes(newCategory)) {
+      setCategories([...categories, newCategory]);
+      setSelectedComponent(newCategory);
+      setAddCategoryModalOpen(false);
+      setNewCategory('');
+    }
+  };
+
+  const handleCancelAddCategory = () => {
+    setAddCategoryModalOpen(false);
+    setNewCategory('');
   };
 
   return (
@@ -165,65 +192,57 @@ const Admin = () => {
                 objectFit: 'fit',
               }}
             />
-            <Typography variant="h8" sx={{ fontFamily: 'stencil', fontStyle: 'italic', fontWeight: 'bold', color: 'yourColor' }}>
+            <Typography variant="h8" sx={{ fontFamily: 'stencil', fontStyle: 'italic', fontWeight: 'bold', color: 'yourColor', mb: 2 }}>
               7D Living
             </Typography>
           </DrawerHeader>
           <Divider sx={{ mt: -1 }} />
-          <List>
-            <ListItemButton
-              onClick={() => handleComponentChange('QuestionForm')}
-              selected={selectedComponent === 'QuestionForm'}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-                backgroundColor: selectedComponent === 'QuestionForm' ? theme.palette.action.hover : 'inherit',
-              }}
-            >
-              <ListItemIcon
+          <PerfectScrollbar>
+          <List sx={{ overflowX: 'hidden' }}>
+             {categories.map((category) => (
+              <ListItemButton
+                key={category}
+                onClick={() => handleComponentChange(category)}
+                selected={selectedComponent === category}
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  backgroundColor: selectedComponent === category ? theme.palette.action.hover : 'inherit',
                 }}
               >
-                <QuestionAnswerIcon />
-              </ListItemIcon>
-              <ListItemText primary="Question Form" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-
-            <ListItemButton
-              onClick={() => handleComponentChange('QuestionList')}
-              selected={selectedComponent === 'QuestionList'}
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-                backgroundColor: selectedComponent === 'QuestionList' ? theme.palette.action.selected : 'inherit',
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <ListIcon />
-              </ListItemIcon>
-              <ListItemText primary="Question List" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </List>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {category === 'QuestionForm' ? <QuestionAnswerIcon /> : <DoneIcon />}
+                </ListItemIcon>
+                <ListItemText primary={category} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            ))}
+            </List>
+            </PerfectScrollbar>
           <DrawerFooter>
+            <ListItemButton onClick={handleAddCategory}
+            sx={{
+                  width: drawerWidth,
+                  justifyContent: 'center',
+                  mt: 1
+              }}
+            >
+              <AddIcon />
+            </ListItemButton>
            {open ? (
-              <IconButton onClick={handleDrawerClose} sx={{ width: drawerWidth }}>
+              <ListItemButton onClick={handleDrawerClose} sx={{ width: drawerWidth, justifyContent: 'center' }}>
                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-              </IconButton>
+              </ListItemButton>
             ) : (
-              <IconButton onClick={handleDrawerOpen} sx={{ width: drawerWidth }}>
+              <ListItemButton onClick={handleDrawerOpen} sx={{ width: drawerWidth, justifyContent: 'center' }}>
                 {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-              </IconButton>
+              </ListItemButton>
             )}
           </DrawerFooter>
         </Drawer>
@@ -246,6 +265,15 @@ const Admin = () => {
             {selectedComponent === 'QuestionForm' && <QuestionForm />}
             {selectedComponent === 'QuestionList' && <QuestionList />}
           </div>
+
+          <AddCategoryModal
+        open={isAddCategoryModalOpen}
+        onClose={handleCancelAddCategory}
+        onSave={handleSaveCategory}
+        onCancel={handleCancelAddCategory}
+        newCategory={newCategory}
+        setNewCategory={setNewCategory}
+      />
         </Box>
       </Box>
     </motion.div>
