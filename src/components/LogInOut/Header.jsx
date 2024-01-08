@@ -12,7 +12,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 
-// Styled components for responsive styling
 const ResponsiveMenu = styled(Menu)({
   width: '250px', // Set your desired width for PC
   '@media (max-width: 600px)': {
@@ -28,7 +27,7 @@ const ResponsiveMenuItem = styled(MenuItem)({
 });
 
 const Header = () => {
-  const { user, login, logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -41,13 +40,9 @@ const Header = () => {
     setAnchorEl(null);
   };
 
-  const handleAction = () => {
-    handleClose();
-  };
-
   return (
     <div>
-    <div style={{ position: 'absolute', top: 0, right: 0 }}>
+    <div style={{ position: 'absolute', top: 0, right: 40 }}>
         <IconButton
             id="avatar-button"
             aria-controls={open ? 'basic-menu' : undefined}
@@ -57,8 +52,8 @@ const Header = () => {
             size="large"
             disableTouchRipple // Disable ripple effect on touch
             sx={{
-                color: "white",
-                width: 150,
+                color: "black",
+                width: 'auto',
                 height: 'auto',
                 '&:hover': {
                 backgroundColor: 'transparent',
@@ -68,9 +63,8 @@ const Header = () => {
                 },
             }}
             >
-            <AccountCircleIcon sx={{ color: "white", width: 40, height: 40 }} />
+            <AccountCircleIcon sx={{ color: "black", width: 40, height: 40 }} />
             </IconButton>
-
 
         <ResponsiveMenu
           id="basic-menu"
@@ -93,12 +87,10 @@ const Header = () => {
           {user ? (
             <>
               <ResponsiveMenuItem>
-                <List>
                   <ListItemIcon>
                     <PersonIcon fontSize="small" />
                   </ListItemIcon>
                   {user.username}
-                </List>
               </ResponsiveMenuItem>
               <ResponsiveMenuItem onClick={logout}>
                 <ListItemIcon>
@@ -108,14 +100,15 @@ const Header = () => {
               </ResponsiveMenuItem>
             </>
           ) : (
-            <ResponsiveMenuItem>
-              <Link to="/login" onClick={handleClose} sx={{color: 'white'}}>
+             <Link to="/login" onClick={handleClose} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <ResponsiveMenuItem>
                 <ListItemIcon>
                   <LoginIcon fontSize="small" />
                 </ListItemIcon>
                 Login
-              </Link>
-            </ResponsiveMenuItem>
+              </ResponsiveMenuItem>
+            </Link>
+
           )}
         </ResponsiveMenu>
       </div>

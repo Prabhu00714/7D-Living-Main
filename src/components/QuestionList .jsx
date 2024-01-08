@@ -19,7 +19,7 @@ const QuestionList = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ position: 'absolute', top: 100 }}>
       <h2>Fetched Data</h2>
       <ul>
         {data.map((item, index) => (

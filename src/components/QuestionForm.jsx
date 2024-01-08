@@ -1,4 +1,6 @@
+import { Box } from '@mui/material';
 import React, { useState, useRef  } from 'react';
+import axios from 'axios';
 
 const QuestionForm = () => {
   const initialCategory = {
@@ -131,7 +133,8 @@ const QuestionForm = () => {
   };
 
   return (
-    <div>
+    <div style={{ position: 'absolute', top: 100 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, ml: 'auto' }}>
       {categories.map((category, cIndex) => (
         <div key={cIndex}>
           <label>Category:</label>
@@ -211,7 +214,8 @@ const QuestionForm = () => {
         </div>
       ))}
 
-      <button onClick={generateJson}>Generate JSON</button>
+        <button onClick={generateJson}>Generate JSON</button>
+        </Box>
     </div>
   );
 };
