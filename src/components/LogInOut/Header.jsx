@@ -1,11 +1,9 @@
-// Header.jsx
 import React, { useState } from "react";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
-import { IconButton, List } from "@mui/material";
+import { IconButton, Avatar, Tooltip, Box } from "@mui/material";
 import { styled } from "@mui/system";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonIcon from "@mui/icons-material/Person";
@@ -41,8 +39,15 @@ const Header = () => {
   };
 
   return (
-    <div>
-      <div style={{ position: "absolute", top: 0, right: 40 }}>
+    <Box
+      sx={{
+        flexGrow: 0,
+        position: "fixed",
+        right: { xs: 20, sm: 50 }, // Adjust right position based on screen width
+        top: "auto",
+      }}
+    >
+      <Tooltip title="Open settings">
         <IconButton
           id="avatar-button"
           aria-controls={open ? "basic-menu" : undefined}
@@ -50,7 +55,7 @@ const Header = () => {
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
           size="large"
-          disableTouchRipple // Disable ripple effect on touch
+          disableTouchRipple
           sx={{
             color: "black",
             width: "auto",
@@ -63,59 +68,65 @@ const Header = () => {
             },
           }}
         >
-          <AccountCircleIcon sx={{ color: "black", width: 40, height: 40 }} />
+          <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
         </IconButton>
+      </Tooltip>
 
-        <ResponsiveMenu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "avatar-button",
-          }}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          getContentAnchorEl={null}
-        >
-          {user ? (
-            <>
+      <ResponsiveMenu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "avatar-button",
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        getContentAnchorEl={null}
+      >
+        {user ? (
+          <>
+            <ResponsiveMenuItem>
+              <ListItemIcon>
+                <PersonIcon fontSize="small" />
+              </ListItemIcon>
+              {user.username}
+            </ResponsiveMenuItem>
+            <Link
+              to="/welcome"
+              onClick={logout}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
               <ResponsiveMenuItem>
-                <ListItemIcon>
-                  <PersonIcon fontSize="small" />
-                </ListItemIcon>
-                {user.username}
-              </ResponsiveMenuItem>
-              <ResponsiveMenuItem onClick={logout}>
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>
                 Logout
               </ResponsiveMenuItem>
-            </>
-          ) : (
-            <Link
-              to="/login"
-              onClick={handleClose}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <ResponsiveMenuItem>
-                <ListItemIcon>
-                  <LoginIcon fontSize="small" />
-                </ListItemIcon>
-                Login
-              </ResponsiveMenuItem>
             </Link>
-          )}
-        </ResponsiveMenu>
-      </div>
-    </div>
+          </>
+        ) : (
+          <Link
+            to="/login"
+            onClick={handleClose}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <ResponsiveMenuItem>
+              <ListItemIcon>
+                <LoginIcon fontSize="small" />
+              </ListItemIcon>
+              Login
+            </ResponsiveMenuItem>
+          </Link>
+        )}
+      </ResponsiveMenu>
+    </Box>
   );
 };
 

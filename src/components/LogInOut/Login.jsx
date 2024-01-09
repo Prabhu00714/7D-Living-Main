@@ -55,7 +55,7 @@ const Login = () => {
       const userData = { username: email };
       login(userData);
       localStorage.setItem("user", JSON.stringify(userData));
-      navigate("/");
+      navigate("/home");
     }
   };
 

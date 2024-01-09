@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import SignUp from "./components/SignUp/SignUp";
 import CustomScrollbar from "react-custom-scrollbars";
 import Admin from "./components/Admin";
+import Welcome from "./components/Welcome";
 import { useAuth } from "./AuthContext";
 import LogOut from "./components/LogInOut/LogOut";
 
@@ -39,15 +40,25 @@ function App() {
       <CustomScrollbar style={{ width: "100%", height: "100vh" }}>
         <AnimatePresence>
           <Routes>
-            {/* Home route */}
+            {/* Welcome route */}
             <Route
               exact
-              path="/"
+              path="/welcome"
               element={
                 <motion.div {...pageTransition}>
                   <div>
-                    <Home />
+                    <Welcome />
                   </div>
+                </motion.div>
+              }
+            />
+
+            {/* Home route */}
+            <Route
+              path="/home"
+              element={
+                <motion.div {...pageTransition}>
+                  <Home />
                 </motion.div>
               }
             />

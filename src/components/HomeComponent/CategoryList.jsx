@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 
-const CategoryList = ({ open, onSelectCategory }) => {
+const CategoryList = ({ onSelectCategory }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -63,22 +63,22 @@ const CategoryList = ({ open, onSelectCategory }) => {
             onClick={() => onSelectCategory(category)}
             sx={{
               minHeight: 48,
-              justifyContent: open ? "initial" : "center",
+              justifyContent: "initial",
               px: 2.5,
-              backgroundColor: open ? "inherit" : "transparent",
+              backgroundColor: "inherit",
             }}
           >
             <ListItemIcon
               sx={{
                 minWidth: 0,
-                mr: open ? 3 : "auto",
+                mr: 3,
                 justifyContent: "center",
               }}
             >
               <ListIcon />
             </ListItemIcon>
             <ListItemText
-              sx={{ opacity: open ? 1 : 0 }}
+              sx={{ opacity: 1 }}
               primary={renderMultiLineText(category, 20)}
             />
           </ListItemButton>
