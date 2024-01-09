@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-// App.js
 import React, { useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";

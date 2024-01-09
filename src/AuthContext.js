@@ -1,4 +1,4 @@
-// AuthContext.js
+/* eslint-disable no-unused-vars */
 import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();

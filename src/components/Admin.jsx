@@ -1,6 +1,6 @@
 // Admin.jsx
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -10,19 +10,15 @@ import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import ListIcon from '@mui/icons-material/List';
 import Header from "./LogInOut/Header";
-import QuestionForm from "./QuestionForm";
-import QuestionList from "./QuestionList ";
-import AddIcon from '@mui/icons-material/Add';
-import AddCategoryModal from "./AdminComponent/AddCategoryModal";
+import QuestionForm from "./AdminComponent/QuestionForm";
+import QuestionList from "./AdminComponent/QuestionList ";
 import DoneIcon from '@mui/icons-material/Done';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -110,8 +106,6 @@ const Admin = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState('QuestionForm');
-  const [isAddCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
-  const [newCategory, setNewCategory] = useState('');
   const [categories, setCategories] = useState(['QuestionForm', 'QuestionList']);
 
   const handleDrawerOpen = () => {
@@ -124,25 +118,6 @@ const Admin = () => {
 
   const handleComponentChange = (component) => {
     setSelectedComponent(component);
-    setOpen(false);
-  };
-
-  const handleAddCategory = () => {
-    setAddCategoryModalOpen(true);
-  };
-
-  const handleSaveCategory = () => {
-    if (newCategory && !categories.includes(newCategory)) {
-      setCategories([...categories, newCategory]);
-      setSelectedComponent(newCategory);
-      setAddCategoryModalOpen(false);
-      setNewCategory('');
-    }
-  };
-
-  const handleCancelAddCategory = () => {
-    setAddCategoryModalOpen(false);
-    setNewCategory('');
   };
 
   return (
@@ -154,33 +129,31 @@ const Admin = () => {
     >
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="fixed" open={open} >
+       <AppBar position="fixed" open={open}>
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: 'none' }),
-              }}
-            >
-            </IconButton>
+            <AnimatePresence>
+              {!open && (
+                <motion.img
+                  key="logo"
+                  src={`${process.env.PUBLIC_URL}/images/Logo.png`}
+                  alt="Logo"
+                  style={{
+                    width: '50px',
+                    height: 'auto',
+                    opacity: open ? 1 : 0,
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+              )}
+            </AnimatePresence>
             <Typography variant="h6" noWrap component="div" sx={{ marginLeft: open ? drawerWidth : 0 }}>
-              <img
-                src={`${process.env.PUBLIC_URL}/images/Logo.png`}
-                alt="Logo"
-                style={{
-                  width: '40px', // Adjust as needed
-                  height: 'auto',
-                  marginRight: '10px', // Adjust as needed
-                }}
-              />
-              Mini variant drawer
               <Header />
             </Typography>
           </Toolbar>
-        </AppBar>
+        </AppBar>yy
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
             <img
@@ -226,15 +199,6 @@ const Admin = () => {
             </List>
             </PerfectScrollbar>
           <DrawerFooter>
-            <ListItemButton onClick={handleAddCategory}
-            sx={{
-                  width: drawerWidth,
-                  justifyContent: 'center',
-                  mt: 1
-              }}
-            >
-              <AddIcon />
-            </ListItemButton>
            {open ? (
               <ListItemButton onClick={handleDrawerClose} sx={{ width: drawerWidth, justifyContent: 'center' }}>
                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -265,15 +229,6 @@ const Admin = () => {
             {selectedComponent === 'QuestionForm' && <QuestionForm />}
             {selectedComponent === 'QuestionList' && <QuestionList />}
           </div>
-
-          <AddCategoryModal
-        open={isAddCategoryModalOpen}
-        onClose={handleCancelAddCategory}
-        onSave={handleSaveCategory}
-        onCancel={handleCancelAddCategory}
-        newCategory={newCategory}
-        setNewCategory={setNewCategory}
-      />
         </Box>
       </Box>
     </motion.div>
