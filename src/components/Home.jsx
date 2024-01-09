@@ -4,12 +4,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import TopBar from "./HomeComponent/TopBar";
 import SideBar from "./HomeComponent/SideBar";
 import CategorySelected from "./HomeComponent/CategorySelected";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Home = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
+  const isMobile = useMediaQuery("(max-width: 600px)");
+  const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const handleCategorySelect = (category) => {
     setSelectedComponent(category);
+  };
+
+  const toggleMobileDrawer = () => {
+    setMobileDrawerOpen(!isMobileDrawerOpen);
   };
 
   return (
@@ -19,8 +26,18 @@ const Home = () => {
       exit={{ opacity: 0, x: 50 }}
       transition={{ duration: 0.5 }}
     >
-      <TopBar />
-      <SideBar onSelectCategory={handleCategorySelect} />
+      <TopBar
+        isMobile={isMobile}
+        isMobileDrawerOpen={isMobileDrawerOpen}
+        toggleMobileDrawer={toggleMobileDrawer}
+      />
+      <SideBar
+        onSelectCategory={handleCategorySelect}
+        isMobile={isMobile}
+        isMobileDrawerOpen={isMobileDrawerOpen}
+        setMobileDrawerOpen={setMobileDrawerOpen}
+        toggleMobileDrawer={toggleMobileDrawer}
+      />
       <div>
         {/* Render component based on selected category */}
         {selectedComponent && (

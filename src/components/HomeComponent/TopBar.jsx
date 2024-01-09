@@ -5,12 +5,14 @@ import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
+import MenuIcon from "@mui/icons-material/Menu";
 import Header from "../LogInOut/Header";
+import IconButton from "@mui/material/IconButton";
 
-function TopBar() {
+function TopBar({ isMobile, isMobileDrawerOpen, toggleMobileDrawer }) {
   return (
     <AppBar
-      position="static"
+      position="fixed"
       sx={{
         background: "white",
         height: "60px",
@@ -29,6 +31,19 @@ function TopBar() {
             {/* Add Header Data */}
           </Box>
           <Header />
+          {isMobile && !isMobileDrawerOpen && (
+            <IconButton
+              sx={{
+                position: "fixed",
+                top: 10,
+                left: 10,
+                zIndex: 1,
+              }}
+              onClick={toggleMobileDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

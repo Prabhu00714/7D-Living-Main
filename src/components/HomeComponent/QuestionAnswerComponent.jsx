@@ -1,22 +1,8 @@
-import { Tab, Typography, Box } from "@mui/material";
+import { Paper, Typography, Box } from "@mui/material";
 import React, { useState } from "react";
-
-const TabPanel = ({ children, value, index }) => {
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {value === index && <Box>{children}</Box>}
-    </div>
-  );
-};
 
 const QuestionAnswerComponent = ({ data }) => {
   const [subSelectedOptions, setSubSelectedOptions] = useState({});
-  const [tabValue, setTabValue] = useState(0);
 
   const handleSubOptionSelect = (questionIndex, answerIndex) => {
     setSubSelectedOptions((prevOptions) => ({
@@ -31,21 +17,31 @@ const QuestionAnswerComponent = ({ data }) => {
   }
 
   return (
-    <div>
-      <Box>
-        {data[0].data.map((categoryData, categoryIndex) => (
-          <TabPanel key={categoryIndex} value={tabValue} index={categoryIndex}>
-            <Typography
-              variant="h5"
+    <Box>
+      {data[0].data.map((categoryData, categoryIndex) => (
+        <div key={categoryIndex}>
+          <Typography
+            variant="h5"
+            sx={{
+              color: "black",
+              fontWeight: "bold",
+              marginBottom: "16px",
+            }}
+          >
+            {categoryData.category}
+          </Typography>
+
+          {categoryData.questions.map((question, questionIndex) => (
+            <Paper
+              key={questionIndex}
               sx={{
-                color: "black",
-                fontWeight: "bold",
+                padding: "16px",
                 marginBottom: "16px",
+                maxWidth: "700px", // Set your desired maxWidth here
+                width: "100%",
               }}
+              elevation={24}
             >
-              {categoryData.category}
-            </Typography>
-            {categoryData.questions.map((question, questionIndex) => (
               <div key={questionIndex} style={{ display: "flex" }}>
                 <div style={{ flex: 1 }}>
                   <Typography
@@ -86,8 +82,8 @@ const QuestionAnswerComponent = ({ data }) => {
                 <div>
                   {question.image && (
                     <img
-                      width={200}
-                      height={200}
+                      width={120}
+                      height={120}
                       src={question.image}
                       alt="preview"
                     />
@@ -95,11 +91,11 @@ const QuestionAnswerComponent = ({ data }) => {
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               </div>
-            ))}
-          </TabPanel>
-        ))}
-      </Box>
-    </div>
+            </Paper>
+          ))}
+        </div>
+      ))}
+    </Box>
   );
 };
 

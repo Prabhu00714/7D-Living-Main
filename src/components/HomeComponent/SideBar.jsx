@@ -3,20 +3,17 @@ import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import CategoryList from "./CategoryList";
 import Divider from "@mui/material/Divider";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
-const SideBar = ({ onSelectCategory }) => {
-  const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 600px)");
-
-  const toggleMobileDrawer = () => {
-    setMobileDrawerOpen(!isMobileDrawerOpen);
-  };
-
+const SideBar = ({
+  onSelectCategory,
+  isMobile,
+  isMobileDrawerOpen,
+  setMobileDrawerOpen,
+  toggleMobileDrawer,
+}) => {
   return (
     <React.Fragment>
       {/* Permanent Drawer for PC */}
@@ -54,7 +51,11 @@ const SideBar = ({ onSelectCategory }) => {
             </Typography>
           </Box>
           <Divider />
-          <CategoryList onSelectCategory={onSelectCategory} />
+          <CategoryList
+            onSelectCategory={(category) => {
+              onSelectCategory(category);
+            }}
+          />
         </Drawer>
       )}
 
@@ -109,20 +110,6 @@ const SideBar = ({ onSelectCategory }) => {
             <CloseIcon />
           </IconButton>
         </Drawer>
-      )}
-
-      {isMobile && !isMobileDrawerOpen && (
-        <IconButton
-          sx={{
-            position: "fixed",
-            top: 10,
-            left: 10,
-            zIndex: 1,
-          }}
-          onClick={toggleMobileDrawer}
-        >
-          <MenuIcon />
-        </IconButton>
       )}
     </React.Fragment>
   );
