@@ -1,6 +1,6 @@
 // LogOut.js
-import React from 'react';
-import { useAuth } from '../../AuthContext';
+import React from "react";
+import { useAuth } from "../../AuthContext";
 
 const LogOut = () => {
   const { logout } = useAuth();
@@ -15,4 +15,4 @@ const LogOut = () => {
     </div>
   );
 };
-export default LogOut
+export default LogOut;

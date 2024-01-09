@@ -72,7 +72,6 @@ const SignUp = () => {
           zIndex: -1,
         }}
       />
-
       <CssBaseline />
       <Paper
         elevation={24}

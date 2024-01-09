@@ -23,7 +23,6 @@ import { motion } from "framer-motion";
 import { useAuth } from "../../AuthContext";
 
 const Login = () => {
-
   const { login } = useAuth(); // useAuth hook
 
   const [showPassword, setShowPassword] = useState(false);
@@ -43,23 +42,22 @@ const Login = () => {
     console.log();
   };
 
- const handleSignUp = () => {
-  console.log('Before assigning email:', email);
-  
-  if (email === "admin" && password === "admin") {
- const userData = { username: email };
-    login(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+  const handleSignUp = () => {
+    console.log("Before assigning email:", email);
 
-    navigate("/admin");
-  } else {
- const userData = { username: email };
-    login(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-    navigate("/");
-  }
-};
+    if (email === "admin" && password === "admin") {
+      const userData = { username: email };
+      login(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
 
+      navigate("/admin");
+    } else {
+      const userData = { username: email };
+      login(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
+      navigate("/");
+    }
+  };
 
   return (
     <motion.div

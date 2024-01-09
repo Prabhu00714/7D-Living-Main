@@ -7,7 +7,7 @@ import Home from "./components/Home";
 import SignUp from "./components/SignUp/SignUp";
 import CustomScrollbar from "react-custom-scrollbars";
 import Admin from "./components/Admin";
-import { useAuth } from './AuthContext';
+import { useAuth } from "./AuthContext";
 import LogOut from "./components/LogInOut/LogOut";
 
 const pageTransition = {
@@ -17,23 +17,22 @@ const pageTransition = {
 };
 
 function App() {
-
   const { login } = useAuth();
-  
-useEffect(() => {
-  // Check if there's an existing user in local storage
-  const storedUser = localStorage.getItem('user');
 
-  if (storedUser) {
-    try {
-      const userData = JSON.parse(storedUser);
-      login(userData);
-    } catch (error) {
-      // Handle the error (e.g., log it, ignore it, or take appropriate action)
-      console.error('Error parsing user data from localStorage:', error);
+  useEffect(() => {
+    // Check if there's an existing user in local storage
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      try {
+        const userData = JSON.parse(storedUser);
+        login(userData);
+      } catch (error) {
+        // Handle the error (e.g., log it, ignore it, or take appropriate action)
+        console.error("Error parsing user data from localStorage:", error);
+      }
     }
-  }
-}, []);
+  }, []);
 
   return (
     <div>
@@ -73,7 +72,7 @@ useEffect(() => {
               }
             />
 
-             {/* LogOut route */}
+            {/* LogOut route */}
             <Route
               path="/logout"
               element={

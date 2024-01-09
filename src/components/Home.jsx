@@ -1,108 +1,108 @@
 // Home.jsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItemButton from '@mui/material/ListItemButton';
+import { styled, useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import MuiDrawer from "@mui/material/Drawer";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import CssBaseline from "@mui/material/CssBaseline";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItemButton from "@mui/material/ListItemButton";
 import CategoryList from "./HomeComponent/CategoryList";
 import Header from "./LogInOut/Header";
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import CategorySelected from "./HomeComponent/CategorySelected";
 
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: 'hidden',
-  display: 'flex',
-  flexDirection: 'column',
+  overflowX: "hidden",
+  display: "flex",
+  flexDirection: "column",
 });
 
 const closedMixin = (theme) => ({
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  overflowX: 'hidden',
+  overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-  display: 'flex',
-  flexDirection: 'column',
+  display: "flex",
+  flexDirection: "column",
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'left',
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "left",
   ...theme.mixins.toolbar,
   padding: theme.spacing(2),
 }));
 
-const DrawerFooter = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
+const DrawerFooter = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
-  position: 'sticky',
+  position: "sticky",
   bottom: 0,
-  width: '100%',
+  width: "100%",
   zIndex: 1,
-  backgroundColor: '#fff',
+  backgroundColor: "#fff",
 }));
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  backgroundColor: '#fff',
+  backgroundColor: "#fff",
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
+}));
 
 const Home = () => {
   const theme = useTheme();
@@ -110,7 +110,7 @@ const Home = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
 
   const handleCategorySelect = (category) => {
-    console.log('main file', category)
+    console.log("main file", category);
     setSelectedComponent(category);
     setOpen(false);
   };
@@ -122,7 +122,7 @@ const Home = () => {
       exit={{ opacity: 0, x: 50 }}
       transition={{ duration: 0.5 }}
     >
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
           <Toolbar>
@@ -133,8 +133,8 @@ const Home = () => {
                   src={`${process.env.PUBLIC_URL}/images/Logo.png`}
                   alt="Logo"
                   style={{
-                    width: '50px',
-                    height: 'auto',
+                    width: "50px",
+                    height: "auto",
                     opacity: open ? 1 : 0,
                   }}
                   initial={{ opacity: 0 }}
@@ -144,41 +144,71 @@ const Home = () => {
                 />
               )}
             </AnimatePresence>
-            <Typography variant="h6" noWrap component="div" sx={{ marginLeft: open ? drawerWidth : 0 }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ marginLeft: open ? drawerWidth : 0 }}
+            >
               <Header />
             </Typography>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
-          <DrawerHeader sx={{ display: 'flex', alignItems: 'center' }}>
+          <DrawerHeader sx={{ display: "flex", alignItems: "center" }}>
             <img
               src={`${process.env.PUBLIC_URL}/images/Logo.png`}
               alt="Logo"
               style={{
-                width: '40%',
-                height: 'auto',
-                objectFit: 'fit',
-                marginRight: '15px'
+                width: "40%",
+                height: "auto",
+                objectFit: "fit",
+                marginRight: "15px",
               }}
             />
-            <Typography variant="h4" sx={{ fontFamily: 'stencil', fontStyle: 'italic', fontWeight: 'bold', color: 'yourColor' }}>
+            <Typography
+              variant="h4"
+              sx={{
+                fontFamily: "stencil",
+                fontStyle: "italic",
+                fontWeight: "bold",
+                color: "yourColor",
+              }}
+            >
               Living
             </Typography>
           </DrawerHeader>
           <Divider sx={{ mt: -1.2 }} />
           <PerfectScrollbar>
             <List sx={{ mt: -1 }}>
-              <CategoryList open={open} onSelectCategory={handleCategorySelect} />
+              <CategoryList
+                open={open}
+                onSelectCategory={handleCategorySelect}
+              />
             </List>
           </PerfectScrollbar>
           <DrawerFooter>
             {open ? (
-              <ListItemButton onClick={() => setOpen(false)} sx={{ width: drawerWidth, justifyContent: 'center' }}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              <ListItemButton
+                onClick={() => setOpen(false)}
+                sx={{ width: drawerWidth, justifyContent: "center" }}
+              >
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
               </ListItemButton>
             ) : (
-              <ListItemButton onClick={() => setOpen(true)} sx={{ width: drawerWidth, justifyContent: 'center' }}>
-                {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              <ListItemButton
+                onClick={() => setOpen(true)}
+                sx={{ width: drawerWidth, justifyContent: "center" }}
+              >
+                {theme.direction === "rtl" ? (
+                  <ChevronLeftIcon />
+                ) : (
+                  <ChevronRightIcon />
+                )}
               </ListItemButton>
             )}
           </DrawerFooter>
@@ -200,7 +230,9 @@ const Home = () => {
           />
           <div>
             {/* Render component based on selected category */}
-            {selectedComponent && <CategorySelected selectedComponent = {selectedComponent} />}
+            {selectedComponent && (
+              <CategorySelected selectedComponent={selectedComponent} />
+            )}
           </div>
         </Box>
       </Box>

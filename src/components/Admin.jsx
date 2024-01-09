@@ -1,112 +1,114 @@
 // Admin.jsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import { styled, useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import MuiDrawer from "@mui/material/Drawer";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import CssBaseline from "@mui/material/CssBaseline";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import Header from "./LogInOut/Header";
 import QuestionForm from "./AdminComponent/QuestionForm";
 import QuestionList from "./AdminComponent/QuestionList ";
-import DoneIcon from '@mui/icons-material/Done';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
-
+import DoneIcon from "@mui/icons-material/Done";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: 'hidden',
+  overflowX: "hidden",
 });
 
 const closedMixin = (theme) => ({
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  overflowX: 'hidden',
+  overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
   ...theme.mixins.toolbar,
   padding: theme.spacing(2),
 }));
 
-const DrawerFooter = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
+const DrawerFooter = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
-  flexGrow: 1,  // Added to push the content to the bottom
+  flexGrow: 1, // Added to push the content to the bottom
 }));
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  backgroundColor: '#fff', // Set background color to white
+  backgroundColor: "#fff", // Set background color to white
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
+}));
 
 const Admin = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState('QuestionForm');
-  const [categories, setCategories] = useState(['QuestionForm', 'QuestionList']);
+  const [selectedComponent, setSelectedComponent] = useState("QuestionForm");
+  const [categories, setCategories] = useState([
+    "QuestionForm",
+    "QuestionList",
+  ]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -127,9 +129,9 @@ const Admin = () => {
       exit={{ opacity: 0, x: 50 }}
       transition={{ duration: 0.5 }}
     >
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: "flex" }}>
         <CssBaseline />
-       <AppBar position="fixed" open={open}>
+        <AppBar position="fixed" open={open}>
           <Toolbar>
             <AnimatePresence>
               {!open && (
@@ -138,8 +140,8 @@ const Admin = () => {
                   src={`${process.env.PUBLIC_URL}/images/Logo.png`}
                   alt="Logo"
                   style={{
-                    width: '50px',
-                    height: 'auto',
+                    width: "50px",
+                    height: "auto",
                     opacity: open ? 1 : 0,
                   }}
                   initial={{ opacity: 0 }}
@@ -149,63 +151,102 @@ const Admin = () => {
                 />
               )}
             </AnimatePresence>
-            <Typography variant="h6" noWrap component="div" sx={{ marginLeft: open ? drawerWidth : 0 }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ marginLeft: open ? drawerWidth : 0 }}
+            >
               <Header />
             </Typography>
           </Toolbar>
-        </AppBar>yy
+        </AppBar>
+        yy
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
             <img
               src={`${process.env.PUBLIC_URL}/images/Logo.png`}
               alt="Logo"
               style={{
-                width: '35%', // Adjust as needed
-                height: 'auto',
-                objectFit: 'fit',
+                width: "35%", // Adjust as needed
+                height: "auto",
+                objectFit: "fit",
               }}
             />
-            <Typography variant="h8" sx={{ fontFamily: 'stencil', fontStyle: 'italic', fontWeight: 'bold', color: 'yourColor', mb: 2 }}>
+            <Typography
+              variant="h8"
+              sx={{
+                fontFamily: "stencil",
+                fontStyle: "italic",
+                fontWeight: "bold",
+                color: "yourColor",
+                mb: 2,
+              }}
+            >
               7D Living
             </Typography>
           </DrawerHeader>
           <Divider sx={{ mt: -1 }} />
           <PerfectScrollbar>
-          <List sx={{ overflowX: 'hidden' }}>
-             {categories.map((category) => (
-              <ListItemButton
-                key={category}
-                onClick={() => handleComponentChange(category)}
-                selected={selectedComponent === category}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                  backgroundColor: selectedComponent === category ? theme.palette.action.hover : 'inherit',
-                }}
-              >
-                <ListItemIcon
+            <List sx={{ overflowX: "hidden" }}>
+              {categories.map((category) => (
+                <ListItemButton
+                  key={category}
+                  onClick={() => handleComponentChange(category)}
+                  selected={selectedComponent === category}
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                    backgroundColor:
+                      selectedComponent === category
+                        ? theme.palette.action.hover
+                        : "inherit",
                   }}
                 >
-                  {category === 'QuestionForm' ? <QuestionAnswerIcon /> : <DoneIcon />}
-                </ListItemIcon>
-                <ListItemText primary={category} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            ))}
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {category === "QuestionForm" ? (
+                      <QuestionAnswerIcon />
+                    ) : (
+                      <DoneIcon />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={category}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              ))}
             </List>
-            </PerfectScrollbar>
+          </PerfectScrollbar>
           <DrawerFooter>
-           {open ? (
-              <ListItemButton onClick={handleDrawerClose} sx={{ width: drawerWidth, justifyContent: 'center' }}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {open ? (
+              <ListItemButton
+                onClick={handleDrawerClose}
+                sx={{ width: drawerWidth, justifyContent: "center" }}
+              >
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
               </ListItemButton>
             ) : (
-              <ListItemButton onClick={handleDrawerOpen} sx={{ width: drawerWidth, justifyContent: 'center' }}>
-                {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              <ListItemButton
+                onClick={handleDrawerOpen}
+                sx={{ width: drawerWidth, justifyContent: "center" }}
+              >
+                {theme.direction === "rtl" ? (
+                  <ChevronLeftIcon />
+                ) : (
+                  <ChevronRightIcon />
+                )}
               </ListItemButton>
             )}
           </DrawerFooter>
@@ -226,8 +267,8 @@ const Admin = () => {
             }}
           />
           <div>
-            {selectedComponent === 'QuestionForm' && <QuestionForm />}
-            {selectedComponent === 'QuestionList' && <QuestionList />}
+            {selectedComponent === "QuestionForm" && <QuestionForm />}
+            {selectedComponent === "QuestionList" && <QuestionList />}
           </div>
         </Box>
       </Box>
