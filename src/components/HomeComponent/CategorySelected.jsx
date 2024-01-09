@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import QuestionAnswerComponent from "./QuestionAnswerComponent"; // Import the component
+import QuestionAnswer from "./QuestionAnswer"; // Import the component
 
 const CategorySelected = ({ selectedComponent }) => {
   const [categoryData, setCategoryData] = useState(null);
@@ -47,7 +47,7 @@ const CategorySelected = ({ selectedComponent }) => {
 
   return (
     <div style={containerStyle}>
-      {categoryData && <QuestionAnswerComponent data={categoryData} />}
+      {categoryData && <QuestionAnswer data={categoryData} />}
     </div>
   );
 };

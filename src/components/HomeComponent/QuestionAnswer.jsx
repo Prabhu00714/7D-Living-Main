@@ -1,7 +1,7 @@
 import { Paper, Typography, Box } from "@mui/material";
 import React, { useState } from "react";
 
-const QuestionAnswerComponent = ({ data }) => {
+const QuestionAnswer = ({ data }) => {
   const [subSelectedOptions, setSubSelectedOptions] = useState({});
 
   const handleSubOptionSelect = (questionIndex, answerIndex) => {
@@ -99,4 +99,4 @@ const QuestionAnswerComponent = ({ data }) => {
   );
 };
 
-export default QuestionAnswerComponent;
+export default QuestionAnswer;
