@@ -60,7 +60,7 @@ const CategoryList = ({ onSelectCategory }) => {
         {categories.map((category) => (
           <ListItemButton
             key={category}
-            onClick={() => onSelectCategory(category)}
+            onClick={() => onSelectCategory(category.trim())}
             sx={{
               minHeight: 48,
               justifyContent: "initial",

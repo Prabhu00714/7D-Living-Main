@@ -119,21 +119,6 @@ const QuestionForm = () => {
   };
 
   const generateJson = async () => {
-    const jsonData = categories.map((category) => ({
-      category: category.category,
-      questions: category.questions.map((question) => ({
-        questionid: question.questionid,
-        questiontext: question.questiontext,
-        answers: question.answers.map((answer) => ({
-          answer: answer.answer,
-          results: answer.results,
-        })),
-        image: question.image,
-      })),
-    }));
-
-    console.log(JSON.stringify(jsonData, null, 2));
-
     try {
       const jsonData = categories.map((category) => ({
         category: category.category,
@@ -153,7 +138,6 @@ const QuestionForm = () => {
         data: jsonData,
       });
 
-      // Optionally, you can handle success or perform other actions here
       console.log("Data sent successfully to the backend");
     } catch (error) {
       // Handle errors here

@@ -9,7 +9,7 @@ import CategoryList from "./CategoryList";
 import Divider from "@mui/material/Divider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const SideBar = () => {
+const SideBar = ({ onSelectCategory }) => {
   const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 600px)");
 
@@ -53,12 +53,8 @@ const SideBar = () => {
               LIVING
             </Typography>
           </Box>
-
-          {/* Divider */}
           <Divider />
-
-          {/* Category List */}
-          <CategoryList />
+          <CategoryList onSelectCategory={onSelectCategory} />
         </Drawer>
       )}
 
@@ -70,7 +66,6 @@ const SideBar = () => {
           onClose={toggleMobileDrawer}
           variant="temporary"
         >
-          {/* Content for mobile drawer */}
           <Box
             sx={{
               p: 2,
@@ -80,7 +75,6 @@ const SideBar = () => {
               alignItems: "center",
             }}
           >
-            {/* Your logo and text content */}
             <img
               src={`${process.env.PUBLIC_URL}/images/Logo.png`}
               alt="Logo"
@@ -101,7 +95,12 @@ const SideBar = () => {
 
           <Divider />
 
-          <CategoryList />
+          <CategoryList
+            onSelectCategory={(category) => {
+              onSelectCategory(category);
+              setMobileDrawerOpen(false);
+            }}
+          />
 
           <IconButton
             sx={{ position: "absolute", top: 5, right: 5 }}
@@ -112,7 +111,6 @@ const SideBar = () => {
         </Drawer>
       )}
 
-      {/* Button to open mobile drawer on PC */}
       {isMobile && !isMobileDrawerOpen && (
         <IconButton
           sx={{
