@@ -37,7 +37,7 @@ const QuestionAnswer = ({ data }) => {
               sx={{
                 padding: "16px",
                 marginBottom: "16px",
-                maxWidth: "700px", // Set your desired maxWidth here
+                maxWidth: "700px",
                 width: "100%",
               }}
               elevation={24}
