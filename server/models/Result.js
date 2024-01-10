@@ -11,23 +11,17 @@ const answerSchema = new mongoose.Schema({
 });
 
 const questionSchema = new mongoose.Schema({
-  questionid: {
-    type: mongoose.Schema.Types.ObjectId,
-  },
-  questionnumber: Number,
+  questionid: Number,
   questiontext: String,
   answers: [answerSchema],
-  image: String,
 });
 
 const categorySchema = new mongoose.Schema({
-  categoryid: {
-    type: mongoose.Schema.Types.ObjectId,
-  },
+  username: String,
   category: String,
   questions: [questionSchema],
 });
 
-const QuestionAnswer = mongoose.model("QuestionAnswer", categorySchema);
+const ResultModel = mongoose.model("Result", categorySchema);
 
-module.exports = QuestionAnswer;
+module.exports = ResultModel;

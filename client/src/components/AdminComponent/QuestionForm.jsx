@@ -7,7 +7,7 @@ const QuestionForm = () => {
     category: "",
     questions: [
       {
-        questionid: 1,
+        questionnumber: 1,
         questiontext: "",
         answers: [
           {
@@ -25,9 +25,9 @@ const QuestionForm = () => {
 
   const addQuestion = (cIndex) => {
     const updatedCategories = [...categories];
-    const newQuestionId = updatedCategories[cIndex].questions.length + 1;
+    const newQuestionNumber = updatedCategories[cIndex].questions.length + 1;
     updatedCategories[cIndex].questions.push({
-      questionid: newQuestionId,
+      questionnumber: newQuestionNumber,
       questiontext: "",
       answers: [{ answer: "", results: [{ result: "", value: "" }] }],
       image: "",
@@ -127,7 +127,7 @@ const QuestionForm = () => {
       const jsonData = categories.map((category) => ({
         category: category.category,
         questions: category.questions.map((question) => ({
-          questionid: question.questionid,
+          questionnumber: question.questionnumber,
           questiontext: question.questiontext,
           answers: question.answers.map((answer) => ({
             answer: answer.answer,
@@ -143,9 +143,7 @@ const QuestionForm = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log("Data sent successfully to the backend");
     } catch (error) {
-      // Handle errors here
       console.error("Error sending data to the backend:", error);
     }
     resetForm();
@@ -172,9 +170,14 @@ const QuestionForm = () => {
                 <label>Question ID:</label>
                 <input
                   type="number"
-                  value={question.questionid}
+                  value={question.questionnumber}
                   onChange={(e) =>
-                    updateQuestion(cIndex, qIndex, "questionid", e.target.value)
+                    updateQuestion(
+                      cIndex,
+                      qIndex,
+                      "questionnumber",
+                      e.target.value
+                    )
                   }
                 />
 

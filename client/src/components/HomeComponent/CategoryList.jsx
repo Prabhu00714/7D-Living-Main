@@ -1,4 +1,3 @@
-// CategoryList.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import List from "@mui/material/List";
@@ -15,21 +14,15 @@ const CategoryList = ({ onSelectCategory }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    // Fetch category names from the backend
     axios
-      .get("http://localhost:3001/api/category/get/each/Categories") // Adjust the endpoint URL
+      .get("http://localhost:3001/api/category/get/each/Categories")
       .then((response) => {
-        setCategories(response.data.categories); // Assuming response.data is an object with a 'categories' property
+        setCategories(response.data.categories);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
   }, []);
-
-  // Log the categories when they are updated
-  useEffect(() => {
-    console.log("Categories:", categories);
-  }, [categories]);
 
   const renderMultiLineText = (text, maxCharsPerLine) => {
     const lines = [];
@@ -60,19 +53,19 @@ const CategoryList = ({ onSelectCategory }) => {
       <List sx={{ overflowX: "hidden", mt: -1 }}>
         {categories.map((category) => (
           <ListItemButton
-            key={category}
+            key={category._id} // Use the _id as the key
             onClick={() => {
-              onSelectCategory(category.trim());
-              setSelectedCategory(category);
+              onSelectCategory(category);
+              setSelectedCategory(category._id);
             }}
-            selected={selectedCategory === category}
+            selected={selectedCategory === category._id}
             sx={{
               minHeight: 48,
               justifyContent: "initial",
               px: 2.5,
               backgroundColor:
-                selectedCategory === category
-                  ? "rgba(0, 0, 0, 0.8)" // Darker background for selected item
+                selectedCategory === category._id
+                  ? "rgba(0, 0, 0, 0.8)"
                   : "inherit",
               "&:hover": {
                 backgroundColor: "rgba(0, 0, 0, 0.1)",
@@ -90,7 +83,7 @@ const CategoryList = ({ onSelectCategory }) => {
             </ListItemIcon>
             <ListItemText
               sx={{ opacity: 1 }}
-              primary={renderMultiLineText(category, 20)}
+              primary={renderMultiLineText(category.category, 20)}
             />
           </ListItemButton>
         ))}

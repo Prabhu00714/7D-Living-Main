@@ -3,6 +3,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import QuestionAnswer from "./QuestionAnswer"; // Import the component
 
 const CategorySelected = ({ selectedComponent }) => {
+  console.log("data haf", selectedComponent);
   const [categoryData, setCategoryData] = useState(null);
 
   const isMobile = useMediaQuery("(max-width: 600px)");
@@ -23,7 +24,9 @@ const CategorySelected = ({ selectedComponent }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ queryString: selectedComponent }),
+          body: JSON.stringify({
+            queryString: selectedComponent.category,
+          }),
         }
       );
 

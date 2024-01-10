@@ -12,8 +12,8 @@ router.post("/upload", async (req, res) => {
     const categories = jsonData.map(({ category, questions }) => ({
       category,
       questions: questions.map(
-        ({ questionid, questiontext, answers, image }) => ({
-          questionid,
+        ({ questionnumber, questiontext, answers, image }) => ({
+          questionnumber,
           questiontext,
           answers: answers.map(({ answer, results }) => ({
             answer,
