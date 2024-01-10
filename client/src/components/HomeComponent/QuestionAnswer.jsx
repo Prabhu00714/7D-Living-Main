@@ -32,7 +32,7 @@ const QuestionAnswer = ({ data, fetchData }) => {
       username: user.username,
       categoryid: data._id,
       questions: data.questions.map((question) => ({
-        questionid: mongoose.Types.ObjectId(question._id),
+        questionid: question._id,
         answers: question.answers.map((answer) => ({
           answer: answer.answer,
           results: answer.results.map((result) => ({

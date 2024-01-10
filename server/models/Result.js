@@ -11,14 +11,13 @@ const answerSchema = new mongoose.Schema({
 });
 
 const questionSchema = new mongoose.Schema({
-  questionid: Number,
-  questiontext: String,
+  questionid: String,
   answers: [answerSchema],
 });
 
 const categorySchema = new mongoose.Schema({
   username: String,
-  category: String,
+  categoryid: String,
   questions: [questionSchema],
 });
 

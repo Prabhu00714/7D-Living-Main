@@ -34,52 +34,28 @@ router.post("/get/each/qna", async (req, res) => {
 });
 
 router.post("/post/saveResult", async (req, res) => {
-  const data = req.body;
-
-  console.log("bckend data", data);
-
   try {
-    // Check if the username table exists
-    const existingUser = await ResultModel.findOne({ username: data.username });
+    const jsonData = req.body;
 
-    if (!existingUser) {
-      // If the username table doesn't exist, create a new one
-      const newUser = new ResultModel({
-        username: data.username,
-        categories: [{ category: data.category, questions: data.questions }],
-      });
+    console.log(jsonData);
 
-      await newUser.save();
-      console.log("New user table created and data saved successfully!");
-      res
-        .status(201)
-        .send("New user table created and data saved successfully!");
-    } else {
-      // If the username table exists, check if the category already exists
-      const existingCategory = existingUser.categories.find(
-        (cat) => cat.category === data.category
-      );
+    const categories = {
+      categoryid: jsonData.categoryid,
+      questions: jsonData.questions.map(({ questionid, answers }) => ({
+        questionid,
+        answers: answers.map(({ answer, results }) => ({
+          answer,
+          results,
+        })),
+      })),
+    };
 
-      if (existingCategory) {
-        console.log("Category already exists for the given username");
-        res.status(409).send("Category already exists for the given username");
-      } else {
-        // If the category doesn't exist, append it to the existing user table
-        existingUser.categories.push({
-          category: data.category,
-          questions: data.questions,
-        });
-        await existingUser.save();
+    const savedData = await ResultModel.create(categories);
 
-        console.log("Data appended to existing user table successfully!");
-        res
-          .status(200)
-          .send("Data appended to existing user table successfully!");
-      }
-    }
+    res.json(savedData);
   } catch (error) {
-    console.error("Error saving data to MongoDB", error);
-    res.status(500).send("Error saving data to MongoDB");
+    console.error("Error:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
