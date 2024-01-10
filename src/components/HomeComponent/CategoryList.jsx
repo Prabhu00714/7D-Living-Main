@@ -3,20 +3,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListIcon from "@mui/icons-material/List";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
+import { ListItemText } from "@mui/material";
 
 const CategoryList = ({ onSelectCategory }) => {
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     // Fetch category names from the backend
     axios
-      .get("http://localhost:3001/api/getCategories") // Adjust the endpoint URL
+      .get("http://localhost:3001/api/category/get/each/Categories") // Adjust the endpoint URL
       .then((response) => {
         setCategories(response.data.categories); // Assuming response.data is an object with a 'categories' property
       })
@@ -56,16 +57,26 @@ const CategoryList = ({ onSelectCategory }) => {
 
   return (
     <PerfectScrollbar>
-      <List sx={{ overflowX: "hidden" }}>
+      <List sx={{ overflowX: "hidden", mt: -1 }}>
         {categories.map((category) => (
           <ListItemButton
             key={category}
-            onClick={() => onSelectCategory(category.trim())}
+            onClick={() => {
+              onSelectCategory(category.trim());
+              setSelectedCategory(category);
+            }}
+            selected={selectedCategory === category}
             sx={{
               minHeight: 48,
               justifyContent: "initial",
               px: 2.5,
-              backgroundColor: "inherit",
+              backgroundColor:
+                selectedCategory === category
+                  ? "rgba(0, 0, 0, 0.8)" // Darker background for selected item
+                  : "inherit",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.1)",
+              },
             }}
           >
             <ListItemIcon
@@ -75,7 +86,7 @@ const CategoryList = ({ onSelectCategory }) => {
                 justifyContent: "center",
               }}
             >
-              <ListIcon />
+              <QuestionAnswerIcon />
             </ListItemIcon>
             <ListItemText
               sx={{ opacity: 1 }}

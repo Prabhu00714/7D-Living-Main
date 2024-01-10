@@ -18,9 +18,9 @@ const ResponsiveMenu = styled(Menu)({
 });
 
 const ResponsiveMenuItem = styled(MenuItem)({
-  height: "55px", // Set your desired height for PC
+  height: "40px", // Set your desired height for PC
   "@media (max-width: 600px)": {
-    height: "40px", // Adjust for mobile view
+    height: "20px", // Adjust for mobile view
   },
 });
 

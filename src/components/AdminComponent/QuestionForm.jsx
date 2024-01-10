@@ -9,7 +9,12 @@ const QuestionForm = () => {
       {
         questionid: 1,
         questiontext: "",
-        answers: [{ answer: "", results: [{ result: "", value: "" }] }],
+        answers: [
+          {
+            answer: "",
+            results: [{ result: "", value: "" }],
+          },
+        ],
         image: "",
       },
     ],
@@ -29,7 +34,6 @@ const QuestionForm = () => {
     });
     setCategories(updatedCategories);
   };
-
   const deleteQuestion = (cIndex, qIndex) => {
     const updatedCategories = [...categories];
     updatedCategories[cIndex].questions.splice(qIndex, 1);
@@ -134,10 +138,11 @@ const QuestionForm = () => {
       }));
 
       // Send the JSON data to the backend endpoint
-      await axios.post("http://localhost:3001/api/submitSurvey", {
-        data: jsonData,
+      await axios.post("http://localhost:3001/api/qna/upload", jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-
       console.log("Data sent successfully to the backend");
     } catch (error) {
       // Handle errors here

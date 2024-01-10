@@ -14,40 +14,40 @@ const CategorySelected = ({ selectedComponent }) => {
     top: 100,
   };
 
-  useEffect(() => {
-    const fetchDataFromServer = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:3001/api/fetchDataFromMongo",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ queryString: selectedComponent }),
-          }
-        );
-
-        if (response.ok) {
-          const dataFromServer = await response.json();
-          // console.log("Data fetched from server:", dataFromServer);
-
-          setCategoryData(dataFromServer);
-        } else {
-          console.error("Failed to fetch data from server");
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/category/get/each/qna",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ queryString: selectedComponent }),
         }
-      } catch (error) {
-        console.error("Error fetching data from server", error);
-      }
-    };
+      );
 
-    // Call the function to fetch data when the component mounts
-    fetchDataFromServer();
+      if (response.ok) {
+        const dataFromServer = await response.json();
+
+        setCategoryData(dataFromServer);
+      } else {
+        console.error("Failed to fetch data from server");
+      }
+    } catch (error) {
+      console.error("Error fetching data from server", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [selectedComponent]);
 
   return (
     <div style={containerStyle}>
-      {categoryData && <QuestionAnswer data={categoryData} />}
+      {categoryData && (
+        <QuestionAnswer data={categoryData[0]} fetchData={fetchData} />
+      )}
     </div>
   );
 };
