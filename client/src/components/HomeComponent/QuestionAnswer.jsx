@@ -1,22 +1,20 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { Paper, Typography, Box, Button } from "@mui/material";
-import { toast } from "react-toastify";
 import ConfirmationDialog from "./ConfirmationDialog"; // Import your ConfirmationDialog component
 import { useAuth } from "../../AuthContext";
 
 const QuestionAnswer = ({ data, fetchData }) => {
-  // console.log("frontend data", data);
   const { user } = useAuth();
   const [subSelectedOptions, setSubSelectedOptions] = useState({});
   const [score, setScore] = useState(0);
   const [isSubmitButtonDisabled, setSubmitButtonDisabled] = useState(true);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
 
-  const handleSubOptionSelect = (questionIndex, answerIndex, value) => {
+  const handleSubOptionSelect = (questionIndex, answerIndex, result, value) => {
     setSubSelectedOptions((prevOptions) => ({
       ...prevOptions,
-      [questionIndex]: { answerIndex, value },
+      [questionIndex]: { answerIndex, result, value },
     }));
   };
 
@@ -30,21 +28,30 @@ const QuestionAnswer = ({ data, fetchData }) => {
     const result = {
       username: user.username,
       categoryid: data._id,
-      questions: data.questions.map((question) => ({
-        questionid: question._id,
-        answers: question.answers.map((answer) => ({
-          answerid: answer._id,
-          results: answer.results.map((result) => ({
-            result: result.result,
-            value: result.value,
-          })),
-        })),
-      })),
+      questions: data.questions.map((question, questionIndex) => {
+        const selectedAnswerIndex =
+          subSelectedOptions[questionIndex]?.answerIndex;
+
+        return {
+          questionid: question._id,
+          answers: [
+            {
+              answerid: question.answers[selectedAnswerIndex]._id,
+              results: [
+                {
+                  result: subSelectedOptions[questionIndex]?.result,
+                  value: subSelectedOptions[questionIndex]?.value,
+                },
+              ],
+            },
+          ],
+        };
+      }),
     };
+
     console.log("result", result);
 
     try {
-      // Make a POST request to your backend API
       const response = await fetch(
         "http://localhost:3001/api/category/post/saveResult",
         {
@@ -64,6 +71,7 @@ const QuestionAnswer = ({ data, fetchData }) => {
     } catch (error) {
       console.error("Error submitting data to server", error);
     }
+
     setScore(/* calculate the score based on the result */);
     setSubmitButtonDisabled(true);
 
@@ -149,6 +157,7 @@ const QuestionAnswer = ({ data, fetchData }) => {
                           handleSubOptionSelect(
                             questionIndex,
                             answerIndex,
+                            answer.results[0].result,
                             answer.results[0].value
                           )
                         }
