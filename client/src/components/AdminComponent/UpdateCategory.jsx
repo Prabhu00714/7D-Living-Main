@@ -189,11 +189,11 @@ const UpdateCategory = ({ categoryId }) => {
         categoryId: category._id,
         category: category.category,
         questions: category.questions.map((question) => ({
-          questionid: question.questionid,
+          questionid: question._id,
           questionnumber: question.questionnumber,
           questiontext: question.questiontext,
           answers: question.answers.map((answer) => ({
-            answerid: answer.answerid,
+            answerid: answer._id,
             answer: answer.answer,
             results: answer.results,
           })),
@@ -380,26 +380,30 @@ const UpdateCategory = ({ categoryId }) => {
                 ))}
               </div>
             ))}
-            {/* Add Question Button */}
-            <Button
-              variant="outlined"
-              onClick={handleAddQuestion}
-              sx={{ mt: 1, mb: 2 }}
-            >
-              Add Question
-            </Button>
           </div>
         ))}
 
-        {/* Update Button */}
-        <Button
-          onClick={handleUpdate}
-          variant="contained"
-          color="primary"
-          sx={{ mt: 1, mb: 2 }}
-        >
-          Update
-        </Button>
+        <Box>
+          {/* Add Question Button */}
+          <Button
+            variant="outlined"
+            onClick={handleAddQuestion}
+            sx={{ mt: 1, mb: 2, display: "block" }}
+          >
+            Add Question
+          </Button>
+
+          {/* Update Button */}
+          <Button
+            onClick={handleUpdate}
+            variant="contained"
+            color="primary"
+            sx={{ mt: 1, mb: 2 }}
+          >
+            Update
+          </Button>
+        </Box>
+
         <ToastContainer
           position={isMobile ? "bottom-center" : "top-right"}
           autoClose={5000}

@@ -61,45 +61,24 @@ router.get("/get/each/category/qna/:categoryId", async (req, res) => {
 
 router.post("/update/each/category/qna", async (req, res) => {
   try {
-    const { categoryId, category, questions } = req.body;
-    console.log("categoryId", categoryId);
+    const jsonData = req.body;
 
-    // Check if the category exists
-    const existingCategory = await QuestionAnswer.findById(categoryId);
-    console.log("existingCategory", existingCategory);
+    // Assuming the categoryId is passed in the request body
+    const categoryId = jsonData.categoryId;
 
-    if (!existingCategory) {
-      return res.status(404).json({ error: "Category not found" });
-    }
+    // Find and update the existing document by categoryId
+    const updatedCategory = await QuestionAnswer.findOneAndUpdate(
+      { _id: categoryId },
+      jsonData,
+      { new: true, upsert: true } // Create a new document if it doesn't exist
+    );
 
-    // Update the category fields
-    existingCategory.category = category;
-
-    // Update or append questions based on questionid
-    questions.forEach((newQuestion) => {
-      const existingQuestion = existingCategory.questions.find(
-        (q) => q.questionid === newQuestion.questionid
-      );
-
-      if (existingQuestion) {
-        // Update existing question
-        existingQuestion.questionnumber = newQuestion.questionnumber;
-        existingQuestion.questiontext = newQuestion.questiontext;
-        existingQuestion.answers = newQuestion.answers;
-        existingQuestion.image = newQuestion.image;
-      } else {
-        // Append new question
-        existingCategory.questions.push(newQuestion);
-      }
-    });
-
-    // Save the updated category
-    const updatedCategory = await existingCategory.save();
-
-    res.status(200).json(updatedCategory);
+    res
+      .status(200)
+      .json({ message: "Data updated successfully!", updatedCategory });
   } catch (error) {
-    console.error("Error updating category:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error updating data:", error);
+    res.status(500).json({ error: "Failed to update data" });
   }
 });
 
