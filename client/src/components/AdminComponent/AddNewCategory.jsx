@@ -9,10 +9,10 @@ const AddNewCategory = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
 
   const containerStyle = {
-    marginLeft: isMobile ? 0 : 250,
+    marginLeft: isMobile ? 0 : 400,
     transition: "margin 0.5s",
     position: "absolute",
-    top: 100,
+    top: 80,
   };
 
   const initialCategory = {
@@ -137,6 +137,28 @@ const AddNewCategory = () => {
 
   const generateJson = async () => {
     try {
+      // Validate if any category or question has empty fields
+      const isInvalidData = categories.some(
+        (category) =>
+          !category.category.trim() ||
+          category.questions.some(
+            (question) =>
+              !question.questiontext.trim() ||
+              !question.answers.every(
+                (answer) =>
+                  !!answer.answer.trim() &&
+                  answer.results.every(
+                    (result) => !!result.result.trim() && !!result.value.trim()
+                  )
+              )
+          )
+      );
+
+      if (isInvalidData) {
+        toast.error("Please fill in all fields.");
+        return;
+      }
+
       const jsonData = categories.map((category) => ({
         category: category.category,
         questions: category.questions.map((question) => ({
@@ -151,11 +173,16 @@ const AddNewCategory = () => {
       }));
 
       // Send the JSON data to the backend endpoint
-      await axios.post("http://localhost:3001/api/qna/upload", jsonData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await axios.post(
+        "http://localhost:3001/api/qna/post/each/category/qna",
+        jsonData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       toast.success("Data added successfully!");
     } catch (error) {
       console.error("Error sending data to the backend:", error);

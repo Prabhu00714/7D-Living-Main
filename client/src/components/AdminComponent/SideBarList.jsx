@@ -83,7 +83,7 @@ const SideBarList = ({ onSelectCategory }) => {
           <ListItemButton
             key={category._id} // Use the _id as the key
             onClick={() => {
-              onSelectCategory(category);
+              onSelectCategory(category._id);
               setSelectedCategory(category._id);
             }}
             selected={selectedCategory === category._id}

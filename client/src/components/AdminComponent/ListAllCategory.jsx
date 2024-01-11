@@ -8,7 +8,7 @@ const ListAllCategory = () => {
   useEffect(() => {
     // Fetch data from the server
     axios
-      .get("http://localhost:3001/api/fetchData")
+      .get("http://localhost:3001/api/category/fetchData")
       .then((response) => {
         setData(response.data);
       })

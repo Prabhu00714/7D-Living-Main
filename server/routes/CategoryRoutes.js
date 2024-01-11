@@ -6,7 +6,6 @@ const ResultModel = require("../models/Result");
 router.get("/get/each/Categories", async (req, res) => {
   try {
     const categoriesWithIds = await QuestionAnswer.find({}, "_id category");
-    console.log("Categories retrieved from MongoDB:", categoriesWithIds);
     res.status(200).json({ categories: categoriesWithIds });
   } catch (error) {
     console.error("Error retrieving categories from MongoDB:", error);
@@ -17,14 +16,11 @@ router.get("/get/each/Categories", async (req, res) => {
 router.post("/get/each/qna", async (req, res) => {
   try {
     const queryString = req.body.queryString;
-    console.log("Received string from frontend:", queryString);
 
     // Query MongoDB to find documents with the specified category
     const result = await QuestionAnswer.find({
       category: new RegExp(`^${queryString}$`, "i"),
     }).lean();
-
-    console.log("Data fetched from MongoDB:", result);
 
     res.status(200).json(result);
   } catch (error) {
@@ -36,8 +32,6 @@ router.post("/get/each/qna", async (req, res) => {
 router.post("/post/saveResult", async (req, res) => {
   try {
     const jsonData = req.body;
-
-    console.log(jsonData);
 
     // Find the existing document by categoryid
     const existingCategory = await ResultModel.findOne({

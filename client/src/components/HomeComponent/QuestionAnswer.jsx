@@ -3,8 +3,12 @@ import React, { useState, useEffect } from "react";
 import { Paper, Typography, Box, Button } from "@mui/material";
 import ConfirmationDialog from "./ConfirmationDialog"; // Import your ConfirmationDialog component
 import { useAuth } from "../../AuthContext";
+import { ToastContainer, toast } from "react-toastify";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const QuestionAnswer = ({ data, fetchData }) => {
+  const isMobile = useMediaQuery("(max-width: 600px)");
+
   const { user } = useAuth();
   const [subSelectedOptions, setSubSelectedOptions] = useState({});
   const [score, setScore] = useState(0);
@@ -65,7 +69,10 @@ const QuestionAnswer = ({ data, fetchData }) => {
 
       if (response.ok) {
         console.log("Data submitted successfully!");
+        toast.success("Data submitted successfully!");
       } else {
+        toast.error("Failed to submit data!");
+
         console.error("Failed to submit data to server");
       }
     } catch (error) {
@@ -205,6 +212,17 @@ const QuestionAnswer = ({ data, fetchData }) => {
         open={isConfirmationDialogOpen}
         onClose={handleCancel}
         onConfirm={handleConfirm}
+      />
+      <ToastContainer
+        position={isMobile ? "bottom-center" : "top-right"}
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
       />
     </Box>
   );
