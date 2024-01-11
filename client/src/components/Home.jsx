@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import TopBar from "./HomeComponent/TopBar";
 import SideBar from "./HomeComponent/SideBar";
 import ListSelectedCategory from "./HomeComponent/ListSelectedCategory";

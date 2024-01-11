@@ -1,9 +1,20 @@
 /* eslint-disable no-unused-vars */
-import { Box } from "@mui/material";
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import { Box, Typography, Button, TextField } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { ToastContainer, toast } from "react-toastify";
 
 const AddNewCategory = () => {
+  const isMobile = useMediaQuery("(max-width: 600px)");
+
+  const containerStyle = {
+    marginLeft: isMobile ? 0 : 250,
+    transition: "margin 0.5s",
+    position: "absolute",
+    top: 100,
+  };
+
   const initialCategory = {
     category: "",
     questions: [
@@ -35,6 +46,7 @@ const AddNewCategory = () => {
     });
     setCategories(updatedCategories);
   };
+
   const deleteQuestion = (cIndex, qIndex) => {
     const updatedCategories = [...categories];
     updatedCategories[cIndex].questions.splice(qIndex, 1);
@@ -144,32 +156,38 @@ const AddNewCategory = () => {
           "Content-Type": "application/json",
         },
       });
+      toast.success("Data added successfully!");
     } catch (error) {
       console.error("Error sending data to the backend:", error);
+      toast.error("Failed to add data!");
     }
     resetForm();
   };
 
   return (
-    <div style={{ position: "absolute", top: 100 }}>
+    <div style={containerStyle}>
       <Box component="main" sx={{ flexGrow: 1, p: 3, ml: "auto" }}>
         {categories.map((category, cIndex) => (
           <div key={cIndex}>
-            <label>Category:</label>
-            <input
+            {/* Category Input */}
+            <Typography variant="h6">Category:</Typography>
+            <TextField
               type="text"
               value={category.category}
               onChange={(e) =>
                 updateCategory(cIndex, "category", e.target.value)
               }
+              size="small"
+              fullWidth
+              margin="dense"
             />
 
-            <button onClick={() => addQuestion(cIndex)}>Add Question</button>
-
+            {/* Question Section */}
             {category.questions.map((question, qIndex) => (
               <div key={qIndex}>
-                <label>Question ID:</label>
-                <input
+                {/* Question ID Input */}
+                <Typography variant="subtitle1">Question ID:</Typography>
+                <TextField
                   type="number"
                   value={question.questionnumber}
                   onChange={(e) =>
@@ -180,10 +198,14 @@ const AddNewCategory = () => {
                       e.target.value
                     )
                   }
+                  size="small"
+                  fullWidth
+                  margin="dense"
                 />
 
-                <label>Question Text:</label>
-                <input
+                {/* Question Text Input */}
+                <Typography variant="subtitle1">Question Text:</Typography>
+                <TextField
                   type="text"
                   value={question.questiontext}
                   onChange={(e) =>
@@ -194,13 +216,22 @@ const AddNewCategory = () => {
                       e.target.value
                     )
                   }
+                  size="small"
+                  fullWidth
+                  margin="dense"
                 />
 
-                <button onClick={() => deleteQuestion(cIndex, qIndex)}>
+                {/* Delete Question Button */}
+                <Button
+                  variant="outlined"
+                  onClick={() => deleteQuestion(cIndex, qIndex)}
+                  sx={{ mt: 1, mb: 2 }}
+                >
                   Delete Question
-                </button>
+                </Button>
 
-                <label>Image:</label>
+                {/* Image Upload Input */}
+                <Typography variant="subtitle1">Image:</Typography>
                 <input
                   ref={fileInputRef} // Set the ref for file input
                   type="file"
@@ -208,14 +239,21 @@ const AddNewCategory = () => {
                   onChange={(e) => handleImageUpload(cIndex, qIndex, e)}
                 />
 
-                <button onClick={() => addAnswer(cIndex, qIndex)}>
+                {/* Add Answer Button */}
+                <Button
+                  variant="outlined"
+                  onClick={() => addAnswer(cIndex, qIndex)}
+                  sx={{ mt: 1, mb: 2 }}
+                >
                   Add Answer
-                </button>
+                </Button>
 
+                {/* Answer Section */}
                 {question.answers.map((answer, aIndex) => (
                   <div key={aIndex}>
-                    <label>Answer:</label>
-                    <input
+                    {/* Answer Input */}
+                    <Typography variant="subtitle1">Answer:</Typography>
+                    <TextField
                       type="text"
                       value={answer.answer}
                       onChange={(e) =>
@@ -227,22 +265,35 @@ const AddNewCategory = () => {
                           e.target.value
                         )
                       }
+                      size="small"
+                      fullWidth
+                      margin="dense"
                     />
 
-                    <button
+                    {/* Delete Answer Button */}
+                    <Button
+                      variant="outlined"
                       onClick={() => deleteAnswer(cIndex, qIndex, aIndex)}
+                      sx={{ mt: 1, mb: 2 }}
                     >
                       Delete Answer
-                    </button>
+                    </Button>
 
-                    <button onClick={() => addResult(cIndex, qIndex, aIndex)}>
+                    {/* Add Result Button */}
+                    <Button
+                      variant="outlined"
+                      onClick={() => addResult(cIndex, qIndex, aIndex)}
+                      sx={{ mt: 1, mb: 2, ml: 2 }}
+                    >
                       Add Result
-                    </button>
+                    </Button>
 
+                    {/* Result Section */}
                     {answer.results.map((result, rIndex) => (
                       <div key={rIndex}>
-                        <label>Result:</label>
-                        <input
+                        {/* Result Input */}
+                        <Typography variant="subtitle1">Result:</Typography>
+                        <TextField
                           type="text"
                           value={result.result}
                           onChange={(e) =>
@@ -255,10 +306,14 @@ const AddNewCategory = () => {
                               e.target.value
                             )
                           }
+                          size="small"
+                          fullWidth
+                          margin="dense"
                         />
 
-                        <label>Value:</label>
-                        <input
+                        {/* Value Input */}
+                        <Typography variant="subtitle1">Value:</Typography>
+                        <TextField
                           type="text"
                           value={result.value}
                           onChange={(e) =>
@@ -271,25 +326,59 @@ const AddNewCategory = () => {
                               e.target.value
                             )
                           }
+                          size="small"
+                          fullWidth
+                          margin="dense"
                         />
 
-                        <button
+                        {/* Delete Result Button */}
+                        <Button
+                          variant="outlined"
                           onClick={() =>
                             deleteResult(cIndex, qIndex, aIndex, rIndex)
                           }
+                          sx={{ mt: 1, mb: 2 }}
                         >
                           Delete Result
-                        </button>
+                        </Button>
                       </div>
                     ))}
                   </div>
                 ))}
               </div>
             ))}
+
+            {/* Add Question Button */}
+            <Button
+              variant="outlined"
+              onClick={() => addQuestion(cIndex)}
+              sx={{ mt: 1, mb: 2 }}
+            >
+              Add Question
+            </Button>
           </div>
         ))}
 
-        <button onClick={generateJson}>Generate JSON</button>
+        {/* Generate JSON Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={generateJson}
+          sx={{ mt: 2 }}
+        >
+          Generate JSON
+        </Button>
+        <ToastContainer
+          position={isMobile ? "bottom-center" : "top-right"}
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </Box>
     </div>
   );
