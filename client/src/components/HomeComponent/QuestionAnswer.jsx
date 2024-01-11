@@ -1,5 +1,4 @@
-// QuestionAnswer.js
-
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { Paper, Typography, Box, Button } from "@mui/material";
 import { toast } from "react-toastify";
@@ -34,7 +33,7 @@ const QuestionAnswer = ({ data, fetchData }) => {
       questions: data.questions.map((question) => ({
         questionid: question._id,
         answers: question.answers.map((answer) => ({
-          answer: answer.answer,
+          answerid: answer._id,
           results: answer.results.map((result) => ({
             result: result.result,
             value: result.value,
@@ -169,7 +168,7 @@ const QuestionAnswer = ({ data, fetchData }) => {
                   width={120}
                   height={120}
                   src={question.image}
-                  alt={`Image for question ${questionIndex + 1}`}
+                  alt="preview"
                 />
               )}
             </div>

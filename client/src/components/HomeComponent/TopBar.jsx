@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-// TopBar.jsx
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";

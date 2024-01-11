@@ -39,12 +39,40 @@ router.post("/post/saveResult", async (req, res) => {
 
     console.log(jsonData);
 
+    // Find the existing document by categoryid
+    const existingCategory = await ResultModel.findOne({
+      categoryid: jsonData.categoryid,
+    });
+
+    if (existingCategory) {
+      // If the category exists, update it with the new data
+      const updatedData = await ResultModel.findOneAndUpdate(
+        { categoryid: jsonData.categoryid },
+        {
+          $set: {
+            username: jsonData.username,
+            questions: jsonData.questions.map(({ questionid, answers }) => ({
+              questionid,
+              answers: answers.map(({ answerid, results }) => ({
+                answerid,
+                results,
+              })),
+            })),
+          },
+        },
+        { new: true } // To return the updated document
+      );
+
+      return res.json(updatedData);
+    }
+
     const categories = {
+      username: jsonData.username,
       categoryid: jsonData.categoryid,
       questions: jsonData.questions.map(({ questionid, answers }) => ({
         questionid,
-        answers: answers.map(({ answer, results }) => ({
-          answer,
+        answers: answers.map(({ answerid, results }) => ({
+          answerid,
           results,
         })),
       })),

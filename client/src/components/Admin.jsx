@@ -1,4 +1,4 @@
-// Admin.jsx
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { styled, useTheme } from "@mui/material/styles";
@@ -17,8 +17,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import Header from "./LogInOut/Header";
-import QuestionForm from "./AdminComponent/QuestionForm";
-import QuestionList from "./AdminComponent/QuestionList ";
+import AddNewCategory from "./AdminComponent/AddNewCategory";
+import ListAllCategory from "./AdminComponent/ListAllCategory";
 import DoneIcon from "@mui/icons-material/Done";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
@@ -104,10 +104,10 @@ const Drawer = styled(MuiDrawer, {
 const Admin = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [selectedComponent, setSelectedComponent] = useState("QuestionForm");
+  const [selectedComponent, setSelectedComponent] = useState("AddNewCategory");
   const [categories, setCategories] = useState([
-    "QuestionForm",
-    "QuestionList",
+    "AddNewCategory",
+    "ListAllCategory",
   ]);
 
   const handleDrawerOpen = () => {
@@ -211,7 +211,7 @@ const Admin = () => {
                       justifyContent: "center",
                     }}
                   >
-                    {category === "QuestionForm" ? (
+                    {category === "AddNewCategory" ? (
                       <QuestionAnswerIcon />
                     ) : (
                       <DoneIcon />
@@ -267,8 +267,8 @@ const Admin = () => {
             }}
           />
           <div>
-            {selectedComponent === "QuestionForm" && <QuestionForm />}
-            {selectedComponent === "QuestionList" && <QuestionList />}
+            {selectedComponent === "AddNewCategory" && <AddNewCategory />}
+            {selectedComponent === "ListAllCategory" && <ListAllCategory />}
           </div>
         </Box>
       </Box>

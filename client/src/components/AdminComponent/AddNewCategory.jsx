@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { Box } from "@mui/material";
 import React, { useState, useRef } from "react";
 import axios from "axios";
 
-const QuestionForm = () => {
+const AddNewCategory = () => {
   const initialCategory = {
     category: "",
     questions: [
@@ -294,4 +295,4 @@ const QuestionForm = () => {
   );
 };
 
-export default QuestionForm;
+export default AddNewCategory;

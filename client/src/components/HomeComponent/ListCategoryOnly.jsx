@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import List from "@mui/material/List";
@@ -9,7 +10,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { ListItemText } from "@mui/material";
 
-const CategoryList = ({ onSelectCategory }) => {
+const ListCategoryOnly = ({ onSelectCategory }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -92,4 +93,4 @@ const CategoryList = ({ onSelectCategory }) => {
   );
 };
 
-export default CategoryList;
+export default ListCategoryOnly;

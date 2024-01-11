@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-// PrivacyDialog.jsx
 import React from "react";
 import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 

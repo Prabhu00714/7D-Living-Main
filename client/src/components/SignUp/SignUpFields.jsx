@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-// SignUpFields.jsx
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Visibility, VisibilityOff } from "@mui/icons-material";

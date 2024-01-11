@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+/* eslint-disable no-unused-vars */
+import React from "react";
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import CategoryList from "./CategoryList";
+import ListCategoryOnly from "./ListCategoryOnly";
 import Divider from "@mui/material/Divider";
 
 const SideBar = ({
@@ -51,7 +52,7 @@ const SideBar = ({
             </Typography>
           </Box>
           <Divider />
-          <CategoryList
+          <ListCategoryOnly
             onSelectCategory={(category) => {
               onSelectCategory(category);
             }}
@@ -93,10 +94,8 @@ const SideBar = ({
               LIVING
             </Typography>
           </Box>
-
           <Divider />
-
-          <CategoryList
+          <ListCategoryOnly
             onSelectCategory={(category) => {
               onSelectCategory(category);
               setMobileDrawerOpen(false);

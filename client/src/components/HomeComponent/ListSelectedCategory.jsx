@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import QuestionAnswer from "./QuestionAnswer"; // Import the component
 
-const CategorySelected = ({ selectedComponent }) => {
+const ListSelectedCategory = ({ selectedComponent }) => {
   console.log("data haf", selectedComponent);
   const [categoryData, setCategoryData] = useState(null);
 
@@ -55,4 +56,4 @@ const CategorySelected = ({ selectedComponent }) => {
   );
 };
 
-export default CategorySelected;
+export default ListSelectedCategory;

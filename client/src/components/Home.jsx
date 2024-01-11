@@ -1,9 +1,9 @@
-// Home.jsx
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import TopBar from "./HomeComponent/TopBar";
 import SideBar from "./HomeComponent/SideBar";
-import CategorySelected from "./HomeComponent/CategorySelected";
+import ListSelectedCategory from "./HomeComponent/ListSelectedCategory";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Home = () => {
@@ -41,7 +41,7 @@ const Home = () => {
       <div>
         {/* Render component based on selected category */}
         {selectedComponent && (
-          <CategorySelected selectedComponent={selectedComponent} />
+          <ListSelectedCategory selectedComponent={selectedComponent} />
         )}
       </div>
     </motion.div>

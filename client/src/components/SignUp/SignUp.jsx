@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-// SignUp.jsx
 import React, { useReducer } from "react";
 import { motion } from "framer-motion";
 import CssBaseline from "@mui/material/CssBaseline";

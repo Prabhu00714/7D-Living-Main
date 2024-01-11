@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const QuestionList = () => {
+const ListAllCategory = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -29,4 +29,4 @@ const QuestionList = () => {
   );
 };
 
-export default QuestionList;
+export default ListAllCategory;

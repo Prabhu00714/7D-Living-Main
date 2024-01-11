@@ -6,7 +6,7 @@ const resultSchema = new mongoose.Schema({
 });
 
 const answerSchema = new mongoose.Schema({
-  answer: String,
+  answerid: String,
   results: [resultSchema],
 });
 

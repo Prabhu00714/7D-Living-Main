@@ -1,11 +1,17 @@
 const mongoose = require("mongoose");
 
 const resultSchema = new mongoose.Schema({
+  resultid: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
   result: String,
   value: String,
 });
 
 const answerSchema = new mongoose.Schema({
+  answerid: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
   answer: String,
   results: [resultSchema],
 });

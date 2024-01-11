@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-// src/components/Login/Login.jsx
 import React, { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
