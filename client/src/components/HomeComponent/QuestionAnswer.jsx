@@ -123,9 +123,13 @@ const QuestionAnswer = ({ data, fetchData }) => {
           sx={{
             padding: "16px",
             marginBottom: "16px",
-            maxWidth: "1000px",
-            minWidth: "800px",
+            maxWidth: "1000px", // Maximum width for PC view
+            minWidth: "800px", // Minimum width for PC view
             width: "100%",
+            "@media (max-width:600px)": {
+              minWidth: "50%", // Set to 100% on small screens (mobile)
+              maxWidth: "90%", // Set to 100% on small screens (mobile)
+            },
           }}
           elevation={24}
         >
