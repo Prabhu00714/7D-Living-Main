@@ -14,6 +14,7 @@ const SideBar = ({
   isMobileDrawerOpen,
   setMobileDrawerOpen,
   toggleMobileDrawer,
+  getCategory,
 }) => {
   return (
     <React.Fragment>
@@ -56,6 +57,7 @@ const SideBar = ({
             onSelectCategory={(category) => {
               onSelectCategory(category);
             }}
+            getCategory={getCategory}
           />
         </Drawer>
       )}
@@ -100,6 +102,7 @@ const SideBar = ({
               onSelectCategory(category);
               setMobileDrawerOpen(false);
             }}
+            getCategory={getCategory}
           />
 
           <IconButton

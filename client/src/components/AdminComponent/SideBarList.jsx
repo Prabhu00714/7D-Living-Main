@@ -11,7 +11,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { ListItemText } from "@mui/material";
 
-const SideBarList = ({ onSelectCategory }) => {
+const SideBarList = ({ onSelectCategory, getCategory }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -24,7 +24,7 @@ const SideBarList = ({ onSelectCategory }) => {
       .catch((error) => {
         console.error("Error fetching categories:", error);
       });
-  }, []);
+  }, [getCategory]);
 
   const renderMultiLineText = (text, maxCharsPerLine) => {
     const lines = [];

@@ -5,7 +5,7 @@ import { Box, Typography, Button, TextField } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ToastContainer, toast } from "react-toastify";
 
-const AddNewCategory = () => {
+const AddNewCategory = ({ getCategory, setGetCategory }) => {
   const isMobile = useMediaQuery("(max-width: 600px)");
 
   const containerStyle = {
@@ -184,6 +184,8 @@ const AddNewCategory = () => {
       );
 
       toast.success("Data added successfully!");
+      let i = getCategory;
+      setGetCategory(i + 1);
     } catch (error) {
       console.error("Error sending data to the backend:", error);
       toast.error("Failed to add data!");

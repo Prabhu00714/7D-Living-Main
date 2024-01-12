@@ -4,7 +4,7 @@ import { Box, Typography, Button, TextField } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ToastContainer, toast } from "react-toastify";
 
-const UpdateCategory = ({ categoryId }) => {
+const UpdateCategory = ({ categoryId, getCategory, setGetCategory }) => {
   const fileInputRef = useRef(null);
 
   const isMobile = useMediaQuery("(max-width: 600px)");
@@ -49,7 +49,7 @@ const UpdateCategory = ({ categoryId }) => {
           console.error("Error fetching category:", error);
         });
     }
-  }, [categoryId]);
+  }, [categoryId, getCategory]);
 
   const handleChange = (field, value, qIndex, aIndex, rIndex) => {
     setCategory((prevCategory) => {
@@ -225,10 +225,11 @@ const UpdateCategory = ({ categoryId }) => {
   const handleDeleteCategory = async () => {
     try {
       await axios.delete(
-        `http://localhost:3001/api/qna/delete/category/qna/${categoryId}`
+        `http://localhost:3001/api/qna/delete/each/category/qna/${categoryId}`
       );
       toast.success("Category deleted successfully!");
-      // Optionally, you can redirect to another page or perform other actions after deletion.
+      let i = getCategory;
+      setGetCategory(i + 1);
     } catch (error) {
       console.error("Error deleting category:", error);
       toast.error("Failed to delete category!");

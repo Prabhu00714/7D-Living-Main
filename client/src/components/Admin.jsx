@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import TopBar from "./HomeComponent/TopBar";
 import SideBar from "./AdminComponent/SideBar";
@@ -12,13 +12,18 @@ const Admin = () => {
   const [newCategory, setNewCategory] = useState(null);
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [getCategory, setGetCategory] = useState("");
+
+  useEffect(() => {}, [getCategory]);
 
   const handleCategorySelect = (category) => {
     if (category === "new category") {
       setNewCategory("new category");
       setSelectedComponent(null);
+      setGetCategory(""); // Reset getCategory
     } else {
       setNewCategory(null);
+      setGetCategory("");
       setSelectedComponent(category);
     }
   };
@@ -45,11 +50,23 @@ const Admin = () => {
         isMobileDrawerOpen={isMobileDrawerOpen}
         setMobileDrawerOpen={setMobileDrawerOpen}
         toggleMobileDrawer={toggleMobileDrawer}
+        getCategory={getCategory}
       />
       <div>
         {/* Render component based on selected category */}
-        {newCategory && <AddNewCategory />}
-        {selectedComponent && <UpdateCategory categoryId={selectedComponent} />}
+        {newCategory && (
+          <AddNewCategory
+            getCategory={getCategory}
+            setGetCategory={setGetCategory}
+          />
+        )}
+        {selectedComponent && (
+          <UpdateCategory
+            categoryId={selectedComponent}
+            getCategory={getCategory}
+            setGetCategory={setGetCategory}
+          />
+        )}
       </div>
     </motion.div>
   );
