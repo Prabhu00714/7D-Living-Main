@@ -28,7 +28,7 @@ const UpdateCategory = ({ categoryId }) => {
           {
             answerid: "",
             answer: "",
-            results: [{ resultid: "", result: "", value: "" }],
+            results: [{ result: "", value: "" }],
           },
         ],
         image: "",
@@ -88,7 +88,7 @@ const UpdateCategory = ({ categoryId }) => {
             {
               answerid: "",
               answer: "",
-              results: [{ resultid: "", result: "", value: "" }],
+              results: [{ result: "", value: "" }],
             },
           ],
           image: "",
@@ -117,7 +117,7 @@ const UpdateCategory = ({ categoryId }) => {
       updatedQuestions[qIndex].answers.push({
         answerid: "",
         answer: "",
-        results: [{ resultid: "", result: "", value: "" }],
+        results: [{ result: "", value: "" }],
       });
       return { ...prevCategory, questions: updatedQuestions };
     });
@@ -135,7 +135,6 @@ const UpdateCategory = ({ categoryId }) => {
     setCategory((prevCategory) => {
       const updatedQuestions = [...prevCategory.questions];
       updatedQuestions[qIndex].answers[aIndex].results.push({
-        resultid: "",
         result: "",
         value: "",
       });
@@ -220,6 +219,19 @@ const UpdateCategory = ({ categoryId }) => {
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:3001/api/qna/delete/each/category/qna/${categoryId}`
+      );
+      toast.success("Category deleted successfully!");
+      // Optionally, you can redirect to another page or perform other actions after deletion.
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      toast.error("Failed to delete category!");
     }
   };
 
@@ -391,6 +403,15 @@ const UpdateCategory = ({ categoryId }) => {
             sx={{ mt: 1, mb: 2, display: "block" }}
           >
             Add Question
+          </Button>
+
+          {/* Delete Category Button */}
+          <Button
+            variant="outlined"
+            onClick={handleDeleteCategory}
+            sx={{ mt: 1, mb: 2, display: "block" }}
+          >
+            Delete Category
           </Button>
 
           {/* Update Button */}
