@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import TopBar from "./HomeComponent/TopBar";
 import SideBar from "./HomeComponent/SideBar";
 import ListSelectedCategory from "./HomeComponent/ListSelectedCategory";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -18,6 +20,13 @@ const Home = () => {
   const toggleMobileDrawer = () => {
     setMobileDrawerOpen(!isMobileDrawerOpen);
   };
+
+  useEffect(() => {
+    // Show the toast message only if neither newCategory nor selectedComponent is true
+    if (!selectedComponent) {
+      toast.info("Please select any one option !!!");
+    }
+  }, [selectedComponent, isMobile]);
 
   return (
     <motion.div
@@ -44,6 +53,17 @@ const Home = () => {
           <ListSelectedCategory selectedComponent={selectedComponent} />
         )}
       </div>
+      <ToastContainer
+        position={isMobile ? "bottom-center" : "top-right"}
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </motion.div>
   );
 };

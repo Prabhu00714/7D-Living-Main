@@ -6,6 +6,8 @@ import SideBar from "./AdminComponent/SideBar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import AddNewCategory from "./AdminComponent/AddNewCategory";
 import UpdateCategory from "./AdminComponent/UpdateCategory";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Admin = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -14,7 +16,12 @@ const Admin = () => {
   const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [getCategory, setGetCategory] = useState("");
 
-  useEffect(() => {}, [getCategory]);
+  useEffect(() => {
+    // Show the toast message only if neither newCategory nor selectedComponent is true
+    if (!newCategory && !selectedComponent) {
+      toast.info("Please select any one option !!!");
+    }
+  }, [newCategory, selectedComponent, isMobile]);
 
   const handleCategorySelect = (category) => {
     if (category === "new category") {
@@ -53,7 +60,6 @@ const Admin = () => {
         getCategory={getCategory}
       />
       <div>
-        {/* Render component based on selected category */}
         {newCategory && (
           <AddNewCategory
             getCategory={getCategory}
@@ -67,6 +73,17 @@ const Admin = () => {
             setGetCategory={setGetCategory}
           />
         )}
+        <ToastContainer
+          position={isMobile ? "bottom-center" : "top-right"}
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     </motion.div>
   );
