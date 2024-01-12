@@ -225,7 +225,7 @@ const UpdateCategory = ({ categoryId }) => {
   const handleDeleteCategory = async () => {
     try {
       await axios.delete(
-        `http://localhost:3001/api/qna/delete/each/category/qna/${categoryId}`
+        `http://localhost:3001/api/qna/delete/category/qna/${categoryId}`
       );
       toast.success("Category deleted successfully!");
       // Optionally, you can redirect to another page or perform other actions after deletion.

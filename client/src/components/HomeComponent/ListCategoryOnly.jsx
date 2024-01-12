@@ -73,17 +73,8 @@ const ListCategoryOnly = ({ onSelectCategory }) => {
               },
             }}
           >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: 3,
-                justifyContent: "center",
-              }}
-            >
-              <QuestionAnswerIcon />
-            </ListItemIcon>
             <ListItemText
-              sx={{ opacity: 1 }}
+              sx={{ opacity: 1, justifyContent: "center" }}
               primary={renderMultiLineText(category.category, 20)}
             />
           </ListItemButton>

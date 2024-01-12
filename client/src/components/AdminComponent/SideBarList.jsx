@@ -100,9 +100,6 @@ const SideBarList = ({ onSelectCategory }) => {
               },
             }}
           >
-            <ListItemIcon>
-              <QuestionAnswerIcon />
-            </ListItemIcon>
             <ListItemText
               primary={renderMultiLineText(category.category, 20)}
             />
