@@ -14,11 +14,13 @@ mongoose.connect("mongodb://localhost:27017/store", {
 
 const qnaAdminRoutes = require("./routes/qnaAdminRoutes");
 const CategoryRoutes = require("./routes/CategoryRoutes");
+const SignUpRoutes = require("./routes/SignUpRoutes");
 
 app.use(bodyParser.json({ limit: "50mb" }));
 
 app.use("/api/qna", qnaAdminRoutes);
 app.use("/api/category", CategoryRoutes);
+app.use("/api/loginsignup", SignUpRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

@@ -15,14 +15,14 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LockIcon from "@mui/icons-material/Lock";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Typography from "@mui/material/Typography";
 import TermsDialog from "./TermsDialog";
 import PrivacyDialog from "./PrivacyDialog";
+import axios from "axios";
 
 const SignUpFields = ({ state, dispatch, isMobile }) => {
-  const navigate = useNavigate();
   const [isTermsDialogOpen, setIsTermsDialogOpen] = useState(false);
   const [isPrivacyDialogOpen, setIsPrivacyDialogOpen] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
@@ -79,7 +79,7 @@ const SignUpFields = ({ state, dispatch, isMobile }) => {
     setIsPrivacyDialogOpen(false);
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (
       !state.firstName ||
       !state.lastName ||
@@ -122,7 +122,33 @@ const SignUpFields = ({ state, dispatch, isMobile }) => {
       return;
     }
 
-    navigate("/");
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/api/loginsignup/new/user",
+        state
+      );
+
+      if (response.status === 200) {
+        dispatch({ type: "SET_FIRST_NAME", payload: "" });
+        dispatch({ type: "SET_LAST_NAME", payload: "" });
+        dispatch({ type: "SET_EMAIL", payload: "" });
+        dispatch({ type: "SET_PHONE_NUMBER", payload: "" });
+        dispatch({ type: "SET_PASSWORD", payload: "" });
+        dispatch({ type: "SET_REENTER_PASSWORD", payload: "" });
+        dispatch({ type: "SET_SHOW_PASSWORD", payload: false });
+        dispatch({ type: "SET_SHOW_REENTER_PASSWORD", payload: false });
+        setIsCheckboxChecked(false);
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        // Handle the 409 status here
+        toast.error(error.response.data.message);
+      } else {
+        console.error(error);
+        toast.error("Error signing up");
+      }
+    }
   };
 
   const handleClickShowPassword = () => {
@@ -445,6 +471,24 @@ const SignUpFields = ({ state, dispatch, isMobile }) => {
           isOpen={isPrivacyDialogOpen}
           handleClose={handleDialogClose}
         />
+        <Typography
+          variant="body2"
+          sx={{ color: "white", mt: 1.5, alignItems: "center" }}
+        >
+          Already have an account?{" "}
+          <Link
+            component="button"
+            variant="body2"
+            to="/login"
+            style={{
+              cursor: "pointer",
+              color: "white",
+              textDecoration: "underline",
+            }}
+          >
+            Login
+          </Link>
+        </Typography>
       </Box>
     </Grid>
   );

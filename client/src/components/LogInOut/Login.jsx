@@ -20,9 +20,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../AuthContext";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Login = () => {
   const { login } = useAuth(); // useAuth hook
+  const isMobile = useMediaQuery("(max-width: 600px)");
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -41,20 +45,34 @@ const Login = () => {
     console.log();
   };
 
-  const handleSignUp = () => {
-    console.log("Before assigning email:", email);
+  const handleSignUp = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/api/loginsignup/existing/user",
+        {
+          email: email,
+          password,
+        }
+      );
 
-    if (email === "admin" && password === "admin") {
-      const userData = { username: email };
-      login(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
+      if (response.status === 200) {
+        const userData = { username: email };
+        login(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
 
-      navigate("/admin");
-    } else {
-      const userData = { username: email };
-      login(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
-      navigate("/home");
+        if (email === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/home");
+        }
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error("Invalid username or password");
+      } else {
+        console.error(error);
+        toast.error("Error logging in");
+      }
     }
   };
 
@@ -275,6 +293,17 @@ const Login = () => {
           </Box>
         </Paper>
       </Container>
+      <ToastContainer
+        position={isMobile ? "bottom-center" : "top-right"}
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </motion.div>
   );
 };
