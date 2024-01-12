@@ -32,44 +32,66 @@ router.post("/get/each/qna", async (req, res) => {
 router.post("/post/saveResult", async (req, res) => {
   try {
     const jsonData = req.body;
+    console.log("Incoming JSON data:", jsonData);
 
-    // Find the existing document by categoryid
-    const existingCategory = await ResultModel.findOne({
-      categoryid: jsonData.categoryid,
+    // Calculate aggregated results
+    const aggregatedResults = {};
+
+    jsonData.questions.forEach(({ results }) => {
+      results.forEach(({ result, value }) => {
+        if (!aggregatedResults[result]) {
+          aggregatedResults[result] = 0;
+        }
+        aggregatedResults[result] += value;
+      });
     });
 
-    if (existingCategory) {
-      // If the category exists, update it with the new data
-      const updatedData = await ResultModel.findOneAndUpdate(
-        { categoryid: jsonData.categoryid },
-        {
-          $set: {
-            username: jsonData.username,
-            questions: jsonData.questions.map(({ questionid, answers }) => ({
-              questionid,
-              answers: answers.map(({ answerid, results }) => ({
-                answerid,
-                results,
-              })),
-            })),
-          },
-        },
-        { new: true } // To return the updated document
-      );
+    console.log("Aggregated Results:", aggregatedResults);
 
+    // Transform aggregatedResults into an array of objects
+    const aggregatedResultsArray = Object.keys(aggregatedResults).map(
+      (resultName) => ({
+        resultName,
+        totalScore: [...aggregatedResults[resultName].toString()].reduce(
+          (acc, digit) => acc + parseInt(digit),
+          0
+        ),
+      })
+    );
+
+    console.log("Aggregated Results Array:", aggregatedResultsArray);
+
+    // Update the existing category with the new data and aggregated results
+    const updatedData = await ResultModel.findOneAndUpdate(
+      { categoryid: jsonData.categoryid },
+      {
+        $set: {
+          username: jsonData.username,
+          "questions.$[question].aggregatedResults": aggregatedResultsArray,
+        },
+      },
+      {
+        arrayFilters: [{ "question._id": { $exists: true } }], // Filter using question id
+        new: true, // To return the updated document
+      }
+    );
+
+    if (updatedData) {
       return res.json(updatedData);
     }
 
+    // If the category doesn't exist, create a new one
     const categories = {
       username: jsonData.username,
       categoryid: jsonData.categoryid,
-      questions: jsonData.questions.map(({ questionid, answers }) => ({
-        questionid,
-        answers: answers.map(({ answerid, results }) => ({
+      questions: jsonData.questions.map(
+        ({ questionid, answerid, results }) => ({
+          questionid,
           answerid,
           results,
-        })),
-      })),
+          aggregatedResults: aggregatedResultsArray,
+        })
+      ),
     };
 
     const savedData = await ResultModel.create(categories);

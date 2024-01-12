@@ -29,28 +29,29 @@ const QuestionAnswer = ({ data, fetchData }) => {
   };
 
   const handleConfirm = async () => {
-    const result = {
-      username: user.username,
-      categoryid: data._id,
-      questions: data.questions.map((question, questionIndex) => {
-        const selectedAnswerIndex =
-          subSelectedOptions[questionIndex]?.answerIndex;
+    const selectedOptions = Object.keys(subSelectedOptions).map(
+      (questionIndex) => {
+        const { answerIndex } = subSelectedOptions[questionIndex];
+        const question = data.questions[questionIndex];
+        const selectedAnswer = question.answers[answerIndex];
+
+        const selectedResults = selectedAnswer.results.map((result) => ({
+          result: result.result,
+          value: result.value,
+        }));
 
         return {
           questionid: question._id,
-          answers: [
-            {
-              answerid: question.answers[selectedAnswerIndex]._id,
-              results: [
-                {
-                  result: subSelectedOptions[questionIndex]?.result,
-                  value: subSelectedOptions[questionIndex]?.value,
-                },
-              ],
-            },
-          ],
+          answerid: selectedAnswer._id,
+          results: selectedResults,
         };
-      }),
+      }
+    );
+
+    const result = {
+      username: user.username,
+      categoryid: data._id,
+      questions: selectedOptions,
     };
 
     console.log("result", result);

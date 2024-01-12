@@ -2,17 +2,19 @@ const mongoose = require("mongoose");
 
 const resultSchema = new mongoose.Schema({
   result: String,
-  value: String,
+  value: Number,
 });
 
-const answerSchema = new mongoose.Schema({
-  answerid: String,
-  results: [resultSchema],
+const aggregatedResultSchema = new mongoose.Schema({
+  resultName: String,
+  totalScore: Number,
 });
 
 const questionSchema = new mongoose.Schema({
   questionid: String,
-  answers: [answerSchema],
+  answerid: String,
+  results: [resultSchema],
+  aggregatedResults: [aggregatedResultSchema],
 });
 
 const categorySchema = new mongoose.Schema({

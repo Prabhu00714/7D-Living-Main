@@ -4,7 +4,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import QuestionAnswer from "./QuestionAnswer"; // Import the component
 
 const ListSelectedCategory = ({ selectedComponent }) => {
-  console.log("data haf", selectedComponent);
   const [categoryData, setCategoryData] = useState(null);
 
   const isMobile = useMediaQuery("(max-width: 600px)");
