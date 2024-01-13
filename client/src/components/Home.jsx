@@ -54,7 +54,7 @@ const Home = () => {
         )}
       </div>
       <ToastContainer
-        position={isMobile ? "bottom-center" : "top-right"}
+        position={isMobile ? "top-center" : "top-right"}
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}

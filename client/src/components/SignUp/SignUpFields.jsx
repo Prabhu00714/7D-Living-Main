@@ -403,7 +403,12 @@ const SignUpFields = ({ state, dispatch, isMobile }) => {
         <Grid item xs={12}>
           <Box
             onClick={handleCheckboxChange}
-            sx={{ display: "flex", alignItems: "center" }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+            }}
           >
             <Checkbox
               checked={isCheckboxChecked}
@@ -454,6 +459,7 @@ const SignUpFields = ({ state, dispatch, isMobile }) => {
               color: "black",
               fontSize: "1rem",
               padding: "10px 20px",
+              mt: 2,
               "&:hover": {
                 backgroundColor: "white",
               },

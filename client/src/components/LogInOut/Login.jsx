@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   const handleSignUpGoogle = () => {
-    console.log();
+    toast.info("This Feature is coming Soon !!!");
   };
 
   const handleSignUp = async () => {
@@ -294,7 +294,7 @@ const Login = () => {
         </Paper>
       </Container>
       <ToastContainer
-        position={isMobile ? "bottom-center" : "top-right"}
+        position={isMobile ? "top-center" : "top-right"}
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
