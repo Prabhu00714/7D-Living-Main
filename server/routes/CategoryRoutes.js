@@ -61,28 +61,8 @@ router.post("/post/saveResult", async (req, res) => {
 
     console.log("Aggregated Results Array:", aggregatedResultsArray);
 
-    // Update the existing category with the new data and aggregated results
-    const updatedData = await ResultModel.findOneAndUpdate(
-      { categoryid: jsonData.categoryid },
-      {
-        $set: {
-          username: jsonData.username,
-          "questions.$[question].aggregatedResults": aggregatedResultsArray,
-        },
-      },
-      {
-        arrayFilters: [{ "question._id": { $exists: true } }], // Filter using question id
-        new: true, // To return the updated document
-      }
-    );
-
-    if (updatedData) {
-      // Return the updated document with aggregatedResultsArray
-      return res.json({ updatedData, aggregatedResultsArray });
-    }
-
-    // If the category doesn't exist, create a new one
-    const categories = {
+    // Create a new document with aggregatedResults at the top level
+    const newDocument = {
       username: jsonData.username,
       categoryid: jsonData.categoryid,
       questions: jsonData.questions.map(
@@ -90,16 +70,21 @@ router.post("/post/saveResult", async (req, res) => {
           questionid,
           answerid,
           results,
-          aggregatedResults: aggregatedResultsArray,
         })
       ),
+      aggregatedResults: aggregatedResultsArray,
     };
 
-    const savedData = await ResultModel.create(categories);
+    // Create or update the document in the database
+    const savedData = await ResultModel.findOneAndUpdate(
+      { categoryid: jsonData.categoryid },
+      newDocument,
+      { upsert: true, new: true }
+    );
 
-    console.log(aggregatedResultsArray);
+    console.log("Saved Data:", savedData);
 
-    // Return the newly created document with aggregatedResultsArray
+    // Return the saved document with aggregatedResultsArray
     res.json({ savedData, aggregatedResultsArray });
   } catch (error) {
     console.error("Error:", error.message);

@@ -60,7 +60,7 @@ const Login = () => {
         login(userData);
         localStorage.setItem("user", JSON.stringify(userData));
 
-        if (email === "admin") {
+        if (email === "7dliving@admin") {
           navigate("/admin");
         } else {
           navigate("/home");
@@ -235,7 +235,7 @@ const Login = () => {
                 mt: -1,
               }}
             >
-              Sign Up
+              Login
             </Button>
             <Divider
               orientation="horizontal"
