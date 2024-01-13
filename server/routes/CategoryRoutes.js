@@ -77,7 +77,8 @@ router.post("/post/saveResult", async (req, res) => {
     );
 
     if (updatedData) {
-      return res.json(updatedData);
+      // Return the updated document with aggregatedResultsArray
+      return res.json({ updatedData, aggregatedResultsArray });
     }
 
     // If the category doesn't exist, create a new one
@@ -96,7 +97,10 @@ router.post("/post/saveResult", async (req, res) => {
 
     const savedData = await ResultModel.create(categories);
 
-    res.json(savedData);
+    console.log(aggregatedResultsArray);
+
+    // Return the newly created document with aggregatedResultsArray
+    res.json({ savedData, aggregatedResultsArray });
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).json({ error: "Internal Server Error" });

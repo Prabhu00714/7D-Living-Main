@@ -14,6 +14,7 @@ const QuestionAnswer = ({ data, fetchData }) => {
   const [score, setScore] = useState(0);
   const [isSubmitButtonDisabled, setSubmitButtonDisabled] = useState(true);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+  const [aggregatedResultsArray, setAggregatedResultsArray] = useState([]);
 
   const handleSubOptionSelect = (questionIndex, answerIndex, result, value) => {
     setSubSelectedOptions((prevOptions) => ({
@@ -71,21 +72,27 @@ const QuestionAnswer = ({ data, fetchData }) => {
       if (response.ok) {
         console.log("Data submitted successfully!");
         toast.success("Data submitted successfully!");
+
+        // Update the aggregated results array state
+        const { aggregatedResultsArray } = await response.json();
+        setAggregatedResultsArray(aggregatedResultsArray);
+
+        // Set the score directly from the aggregatedResultsArray
+        const scoreString = aggregatedResultsArray
+          .map(({ resultName, totalScore }) => `${resultName}: ${totalScore}`)
+          .join(", ");
+        setScore(scoreString);
       } else {
         toast.error("Failed to submit data!");
-
-        console.error("Failed to submit data to server");
+        console.error("Failed to submit data to the server");
       }
     } catch (error) {
-      console.error("Error submitting data to server", error);
+      console.error("Error submitting data to the server", error);
     }
-
-    setScore(/* calculate the score based on the result */);
-    setSubmitButtonDisabled(true);
 
     // Reset states
     setSubSelectedOptions({});
-    setScore(0);
+    setSubmitButtonDisabled(true);
 
     // Close the confirmation dialog
     setConfirmationDialogOpen(false);
