@@ -55,8 +55,6 @@ const QuestionAnswer = ({ data, fetchData }) => {
       questions: selectedOptions,
     };
 
-    console.log("result", result);
-
     try {
       const response = await fetch(
         "http://localhost:3001/api/category/post/saveResult",
@@ -90,8 +88,6 @@ const QuestionAnswer = ({ data, fetchData }) => {
       console.error("Error submitting data to the server", error);
     }
 
-    // Reset states
-    setSubSelectedOptions({});
     setSubmitButtonDisabled(true);
 
     // Close the confirmation dialog
@@ -115,7 +111,6 @@ const QuestionAnswer = ({ data, fetchData }) => {
   }, [fetchData]);
 
   if (!data || !data.questions) {
-    console.log("Data is missing properties");
     return <div>No data available</div>;
   }
 

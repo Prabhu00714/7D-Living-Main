@@ -32,7 +32,6 @@ router.post("/get/each/qna", async (req, res) => {
 router.post("/post/saveResult", async (req, res) => {
   try {
     const jsonData = req.body;
-    console.log("Incoming JSON data:", jsonData);
 
     // Calculate aggregated results
     const aggregatedResults = {};
@@ -59,8 +58,6 @@ router.post("/post/saveResult", async (req, res) => {
       })
     );
 
-    console.log("Aggregated Results Array:", aggregatedResultsArray);
-
     // Create a new document with aggregatedResults at the top level
     const newDocument = {
       username: jsonData.username,
@@ -81,8 +78,6 @@ router.post("/post/saveResult", async (req, res) => {
       newDocument,
       { upsert: true, new: true }
     );
-
-    console.log("Saved Data:", savedData);
 
     // Return the saved document with aggregatedResultsArray
     res.json({ savedData, aggregatedResultsArray });
