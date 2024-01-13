@@ -100,7 +100,7 @@ const Header = () => {
               {user.username}
             </ResponsiveMenuItem>
             <Link
-              to="/welcome"
+              to="/"
               onClick={logout}
               style={{ textDecoration: "none", color: "inherit" }}
             >
