@@ -199,7 +199,6 @@ const UpdateCategory = ({ categoryId, getCategory, setGetCategory }) => {
           image: question.image,
         })),
       };
-      console.log("json data", jsonData);
 
       await axios.post(
         "http://localhost:3001/api/qna/update/each/category/qna",

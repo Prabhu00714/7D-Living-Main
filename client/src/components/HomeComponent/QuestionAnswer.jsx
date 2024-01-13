@@ -80,6 +80,7 @@ const QuestionAnswer = ({ data, fetchData }) => {
           .map(({ resultName, totalScore }) => `${resultName}: ${totalScore}`)
           .join(", ");
         setScore(scoreString);
+        setSubmitButtonDisabled(true);
       } else {
         toast.error("Failed to submit data!");
         console.error("Failed to submit data to the server");
@@ -87,8 +88,6 @@ const QuestionAnswer = ({ data, fetchData }) => {
     } catch (error) {
       console.error("Error submitting data to the server", error);
     }
-
-    setSubmitButtonDisabled(true);
 
     // Close the confirmation dialog
     setConfirmationDialogOpen(false);
