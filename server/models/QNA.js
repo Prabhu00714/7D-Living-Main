@@ -22,6 +22,6 @@ const qnaSchema = new mongoose.Schema({
   questions: [questionSchema],
 });
 
-const QuestionAnswer = mongoose.model("QuestionAnswer", qnaSchema);
+const QuestionAnswer = mongoose.model("QNA", qnaSchema);
 
 module.exports = QuestionAnswer;

@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const subCategoriesSchema = new mongoose.Schema({
-  questions: [questionId],
+  questionId: String,
 });
 
-const subcategorySchema = new mongoose.Schema({
+const subCategorySchema = new mongoose.Schema({
   categoryId: String,
   subCategoryHeading: String,
   subCategoryDescription: String,
@@ -12,6 +12,6 @@ const subcategorySchema = new mongoose.Schema({
   subCategory: [subCategoriesSchema],
 });
 
-const Category = mongoose.model("subCategory", categoryGroupSchema);
+const subCategory = mongoose.model("subCategory", subCategorySchema);
 
-module.exports = CategoryGroup;
+module.exports = subCategory;
