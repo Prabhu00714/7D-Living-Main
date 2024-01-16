@@ -4,7 +4,6 @@ import axios from "axios";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import AddIcon from "@mui/icons-material/Add";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Typography from "@mui/material/Typography";
 import PerfectScrollbar from "react-perfect-scrollbar";
@@ -13,7 +12,7 @@ import { ListItemText } from "@mui/material";
 
 const SideBarList = ({ onSelectCategory, getCategory }) => {
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("new category");
 
   useEffect(() => {
     axios
@@ -57,14 +56,15 @@ const SideBarList = ({ onSelectCategory, getCategory }) => {
         <ListItemButton
           onClick={() => {
             onSelectCategory("new category");
+            setSelectedCategory("new category");
           }}
-          selected={selectedCategory === "addNewCategory"}
+          selected={selectedCategory === "new category"}
           sx={{
             minHeight: 48,
             justifyContent: "initial",
             px: 2.5,
             backgroundColor:
-              selectedCategory === "addNewCategory"
+              selectedCategory === "new category"
                 ? "rgba(0, 0, 0, 0.8)"
                 : "inherit",
             "&:hover": {
