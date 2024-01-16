@@ -1,19 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import ClearIcon from "@mui/icons-material/Clear";
-import { IconButton, Tooltip } from "@mui/material";
 
 const CategoryList = ({ state, dispatch }) => {
-  const items = ["Category Group 1", "Category Group 2", "Category Group 3"];
+  const items = ["Category 1", "Category 2", "Category 3"];
 
-  const handleItemDoubleClick = (item) => {
-    dispatch({ type: "set_selected_Category_item", payload: item });
-  };
+  useEffect(() => {
+    dispatch({
+      type: "set_selected_category_item",
+      payload: items[0],
+    });
+  }, []);
 
-  const handleClearClick = () => {
-    dispatch({ type: "set_selected_Category_item", payload: null });
+  const handleItemClick = (item) => {
+    dispatch({ type: "set_selected_category_item", payload: item });
   };
 
   return (
@@ -24,7 +25,7 @@ const CategoryList = ({ state, dispatch }) => {
             <ListItem
               component="div"
               key={index}
-              onDoubleClick={() => handleItemDoubleClick(item)}
+              onClick={() => handleItemClick(item)}
               sx={{
                 backgroundColor:
                   state.selectedCategoryItem === item ? "#e0e0e0" : "inherit",
@@ -39,19 +40,6 @@ const CategoryList = ({ state, dispatch }) => {
             </ListItem>
           ))}
         </List>
-      </div>
-      <div>
-        <Tooltip title="Clear" arrow>
-          <IconButton
-            edge="center"
-            aria-label="clear"
-            onClick={handleClearClick}
-            sx={{ color: "black" }}
-            size="large"
-          >
-            <ClearIcon />
-          </IconButton>
-        </Tooltip>
       </div>
     </div>
   );

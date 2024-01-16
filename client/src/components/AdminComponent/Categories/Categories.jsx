@@ -4,20 +4,21 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import AddEditCategoryGroupModal from "./Category Group/AddEditCategoryGroupModal";
 import CategoryGroup from "./Category Group/CategoryGroup";
-import Category from "./Category/category";
+import Category from "./Category/Category";
 import CategoryGroupList from "./Category Group/CategoryGroupList";
 import CategoryList from "./Category/CategoryList";
-import AddEditCategoryModal from "./Category/AddEditCategoryModal";
+import AddEditCategoryModal from "./AddEditCategoryModal";
+import SubCategoryList from "./SubCategory/SubCategoryList";
+import SubCategory from "./SubCategory/SubCategory";
 
 const initialState = {
-  categoryGroupModal: false,
-  categoryGroupAction: "add",
-  selectedCategoryGroupItem: null,
   categoryModal: false,
   categoryAction: "add",
+  categoryType: null,
+  selectedCategoryGroupItem: null,
   selectedCategoryItem: null,
+  selectedSubCategoryItem: null,
 };
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
@@ -37,14 +38,20 @@ const reducer = (state, action) => {
       return { ...state, categoryGroupModal: action.payload };
     case "set_categorygroup_action":
       return { ...state, categoryGroupAction: action.payload };
-    case "set_selected_CategoryGroup_item":
+    case "set_selected_categorygroup_item":
       return { ...state, selectedCategoryGroupItem: action.payload };
     case "set_category_modal":
       return { ...state, categoryModal: action.payload };
     case "set_category_action":
       return { ...state, categoryAction: action.payload };
-    case "set_selected_Category_item":
+    case "set_selected_category_item":
       return { ...state, selectedCategoryItem: action.payload };
+    case "set_subcategory_modal":
+      return { ...state, subCategoryModal: action.payload };
+    case "set_subcategory_action":
+      return { ...state, subCategoryAction: action.payload };
+    case "set_selected_subcategory_item":
+      return { ...state, selectedSubCategoryItem: action.payload };
     default:
       return state;
   }
@@ -82,7 +89,15 @@ const Categories = () => {
         <Category state={state} dispatch={dispatch} />
       </Stack>
       &nbsp;&nbsp;&nbsp;
-      <AddEditCategoryGroupModal state={state} dispatch={dispatch} />
+      {/* Paper 3 */}
+      <Stack direction="column" spacing={2} alignItems="center">
+        <Typography variant="h6">Sub Category</Typography>
+        <DemoPaper square={false} elevation={12}>
+          <SubCategoryList state={state} dispatch={dispatch} />
+        </DemoPaper>
+        <SubCategory state={state} dispatch={dispatch} />
+      </Stack>
+      &nbsp;&nbsp;&nbsp;
       <AddEditCategoryModal state={state} dispatch={dispatch} />
     </div>
   );

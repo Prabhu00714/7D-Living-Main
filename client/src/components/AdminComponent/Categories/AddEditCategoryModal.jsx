@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 
-const AddEditCategoryModal = ({ state, dispatch }) => {
+const AddEditCategoriesModal = ({ state, dispatch }) => {
   const handleClose = () => {
     dispatch({ type: "set_category_modal", payload: false });
   };
@@ -38,4 +38,4 @@ const AddEditCategoryModal = ({ state, dispatch }) => {
   );
 };
 
-export default AddEditCategoryModal;
+export default AddEditCategoriesModal;

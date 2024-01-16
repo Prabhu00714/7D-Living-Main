@@ -5,7 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton, Tooltip } from "@mui/material";
 
-function CategoryGroup({ state, dispatch }) {
+function SubCategory({ state, dispatch }) {
   return (
     <Stack direction="row" spacing={1} justifyContent="center">
       <Tooltip title="Add Category" arrow>
@@ -53,4 +53,4 @@ function CategoryGroup({ state, dispatch }) {
   );
 }
 
-export default CategoryGroup;
+export default SubCategory;
