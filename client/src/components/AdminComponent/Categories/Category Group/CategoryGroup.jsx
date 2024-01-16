@@ -12,9 +12,10 @@ function CategoryGroup({ state, dispatch }) {
         <IconButton
           edge="end"
           aria-label="add"
-          onClick={() =>
-            dispatch({ type: "categories_modal_open", payload: true })
-          }
+          onClick={() => {
+            dispatch({ type: "set_categorygroup_modal", payload: true });
+            dispatch({ type: "set_categorygroup_action", payload: "add" });
+          }}
           sx={{ color: "black" }}
           size="large"
         >
@@ -25,9 +26,10 @@ function CategoryGroup({ state, dispatch }) {
         <IconButton
           edge="end"
           aria-label="edit"
-          onClick={() =>
-            dispatch({ type: "categories_modal_open", payload: true })
-          }
+          onClick={() => {
+            dispatch({ type: "set_categorygroup_modal", payload: true });
+            dispatch({ type: "set_categorygroup_action", payload: "edit" });
+          }}
           sx={{ color: "black" }}
           size="large"
         >
@@ -39,7 +41,7 @@ function CategoryGroup({ state, dispatch }) {
           edge="end"
           aria-label="delete"
           onClick={() =>
-            dispatch({ type: "categories_modal_close", payload: false })
+            dispatch({ type: "set_categorygroup_modal", payload: false })
           }
           sx={{ color: "black" }}
           size="large"

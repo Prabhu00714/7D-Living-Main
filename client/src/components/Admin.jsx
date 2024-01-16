@@ -7,7 +7,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import AddNewCategory from "./AdminComponent/AddNewCategory";
 import UpdateCategory from "./AdminComponent/UpdateCategory";
 import "react-toastify/dist/ReactToastify.css";
-import Categories from "./AdminComponent/Categories";
+import Categories from "./AdminComponent/Categories/Categories";
 import Qna from "./AdminComponent/Qna";
 import Users from "./AdminComponent/Users";
 

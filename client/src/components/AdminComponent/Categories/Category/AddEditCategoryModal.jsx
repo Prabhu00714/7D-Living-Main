@@ -5,11 +5,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 
-const AddCategoriesModal = ({ state, dispatch }) => {
-  const { categoriesModal, action } = state;
-
+const AddEditCategoryModal = ({ state, dispatch }) => {
   const handleClose = () => {
-    dispatch({ type: "categories_modal_close", payload: false });
+    dispatch({ type: "set_category_modal", payload: false });
   };
 
   const handleSubmit = () => {
@@ -19,16 +17,18 @@ const AddCategoriesModal = ({ state, dispatch }) => {
 
   return (
     <Dialog
-      open={categoriesModal}
+      open={state.categoryModal}
       onClose={handleClose}
       fullWidth
       maxWidth="xs"
     >
-      <DialogTitle>{action === "add" ? "Add Item" : "Edit Item"}</DialogTitle>
+      <DialogTitle>
+        {state.categoryAction === "add" ? "Add Item" : "Edit Item"}
+      </DialogTitle>
       <DialogContent>{/* Your form or content goes here */}</DialogContent>
       <DialogActions>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
-          {action === "add" ? "Add" : "Edit"}
+          {state.categoryAction === "add" ? "Add" : "Edit"}
         </Button>
         <Button variant="outlined" color="secondary" onClick={handleClose}>
           Cancel
@@ -38,4 +38,4 @@ const AddCategoriesModal = ({ state, dispatch }) => {
   );
 };
 
-export default AddCategoriesModal;
+export default AddEditCategoryModal;
