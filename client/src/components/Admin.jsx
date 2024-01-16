@@ -7,23 +7,37 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import AddNewCategory from "./AdminComponent/AddNewCategory";
 import UpdateCategory from "./AdminComponent/UpdateCategory";
 import "react-toastify/dist/ReactToastify.css";
+import Categories from "./AdminComponent/Categories";
+import Qna from "./AdminComponent/Qna";
+import Users from "./AdminComponent/Users";
 
 const Admin = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [newCategory, setNewCategory] = useState("new category");
+  const [newQna, setNewQna] = useState("");
+  const [newUsers, setNewUsers] = useState("");
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [getCategory, setGetCategory] = useState("");
 
   const handleCategorySelect = (category) => {
     if (category === "new category") {
-      setNewCategory("new category");
-      setSelectedComponent(null);
+      setNewCategory(category);
+      // setSelectedComponent(null);
       setGetCategory(""); // Reset getCategory
-    } else {
-      setNewCategory(null);
+      setNewQna("");
+      setNewUsers("");
+    } else if (category === "new qna") {
+      setNewQna(category);
+      setNewCategory("");
       setGetCategory("");
-      setSelectedComponent(category);
+      // setSelectedComponent(category);
+      setNewUsers("");
+    } else if (category === "new users") {
+      setNewUsers(category);
+      setNewQna("");
+      setNewCategory("");
+      setGetCategory("");
     }
   };
 
@@ -51,7 +65,7 @@ const Admin = () => {
         toggleMobileDrawer={toggleMobileDrawer}
         getCategory={getCategory}
       />
-      <div>
+      {/* <div>
         {newCategory && (
           <AddNewCategory
             getCategory={getCategory}
@@ -65,6 +79,11 @@ const Admin = () => {
             setGetCategory={setGetCategory}
           />
         )}
+      </div> */}
+      <div>
+        {newCategory && <Categories />}
+        {newQna && <Qna />}
+        {newUsers && <Users />}
       </div>
     </motion.div>
   );

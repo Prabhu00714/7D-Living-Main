@@ -72,14 +72,89 @@ const SideBarList = ({ onSelectCategory, getCategory }) => {
             },
           }}
         >
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          <ListItemText primary="Add New Category" />
+          <ListItemText
+            primary={
+              <Typography
+                variant="body1"
+                style={{
+                  fontFamily: "YourFont",
+                  fontSize: "25px",
+                }}
+              >
+                Categories
+              </Typography>
+            }
+          />
+        </ListItemButton>
+
+        <ListItemButton
+          onClick={() => {
+            onSelectCategory("new qna");
+            setSelectedCategory("new qna");
+          }}
+          selected={selectedCategory === "new qna"}
+          sx={{
+            minHeight: 48,
+            justifyContent: "initial",
+            px: 2.5,
+            backgroundColor:
+              selectedCategory === "new qna" ? "rgba(0, 0, 0, 0.8)" : "inherit",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+            },
+          }}
+        >
+          <ListItemText
+            primary={
+              <Typography
+                variant="body1"
+                style={{
+                  fontFamily: "YourFont",
+                  fontSize: "20px",
+                }}
+              >
+                QA
+              </Typography>
+            }
+          />{" "}
+        </ListItemButton>
+
+        <ListItemButton
+          onClick={() => {
+            onSelectCategory("new users");
+            setSelectedCategory("new users");
+          }}
+          selected={selectedCategory === "new users"}
+          sx={{
+            minHeight: 48,
+            justifyContent: "initial",
+            px: 2.5,
+            backgroundColor:
+              selectedCategory === "new users"
+                ? "rgba(0, 0, 0, 0.8)"
+                : "inherit",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+            },
+          }}
+        >
+          <ListItemText
+            primary={
+              <Typography
+                variant="body1"
+                style={{
+                  fontFamily: "YourFont",
+                  fontSize: "20px",
+                }}
+              >
+                Users
+              </Typography>
+            }
+          />
         </ListItemButton>
 
         {/* Dynamic categories */}
-        {categories.map((category) => (
+        {/* {categories.map((category) => (
           <ListItemButton
             key={category._id} // Use the _id as the key
             onClick={() => {
@@ -104,7 +179,7 @@ const SideBarList = ({ onSelectCategory, getCategory }) => {
               primary={renderMultiLineText(category.category, 20)}
             />
           </ListItemButton>
-        ))}
+        ))} */}
       </List>
     </PerfectScrollbar>
   );
