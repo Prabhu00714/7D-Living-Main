@@ -33,14 +33,33 @@ const AddEditCategoriesModal = ({ state, dispatch }) => {
         return;
       }
 
-      const response = await axios.post(
-        `http://localhost:3001/api/qna/post/new/${state.modelType}`,
-        {
-          header: formData.header,
-          description: formData.description,
-          image: formData.image,
-        }
-      );
+      let apiEndpoint;
+
+      switch (state.modelType) {
+        case "categoryGroup":
+          apiEndpoint = `http://localhost:3001/api/qna/post/new/categorygroup`;
+          break;
+        case "category":
+          apiEndpoint = `http://localhost:3001/api/qna/post/new/category/${state.selectedCategoryGroupItem._id}`;
+          break;
+        case "subCategory":
+          apiEndpoint = `http://localhost:3001/api/qna/post/new/subcategory/${state.selectedCategoryItem}`;
+          break;
+        default:
+          throw new Error("Invalid category action");
+      }
+
+      const requestData = {
+        header: formData.header,
+        description: formData.description,
+        image: formData.image,
+        categoryId:
+          state.modelType === "category" ? state.selectedItemId : undefined,
+        subCategoryId:
+          state.modelType === "subCategory" ? state.selectedItemId : undefined,
+      };
+
+      const response = await axios.post(apiEndpoint, requestData);
 
       if (response.status === 200) {
         toast.success(`${state.modelName} Added Successfully`);
@@ -57,17 +76,17 @@ const AddEditCategoriesModal = ({ state, dispatch }) => {
 
   const getModelData = () => {
     switch (state.modelType) {
-      case "category":
-        return {
-          headingKey: "categoryHeading",
-          descriptionKey: "categoryDescription",
-          imageKey: "categoryImage",
-        };
       case "categoryGroup":
         return {
           headingKey: "categoryGroupHeading",
           descriptionKey: "categoryGroupDescription",
           imageKey: "categoryGroupImage",
+        };
+      case "category":
+        return {
+          headingKey: "categoryHeading",
+          descriptionKey: "categoryDescription",
+          imageKey: "categoryImage",
         };
       case "subCategory":
         return {

@@ -14,6 +14,8 @@ import SubCategory from "./SubCategory/SubCategory";
 import QuestionsList from "./Questions/QuestionsList";
 import Questions from "./Questions/Questions";
 import AddQuestionsModal from "./AddQuestionsModal";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 const initialState = {
   categoryModal: false,
@@ -36,6 +38,12 @@ const DemoPaper = styled(Paper)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
+  position: "relative",
+  "& > div": {
+    maxHeight: "100%",
+    overflowY: "auto",
+    paddingRight: theme.spacing(1),
+  },
 }));
 
 const reducer = (state, action) => {
@@ -81,7 +89,9 @@ const Categories = () => {
       <Stack direction="column" spacing={2} alignItems="center">
         <Typography variant="h6">Category Group</Typography>
         <DemoPaper square={false} elevation={12}>
-          <CategoryGroupList state={state} dispatch={dispatch} />
+          <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <CategoryGroupList state={state} dispatch={dispatch} />
+          </PerfectScrollbar>
         </DemoPaper>
         <CategoryGroup state={state} dispatch={dispatch} />
       </Stack>
@@ -90,7 +100,9 @@ const Categories = () => {
       <Stack direction="column" spacing={2} alignItems="center">
         <Typography variant="h6">Category</Typography>
         <DemoPaper square={false} elevation={12}>
-          <CategoryList state={state} dispatch={dispatch} />
+          <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <CategoryList state={state} dispatch={dispatch} />
+          </PerfectScrollbar>
         </DemoPaper>
         <Category state={state} dispatch={dispatch} />
       </Stack>
@@ -99,7 +111,9 @@ const Categories = () => {
       <Stack direction="column" spacing={2} alignItems="center">
         <Typography variant="h6">Sub Category</Typography>
         <DemoPaper square={false} elevation={12}>
-          <SubCategoryList state={state} dispatch={dispatch} />
+          <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <SubCategoryList state={state} dispatch={dispatch} />
+          </PerfectScrollbar>
         </DemoPaper>
         <SubCategory state={state} dispatch={dispatch} />
       </Stack>
@@ -108,7 +122,9 @@ const Categories = () => {
       <Stack direction="column" spacing={2} alignItems="center">
         <Typography variant="h6">Questions</Typography>
         <DemoPaper square={false} elevation={12}>
-          <QuestionsList state={state} dispatch={dispatch} />
+          <PerfectScrollbar options={{ wheelPropagation: false }}>
+            <QuestionsList state={state} dispatch={dispatch} />
+          </PerfectScrollbar>
         </DemoPaper>
         <Questions state={state} dispatch={dispatch} />
       </Stack>

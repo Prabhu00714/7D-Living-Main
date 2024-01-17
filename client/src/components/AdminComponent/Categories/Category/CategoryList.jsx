@@ -2,16 +2,28 @@ import React, { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import axios from "axios";
 
 const CategoryList = ({ state, dispatch }) => {
-  const items = ["Category 1", "Category 2", "Category 3"];
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/api/qna/get/all/category")
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, [state.selectedCategoryGroupItem]);
 
   useEffect(() => {
     dispatch({
       type: "set_selected_category_item",
       payload: items[0],
     });
-  }, []);
+  }, [items, dispatch]);
 
   const handleItemClick = (item) => {
     dispatch({ type: "set_selected_category_item", payload: item });
@@ -36,7 +48,7 @@ const CategoryList = ({ state, dispatch }) => {
                 userSelect: "none", // Prevent text selection
               }}
             >
-              <ListItemText primary={item} />
+              <ListItemText primary={item.categoryHeading} />
             </ListItem>
           ))}
         </List>

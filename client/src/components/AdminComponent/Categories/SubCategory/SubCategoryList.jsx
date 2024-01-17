@@ -2,16 +2,28 @@ import React, { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import axios from "axios";
 
 const SubCategoryList = ({ state, dispatch }) => {
-  const items = ["Sub Category 1", "Sub Category 2", "Sub Category 3"];
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/api/qna/get/all/subcategory")
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, [state.selectedCategoryGroupItem, state.selectedCategoryItem]);
 
   useEffect(() => {
     dispatch({
       type: "set_selected_subcategory_item",
       payload: items[0],
     });
-  }, []);
+  }, [items, dispatch]);
 
   const handleItemClick = (item) => {
     dispatch({ type: "set_selected_subcategory_item", payload: item });
@@ -38,7 +50,7 @@ const SubCategoryList = ({ state, dispatch }) => {
                 userSelect: "none", // Prevent text selection
               }}
             >
-              <ListItemText primary={item} />
+              <ListItemText primary={item.subCategoryHeading} />
             </ListItem>
           ))}
         </List>

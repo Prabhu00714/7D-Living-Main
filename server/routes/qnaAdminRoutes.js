@@ -106,33 +106,95 @@ router.delete("/delete/each/category/qna/:categoryId", async (req, res) => {
   }
 });
 
-router.post("/post/new/:modelType", async (req, res) => {
+router.get("/get/all/categorygroup", async (req, res) => {
+  try {
+    const categoryGroups = await CategoryGroup.find({});
+    res.json(categoryGroups);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/get/all/category", async (req, res) => {
+  try {
+    const result = await Category.find({});
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/get/all/subcategory", async (req, res) => {
+  try {
+    const result = await SubCategory.find({});
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/post/new/categorygroup", async (req, res) => {
   try {
     const { header, description, image } = req.body;
 
-    const { modelType } = req.params;
-    console.log(modelType);
+    const item = await CategoryGroup.create({
+      categoryGroupHeading: header,
+      categoryGroupDescription: description,
+      categoryGroupImage: image,
+    });
 
-    let ItemModel;
+    res.status(200).json(item);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
-    switch (modelType) {
-      case "category":
-        ItemModel = Category;
-        break;
-      case "categoryGroup":
-        ItemModel = CategoryGroup;
-        break;
-      case "subCategory":
-        ItemModel = SubCategory;
-        break;
-      default:
-        return res.status(400).json({ error: "Invalid model type" });
-    }
+router.post("/post/new/category/:categorygroupId", async (req, res) => {
+  try {
+    const { header, description, image } = req.body;
+    const { categorygroupId } = req.params;
 
-    const item = await ItemModel.create({
-      [`${modelType}Heading`]: header,
-      [`${modelType}Description`]: description,
-      [`${modelType}Image`]: image,
+    // Create a new Category
+    const newCategory = await Category.create({
+      categoryHeading: header,
+      categoryDescription: description,
+      categoryImage: image,
+    });
+
+    // Find the CategoryGroup by ID and update its categoryGroups array
+    const updatedCategoryGroup = await CategoryGroup.findByIdAndUpdate(
+      categorygroupId,
+      {
+        $push: {
+          categoryGroups: {
+            categoryId: newCategory._id,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ newCategory, updatedCategoryGroup });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/post/new/subcategory/:categoryId", async (req, res) => {
+  try {
+    const { header, description, image } = req.body;
+    const { categoryId } = req.params;
+    console.log(categoryId);
+
+    const item = await SubCategory.create({
+      subCategoryHeading: header,
+      subCategoryDescription: description,
+      subCategoryImage: image,
     });
 
     res.status(200).json(item);
