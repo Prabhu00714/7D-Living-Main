@@ -37,13 +37,13 @@ const AddEditCategoriesModal = ({ state, dispatch }) => {
 
       switch (state.modelType) {
         case "categoryGroup":
-          apiEndpoint = `http://localhost:3001/api/qna/post/new/categorygroup`;
+          apiEndpoint = "http://localhost:3001/api/qna/post/new/categorygroup";
           break;
         case "category":
           apiEndpoint = `http://localhost:3001/api/qna/post/new/category/${state.selectedCategoryGroupItem._id}`;
           break;
         case "subCategory":
-          apiEndpoint = `http://localhost:3001/api/qna/post/new/subcategory/${state.selectedCategoryItem}`;
+          apiEndpoint = `http://localhost:3001/api/qna/post/new/subcategory/${state.selectedCategoryItem._id}`;
           break;
         default:
           throw new Error("Invalid category action");
@@ -64,10 +64,17 @@ const AddEditCategoriesModal = ({ state, dispatch }) => {
       if (response.status === 200) {
         toast.success(`${state.modelName} Added Successfully`);
         setFormData({ header: "", description: "", image: null });
+        dispatch({
+          type: "set_refetch_flag",
+          payload: true,
+        });
       } else {
         toast.error("Please fill all fields!!!");
       }
-
+      dispatch({
+        type: "set_refetch_flag",
+        payload: false,
+      });
       handleClose();
     } catch (error) {
       console.error("Error:", error);

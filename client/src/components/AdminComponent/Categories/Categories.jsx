@@ -27,6 +27,7 @@ const initialState = {
   selectedQuestionItem: null,
   modelType: null,
   modelName: null,
+  refetchFlag: false,
 };
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
@@ -66,6 +67,8 @@ const reducer = (state, action) => {
       return { ...state, modelType: action.payload };
     case "set_model_name":
       return { ...state, modelName: action.payload };
+    case "set_refetch_flag":
+      return { ...state, refetchFlag: action.payload };
     default:
       return state;
   }

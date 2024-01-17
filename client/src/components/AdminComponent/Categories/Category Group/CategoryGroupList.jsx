@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -6,23 +6,29 @@ import axios from "axios";
 
 const CategoryGroupList = ({ state, dispatch }) => {
   const [items, setItems] = useState([]);
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/api/qna/get/all/categorygroup")
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/qna/get/all/categorygroup"
+        );
         setItems(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  }, []);
 
-  useEffect(() => {
-    dispatch({
-      type: "set_selected_categorygroup_item",
-      payload: items[0],
-    });
+        if (isInitialRender.current && response.data.length > 0) {
+          dispatch({
+            type: "set_selected_categorygroup_item",
+            payload: response.data[0],
+          });
+          isInitialRender.current = false;
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchData();
   }, [items, dispatch]);
 
   const handleItemClick = (item) => {
@@ -40,7 +46,8 @@ const CategoryGroupList = ({ state, dispatch }) => {
               onClick={() => handleItemClick(item)}
               sx={{
                 backgroundColor:
-                  state.selectedCategoryGroupItem === item
+                  state.selectedCategoryGroupItem &&
+                  state.selectedCategoryGroupItem._id === item._id
                     ? "#e0e0e0"
                     : "inherit",
                 "&:hover": {

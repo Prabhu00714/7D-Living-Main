@@ -106,6 +106,8 @@ router.delete("/delete/each/category/qna/:categoryId", async (req, res) => {
   }
 });
 
+// new structure codes
+
 router.get("/get/all/categorygroup", async (req, res) => {
   try {
     const categoryGroups = await CategoryGroup.find({});
@@ -116,20 +118,50 @@ router.get("/get/all/categorygroup", async (req, res) => {
   }
 });
 
-router.get("/get/all/category", async (req, res) => {
+router.get("/get/all/category/:categorygroupId", async (req, res) => {
   try {
-    const result = await Category.find({});
-    res.json(result);
+    const { categorygroupId } = req.params;
+
+    const categoryGroup = await CategoryGroup.findById(categorygroupId);
+
+    if (!categoryGroup) {
+      return res.status(404).json({ error: "CategoryGroup not found" });
+    }
+
+    const categoryIds = categoryGroup.categoryGroups.map(
+      (CategoryGroup) => CategoryGroup.categoryId
+    );
+
+    const categories = await Category.find({ _id: { $in: categoryIds } });
+
+    res.json(categories);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-router.get("/get/all/subcategory", async (req, res) => {
+router.get("/get/all/subcategory/:categoryId", async (req, res) => {
   try {
-    const result = await SubCategory.find({});
-    res.json(result);
+    const { categoryId } = req.params;
+
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    const subCategoryIds = category.categories.map(
+      (Category) => Category.subCategoryId
+    );
+
+    const subcategories = await SubCategory.find({
+      _id: { $in: subCategoryIds },
+    });
+
+    console.log(subcategories);
+
+    res.json(subcategories);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -189,15 +221,27 @@ router.post("/post/new/subcategory/:categoryId", async (req, res) => {
   try {
     const { header, description, image } = req.body;
     const { categoryId } = req.params;
-    console.log(categoryId);
 
-    const item = await SubCategory.create({
+    // Create a new Category
+    const newSubCategory = await SubCategory.create({
       subCategoryHeading: header,
       subCategoryDescription: description,
       subCategoryImage: image,
     });
 
-    res.status(200).json(item);
+    const updatedCategory = await Category.findByIdAndUpdate(
+      categoryId,
+      {
+        $push: {
+          categories: {
+            subCategoryId: newSubCategory._id,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ newSubCategory, updatedCategory });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
