@@ -27,7 +27,7 @@ const initialState = {
   selectedQuestionItem: null,
   modelType: null,
   modelName: null,
-  refetchFlag: false,
+  refreshFlag: false,
 };
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
@@ -67,8 +67,8 @@ const reducer = (state, action) => {
       return { ...state, modelType: action.payload };
     case "set_model_name":
       return { ...state, modelName: action.payload };
-    case "set_refetch_flag":
-      return { ...state, refetchFlag: action.payload };
+    case "set_refresh_flag":
+      return { ...state, refreshFlag: action.payload };
     default:
       return state;
   }
@@ -78,6 +78,14 @@ const Categories = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
 
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const handleAddItem = () => {
+    // Update state or perform any action when an item is added
+    dispatch({
+      type: "set_refresh_flag",
+      payload: !state.refreshFlag,
+    });
+  };
 
   const containerStyle = {
     marginLeft: isMobile ? 10 : 230,
@@ -131,7 +139,11 @@ const Categories = () => {
         </DemoPaper>
         <Questions state={state} dispatch={dispatch} />
       </Stack>
-      <AddEditCategoryModal state={state} dispatch={dispatch} />
+      <AddEditCategoryModal
+        state={state}
+        dispatch={dispatch}
+        onAddItem={handleAddItem}
+      />
       <AddQuestionsModal state={state} dispatch={dispatch} />
     </div>
   );

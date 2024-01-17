@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -6,7 +6,6 @@ import axios from "axios";
 
 const CategoryGroupList = ({ state, dispatch }) => {
   const [items, setItems] = useState([]);
-  const isInitialRender = useRef(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,20 +14,19 @@ const CategoryGroupList = ({ state, dispatch }) => {
           "http://localhost:3001/api/qna/get/all/categorygroup"
         );
         setItems(response.data);
-
-        if (isInitialRender.current && response.data.length > 0) {
-          dispatch({
-            type: "set_selected_categorygroup_item",
-            payload: response.data[0],
-          });
-          isInitialRender.current = false;
-        }
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
 
     fetchData();
+  }, [state.refreshFlag, dispatch]);
+
+  useEffect(() => {
+    dispatch({
+      type: "set_selected_categorygroup_item",
+      payload: items[0],
+    });
   }, [items, dispatch]);
 
   const handleItemClick = (item) => {

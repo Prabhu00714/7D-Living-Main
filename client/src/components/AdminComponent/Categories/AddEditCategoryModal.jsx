@@ -14,7 +14,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const AddEditCategoriesModal = ({ state, dispatch }) => {
+const AddEditCategoriesModal = ({ state, dispatch, onAddItem }) => {
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [formData, setFormData] = useState({
     header: "",
@@ -64,17 +64,10 @@ const AddEditCategoriesModal = ({ state, dispatch }) => {
       if (response.status === 200) {
         toast.success(`${state.modelName} Added Successfully`);
         setFormData({ header: "", description: "", image: null });
-        dispatch({
-          type: "set_refetch_flag",
-          payload: true,
-        });
       } else {
         toast.error("Please fill all fields!!!");
       }
-      dispatch({
-        type: "set_refetch_flag",
-        payload: false,
-      });
+      onAddItem();
       handleClose();
     } catch (error) {
       console.error("Error:", error);
