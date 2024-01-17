@@ -4,8 +4,31 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton, Tooltip } from "@mui/material";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 function CategoryGroup({ state, dispatch }) {
+  const handleDeleteConfirmation = () => {
+    confirmAlert({
+      title: "Confirm Deletion",
+      message: "Are you sure you want to delete this category group?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            // Dispatch your delete action here
+            dispatch({ type: "set_category_modal", payload: false });
+            // Add additional dispatch for deletion if needed
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {}, // Do nothing on cancel
+        },
+      ],
+    });
+  };
+
   return (
     <Stack direction="row" spacing={1} justifyContent="center">
       <Tooltip title="Add Category" arrow>
@@ -56,9 +79,7 @@ function CategoryGroup({ state, dispatch }) {
         <IconButton
           edge="end"
           aria-label="delete"
-          onClick={() =>
-            dispatch({ type: "set_category_modal", payload: false })
-          }
+          onClick={handleDeleteConfirmation}
           sx={{ color: "black" }}
           size="large"
         >

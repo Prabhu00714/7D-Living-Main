@@ -159,8 +159,6 @@ router.get("/get/all/subcategory/:categoryId", async (req, res) => {
       _id: { $in: subCategoryIds },
     });
 
-    console.log(subcategories);
-
     res.json(subcategories);
   } catch (error) {
     console.error(error);
@@ -248,7 +246,7 @@ router.post("/post/new/subcategory/:categoryId", async (req, res) => {
   }
 });
 
-router.get("/get/:modelType/:itemId", async (req, res) => {
+router.get("/get/edit/:modelType/:itemId", async (req, res) => {
   try {
     const { modelType, itemId } = req.params;
     let ItemModel;
@@ -257,10 +255,10 @@ router.get("/get/:modelType/:itemId", async (req, res) => {
       case "category":
         ItemModel = Category;
         break;
-      case "categorygroup":
+      case "categoryGroup":
         ItemModel = CategoryGroup;
         break;
-      case "subcategory":
+      case "subCategory":
         ItemModel = SubCategory;
         break;
       default:
@@ -271,6 +269,51 @@ router.get("/get/:modelType/:itemId", async (req, res) => {
     res.json(item);
   } catch (error) {
     console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/post/edit/:modelType/:itemId", async (req, res) => {
+  try {
+    const { modelType, itemId } = req.params;
+    console.log(modelType);
+
+    let Model;
+
+    switch (modelType) {
+      case "categoryGroup":
+        Model = CategoryGroup;
+        break;
+      case "category":
+        Model = Category;
+        break;
+      case "subCategory":
+        Model = SubCategory;
+        break;
+      default:
+        return res.status(400).json({ error: "Invalid model type" });
+    }
+
+    // Create the update data object based on the modelType
+    const updateData = {
+      [`${modelType}Heading`]: req.body.header,
+      [`${modelType}Description`]: req.body.description,
+      [`${modelType}Image`]: req.body.image,
+    };
+
+    const updatedItem = await Model.findByIdAndUpdate(itemId, updateData, {
+      new: true,
+    });
+
+    console.log("updated data", updatedItem);
+
+    if (!updatedItem) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

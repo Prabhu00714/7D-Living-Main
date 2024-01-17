@@ -22,7 +22,7 @@ const CategoryList = ({ state, dispatch }) => {
     };
 
     fetchData();
-  }, [state.refreshFlag, state.selectedCategoryGroupItem, dispatch]);
+  }, [state.categoryRefreshFlag, state.selectedCategoryGroupItem, dispatch]);
 
   useEffect(() => {
     dispatch({

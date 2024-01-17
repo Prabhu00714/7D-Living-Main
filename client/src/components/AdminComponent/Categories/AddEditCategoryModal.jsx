@@ -26,7 +26,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem }) => {
     dispatch({ type: "set_category_modal", payload: false });
   };
 
-  const handleConfirmation = async () => {
+  const handleAdd = async () => {
     try {
       if (!formData.header || !formData.description) {
         toast.error("Both header and description are required");
@@ -67,7 +67,59 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem }) => {
       } else {
         toast.error("Please fill all fields!!!");
       }
-      onAddItem();
+      onAddItem(state.modelType);
+      handleClose();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleEdit = async () => {
+    try {
+      if (!formData.header || !formData.description) {
+        toast.error("Both header and description are required");
+        return;
+      }
+
+      let selectedItemId;
+
+      switch (state.modelType) {
+        case "categoryGroup":
+          selectedItemId = state.selectedCategoryGroupItem._id;
+          break;
+        case "category":
+          selectedItemId = state.selectedCategoryItem._id;
+          break;
+        case "subCategory":
+          selectedItemId = state.selectedSubCategoryItem._id;
+          break;
+        default:
+          break;
+      }
+
+      const requestData = {
+        header: formData.header,
+        description: formData.description,
+        image: formData.image,
+      };
+
+      console.log(requestData);
+
+      // const cacheBuster = new Date().getTime();
+      // `http://localhost:3001/api/qna/post/edit/${state.modelType}/${selectedItemId}?_=${cacheBuster}`,
+
+      const response = await axios.post(
+        `http://localhost:3001/api/qna/post/edit/${state.modelType}/${selectedItemId}`,
+        requestData
+      );
+
+      if (response.status === 200) {
+        toast.success(`${state.modelName} Edited Successfully`);
+      } else {
+        toast.error("Failed to edit. Please fill all fields!!!");
+      }
+
+      onAddItem(state.modelType);
       handleClose();
     } catch (error) {
       console.error("Error:", error);
@@ -102,7 +154,6 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem }) => {
   const { headingKey, descriptionKey } = getModelData();
 
   useEffect(() => {
-    // Initialize formData when adding a new item
     if (state.categoryAction === "add" && state.modelType) {
       setFormData({
         header: "",
@@ -110,25 +161,42 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem }) => {
         image: null,
       });
     } else if (state.categoryAction === "edit" && state.modelType) {
-      axios
-        .get(`/api/${state.modelType}/${state.selectedItemId}`)
-        .then((response) => {
-          const data = response.data;
-          setFormData({
-            header: data[headingKey] || "",
-            description: data[descriptionKey] || "",
-            image: data.image || null,
-          });
-        })
-        .catch((error) => console.error("Error fetching data:", error));
+      let selectedItemId;
+
+      switch (state.modelType) {
+        case "categoryGroup":
+          selectedItemId = state.selectedCategoryGroupItem._id;
+          break;
+        case "category":
+          selectedItemId = state.selectedCategoryItem._id;
+          break;
+        case "subCategory":
+          selectedItemId = state.selectedSubCategoryItem._id;
+          break;
+        default:
+          break;
+      }
+
+      console.log("id", selectedItemId);
+
+      if (selectedItemId) {
+        axios
+          .get(
+            `http://localhost:3001/api/qna/get/edit/${state.modelType}/${selectedItemId}`
+          )
+          .then((response) => {
+            const data = response.data;
+            console.log("edit data", data);
+            setFormData({
+              header: data[headingKey] || "",
+              description: data[descriptionKey] || "",
+              image: data.image || null,
+            });
+          })
+          .catch((error) => console.error("Error fetching data:", error));
+      }
     }
-  }, [
-    state.categoryAction,
-    state.modelType,
-    state.selectedItemId,
-    headingKey,
-    descriptionKey,
-  ]);
+  }, [state.categoryAction, state.modelType]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -204,7 +272,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem }) => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={handleConfirmation}
+            onClick={state.categoryAction === "add" ? handleAdd : handleEdit}
             startIcon={
               state.categoryAction === "add" ? (
                 <SaveIcon />

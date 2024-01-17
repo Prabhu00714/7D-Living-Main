@@ -27,7 +27,9 @@ const initialState = {
   selectedQuestionItem: null,
   modelType: null,
   modelName: null,
-  refreshFlag: false,
+  categoryGroupRefreshFlag: false,
+  categoryRefreshFlag: false,
+  subCategoryRefreshFlag: false,
 };
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
@@ -67,8 +69,12 @@ const reducer = (state, action) => {
       return { ...state, modelType: action.payload };
     case "set_model_name":
       return { ...state, modelName: action.payload };
-    case "set_refresh_flag":
-      return { ...state, refreshFlag: action.payload };
+    case "set_categorygroup_refresh_flag":
+      return { ...state, categoryGroupRefreshFlag: action.payload };
+    case "set_category_refresh_flag":
+      return { ...state, categoryRefreshFlag: action.payload };
+    case "set_subCategory_refresh_flag":
+      return { ...state, subCategoryRefreshFlag: action.payload };
     default:
       return state;
   }
@@ -79,12 +85,30 @@ const Categories = () => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleAddItem = () => {
-    // Update state or perform any action when an item is added
-    dispatch({
-      type: "set_refresh_flag",
-      payload: !state.refreshFlag,
-    });
+  const handleAddItem = (data) => {
+    console.log("refresh", data);
+    switch (data) {
+      case "categoryGroup":
+        dispatch({
+          type: "set_categorygroup_refresh_flag",
+          payload: !state.categoryGroupRefreshFlag,
+        });
+        break;
+      case "category":
+        dispatch({
+          type: "set_category_refresh_flag",
+          payload: !state.categoryRefreshFlag,
+        });
+        break;
+      case "subCategory":
+        dispatch({
+          type: "set_subCategory_refresh_flag",
+          payload: !state.subCategoryRefreshFlag,
+        });
+        break;
+      default:
+        throw new Error("Invalid category action");
+    }
   };
 
   const containerStyle = {

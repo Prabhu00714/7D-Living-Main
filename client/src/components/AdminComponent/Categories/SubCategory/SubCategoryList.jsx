@@ -27,7 +27,7 @@ const SubCategoryList = ({ state, dispatch }) => {
     };
     fetchData();
   }, [
-    state.refreshFlag,
+    state.subCategoryRefreshFlag,
     state.selectedCategoryGroupItem,
     state.selectedCategoryItem,
     dispatch,

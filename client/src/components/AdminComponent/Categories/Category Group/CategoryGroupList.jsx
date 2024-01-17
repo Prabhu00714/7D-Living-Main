@@ -20,7 +20,7 @@ const CategoryGroupList = ({ state, dispatch }) => {
     };
 
     fetchData();
-  }, [state.refreshFlag, dispatch]);
+  }, [state.categoryGroupRefreshFlag, dispatch]);
 
   useEffect(() => {
     dispatch({
