@@ -15,6 +15,11 @@ function SubCategory({ state, dispatch }) {
           onClick={() => {
             dispatch({ type: "set_category_modal", payload: true });
             dispatch({ type: "set_category_action", payload: "add" });
+            dispatch({ type: "set_model_type", payload: "subCategory" });
+            dispatch({
+              type: "set_model_name",
+              payload: "Sub Category",
+            });
           }}
           sx={{ color: "black" }}
           size="large"
@@ -29,6 +34,14 @@ function SubCategory({ state, dispatch }) {
           onClick={() => {
             dispatch({ type: "set_category_modal", payload: true });
             dispatch({ type: "set_category_action", payload: "edit" });
+            dispatch({
+              type: "set_model_type",
+              payload: "subCategory",
+            });
+            dispatch({
+              type: "set_model_name",
+              payload: "Sub Category",
+            });
           }}
           sx={{ color: "black" }}
           size="large"

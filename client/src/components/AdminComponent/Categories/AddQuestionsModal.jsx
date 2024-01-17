@@ -4,6 +4,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Divider from "@mui/material/Divider";
 
 const AddQuestionsModal = ({ state, dispatch }) => {
   const handleClose = () => {
@@ -23,7 +28,36 @@ const AddQuestionsModal = ({ state, dispatch }) => {
       maxWidth="xs"
     >
       <DialogTitle>Title</DialogTitle>
-      <DialogContent>{/* Your form or content goes here */}</DialogContent>
+      <Divider />
+
+      <DialogContent>
+        {/* Your form or content goes here */}
+        <List>
+          {/* List items with checkboxes */}
+          <ListItem>
+            <FormControlLabel
+              control={<Checkbox />}
+              label="Option 1"
+              // You can handle the state of the checkboxes here
+              // e.g., checked={state.option1Checked}
+              // onChange={() => handleCheckboxChange("option1")}
+            />
+          </ListItem>
+          <ListItem>
+            <FormControlLabel
+              control={<Checkbox />}
+              label="Option 2"
+              // You can handle the state of the checkboxes here
+              // e.g., checked={state.option2Checked}
+              // onChange={() => handleCheckboxChange("option2")}
+            />
+          </ListItem>
+          {/* Add more list items as needed */}
+        </List>
+      </DialogContent>
+
+      <Divider />
+
       <DialogActions>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
           Add

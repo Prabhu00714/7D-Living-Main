@@ -23,6 +23,8 @@ const initialState = {
   selectedSubCategoryItem: null,
   questionModal: false,
   selectedQuestionItem: null,
+  modelType: null,
+  modelName: null,
 };
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
@@ -52,6 +54,10 @@ const reducer = (state, action) => {
       return { ...state, questionModal: action.payload };
     case "set_selected_question_item":
       return { ...state, selectedQuestionItem: action.payload };
+    case "set_model_type":
+      return { ...state, modelType: action.payload };
+    case "set_model_name":
+      return { ...state, modelName: action.payload };
     default:
       return state;
   }

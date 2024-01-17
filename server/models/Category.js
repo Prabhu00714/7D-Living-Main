@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const categoriesSchema = new mongoose.Schema({
-  questions: [questionSchema],
+  subCategoryId: String,
+  questionId: String,
 });
 
 const categorySchema = new mongoose.Schema({

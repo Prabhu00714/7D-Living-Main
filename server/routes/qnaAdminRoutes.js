@@ -1,5 +1,9 @@
 const express = require("express");
+
 const QuestionAnswer = require("../models/QuestionAnswer");
+const CategoryGroup = require("../models/CategoryGroup");
+const Category = require("../models/Category");
+const SubCategory = require("../models/SubCategory");
 
 const router = express.Router();
 
@@ -98,6 +102,69 @@ router.delete("/delete/each/category/qna/:categoryId", async (req, res) => {
     res.status(200).json({ message: "Category deleted successfully" });
   } catch (error) {
     console.error("Error deleting category:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/post/new/:modelType", async (req, res) => {
+  try {
+    const { header, description, image } = req.body;
+
+    const { modelType } = req.params;
+    console.log(modelType);
+
+    let ItemModel;
+
+    switch (modelType) {
+      case "category":
+        ItemModel = Category;
+        break;
+      case "categoryGroup":
+        ItemModel = CategoryGroup;
+        break;
+      case "subCategory":
+        ItemModel = SubCategory;
+        break;
+      default:
+        return res.status(400).json({ error: "Invalid model type" });
+    }
+
+    const item = await ItemModel.create({
+      [`${modelType}Heading`]: header,
+      [`${modelType}Description`]: description,
+      [`${modelType}Image`]: image,
+    });
+
+    res.status(200).json(item);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/get/:modelType/:itemId", async (req, res) => {
+  try {
+    const { modelType, itemId } = req.params;
+    let ItemModel;
+
+    switch (modelType) {
+      case "category":
+        ItemModel = Category;
+        break;
+      case "categorygroup":
+        ItemModel = CategoryGroup;
+        break;
+      case "subcategory":
+        ItemModel = SubCategory;
+        break;
+      default:
+        return res.status(400).json({ error: "Invalid model type" });
+    }
+
+    const item = await ItemModel.findById(itemId);
+    res.json(item);
+  } catch (error) {
+    console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
