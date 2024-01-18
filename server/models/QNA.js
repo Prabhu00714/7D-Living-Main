@@ -11,13 +11,6 @@ const answerSchema = new mongoose.Schema({
   results: [resultSchema],
 });
 
-// const questionSchema = new mongoose.Schema({
-//   questionnumber: Number,
-//   questiontext: String,
-//   answers: [answerSchema],
-//   questionimage: String,
-// });
-
 const qnaSchema = new mongoose.Schema({
   questionnumber: Number,
   questiontext: String,
@@ -25,6 +18,6 @@ const qnaSchema = new mongoose.Schema({
   answers: [answerSchema],
 });
 
-const Qna = mongoose.model("qna", qnaSchema);
+const Qna = mongoose.model("qna", qnaSchema, "Qna");
 
 module.exports = Qna;

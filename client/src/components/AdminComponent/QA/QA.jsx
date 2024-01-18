@@ -4,16 +4,16 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import CategoryGroup from "./Category Group/CategoryGroup";
-import Category from "./Category/Category";
-import CategoryGroupList from "./Category Group/CategoryGroupList";
-import CategoryList from "./Category/CategoryList";
-import AddEditCategoryModal from "./AddEditCategoryModal";
-import SubCategoryList from "./SubCategory/SubCategoryList";
-import SubCategory from "./SubCategory/SubCategory";
-import QuestionsList from "./Questions/QuestionsList";
-import Questions from "./Questions/Questions";
-import AddQuestionsModal from "./AddQuestionsModal";
+// import CategoryGroup from "./Category Group/CategoryGroup";
+// import Category from "./Category/Category";
+// import CategoryGroupList from "./Category Group/CategoryGroupList";
+// import CategoryList from "./Category/CategoryList";
+// import AddEditCategoryModal from "./AddEditCategoryModal";
+// import SubCategoryList from "./SubCategory/SubCategoryList";
+// import SubCategory from "./SubCategory/SubCategory";
+// import QuestionsList from "./Questions/QuestionsList";
+// import Questions from "./Questions/Questions";
+// import AddQuestionsModal from "./AddQuestionsModal";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 
@@ -112,12 +112,6 @@ const Categories = () => {
           payload: !state.subCategoryRefreshFlag,
         });
         break;
-      case "questions":
-        dispatch({
-          type: "set_questions_refresh_flag",
-          payload: !state.questionsRefreshFlag,
-        });
-        break;
       default:
         throw new Error("Invalid category action");
     }
@@ -137,10 +131,10 @@ const Categories = () => {
         <Typography variant="h6">Category Group</Typography>
         <DemoPaper square={false} elevation={12}>
           <PerfectScrollbar options={{ wheelPropagation: false }}>
-            <CategoryGroupList state={state} dispatch={dispatch} />
+            {/* <CategoryGroupList state={state} dispatch={dispatch} /> */}
           </PerfectScrollbar>
         </DemoPaper>
-        <CategoryGroup state={state} dispatch={dispatch} />
+        {/* <CategoryGroup state={state} dispatch={dispatch} /> */}
       </Stack>
       &nbsp;&nbsp;&nbsp;
       {/* Paper 2 */}
@@ -148,10 +142,10 @@ const Categories = () => {
         <Typography variant="h6">Category</Typography>
         <DemoPaper square={false} elevation={12}>
           <PerfectScrollbar options={{ wheelPropagation: false }}>
-            <CategoryList state={state} dispatch={dispatch} />
+            {/* <CategoryList state={state} dispatch={dispatch} /> */}
           </PerfectScrollbar>
         </DemoPaper>
-        <Category state={state} dispatch={dispatch} />
+        {/* <Category state={state} dispatch={dispatch} /> */}
       </Stack>
       &nbsp;&nbsp;&nbsp;
       {/* Paper 3 */}
@@ -159,10 +153,10 @@ const Categories = () => {
         <Typography variant="h6">Sub Category</Typography>
         <DemoPaper square={false} elevation={12}>
           <PerfectScrollbar options={{ wheelPropagation: false }}>
-            <SubCategoryList state={state} dispatch={dispatch} />
+            {/* <SubCategoryList state={state} dispatch={dispatch} /> */}
           </PerfectScrollbar>
         </DemoPaper>
-        <SubCategory state={state} dispatch={dispatch} />
+        {/* <SubCategory state={state} dispatch={dispatch} /> */}
       </Stack>
       &nbsp;&nbsp;&nbsp;
       {/* Paper 4 */}
@@ -170,21 +164,17 @@ const Categories = () => {
         <Typography variant="h6">Questions</Typography>
         <DemoPaper square={false} elevation={12}>
           <PerfectScrollbar options={{ wheelPropagation: false }}>
-            <QuestionsList state={state} dispatch={dispatch} />
+            {/* <QuestionsList state={state} dispatch={dispatch} /> */}
           </PerfectScrollbar>
         </DemoPaper>
-        <Questions state={state} dispatch={dispatch} />
+        {/* <Questions state={state} dispatch={dispatch} /> */}
       </Stack>
-      <AddEditCategoryModal
+      {/* <AddEditCategoryModal
         state={state}
         dispatch={dispatch}
         onAddItem={handleAddItem}
       />
-      <AddQuestionsModal
-        state={state}
-        dispatch={dispatch}
-        onAddItem={handleAddItem}
-      />
+      <AddQuestionsModal state={state} dispatch={dispatch} /> */}
     </div>
   );
 };

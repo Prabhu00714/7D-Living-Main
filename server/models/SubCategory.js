@@ -1,16 +1,23 @@
 const mongoose = require("mongoose");
 
 const subCategoriesSchema = new mongoose.Schema({
-  questionId: String,
+  questionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Qna",
+  },
 });
 
 const subCategorySchema = new mongoose.Schema({
   subCategoryHeading: String,
   subCategoryDescription: String,
   subCategoryImage: String,
-  subCategory: [subCategoriesSchema],
+  questions: [subCategoriesSchema],
 });
 
-const subCategory = mongoose.model("subCategory", subCategorySchema);
+const SubCategory = mongoose.model(
+  "SubCategory",
+  subCategorySchema,
+  "SubCategory"
+);
 
-module.exports = subCategory;
+module.exports = SubCategory;

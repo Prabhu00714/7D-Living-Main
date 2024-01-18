@@ -11,8 +11,12 @@ import Divider from "@mui/material/Divider";
 import axios from "axios";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-const AddQuestionsModal = ({ state, dispatch }) => {
+const AddQuestionsModal = ({ state, dispatch, onAddItem }) => {
+  const isMobile = useMediaQuery("(max-width: 600px)");
   const [questions, setQuestions] = useState([]);
   const [selectedQuestions, setSelectedQuestions] = useState(new Set());
   const [selectedQuestionsArray, setSelectedQuestionsArray] = useState([]);
@@ -21,12 +25,35 @@ const AddQuestionsModal = ({ state, dispatch }) => {
     dispatch({ type: "set_question_modal", payload: false });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     dispatch({
       type: "set_questions",
       payload: selectedQuestionsArray,
     });
-    console.log(selectedQuestionsArray);
+
+    const formattedQuestionIds = selectedQuestionsArray.map((question) => ({
+      _id: question._id,
+    }));
+    console.log("ids", formattedQuestionIds);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/qna/post/questions/${state.selectedSubCategoryItem._id}`,
+        { questions: formattedQuestionIds }
+      );
+
+      // Handle the response if needed
+      console.log("Backend response:", response.data);
+      if (response.status === 200) {
+        toast.success(`New Question Added Successfully`);
+        setSelectedQuestions(new Set());
+        setSelectedQuestionsArray([]);
+        onAddItem("questions");
+      }
+    } catch (error) {
+      console.error("Error posting questions:", error);
+    }
+
     handleClose();
   };
 
@@ -70,50 +97,65 @@ const AddQuestionsModal = ({ state, dispatch }) => {
   };
 
   return (
-    <Dialog
-      open={state.questionModal}
-      onClose={handleClose}
-      fullWidth
-      maxWidth="xs"
-    >
-      <DialogTitle>Title</DialogTitle>
-      <Divider />
-      <PerfectScrollbar>
-        <DialogContent>
-          <List>
-            {questions.map((question) => (
-              <ListItem
-                key={question._id}
-                onClick={() => handleListItemClick(question)}
-                sx={{
-                  backgroundColor: selectedQuestions.has(question.questiontext)
-                    ? "#c0c0c0"
-                    : "inherit",
-                  "&:hover": {
-                    backgroundColor: "#f0f0f0",
-                    cursor: "default",
-                  },
-                  userSelect: "none",
-                }}
-              >
-                <ListItemText primary={question.questiontext} />
-              </ListItem>
-            ))}
-          </List>
-        </DialogContent>
-      </PerfectScrollbar>
+    <>
+      <Dialog
+        open={state.questionModal}
+        onClose={handleClose}
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle>Title</DialogTitle>
+        <Divider />
+        <PerfectScrollbar>
+          <DialogContent>
+            <List>
+              {questions.map((question) => (
+                <ListItem
+                  key={question._id}
+                  onClick={() => handleListItemClick(question)}
+                  sx={{
+                    backgroundColor: selectedQuestions.has(
+                      question.questiontext
+                    )
+                      ? "#c0c0c0"
+                      : "inherit",
+                    "&:hover": {
+                      backgroundColor: "#f0f0f0",
+                      cursor: "default",
+                    },
+                    userSelect: "none",
+                  }}
+                >
+                  <ListItemText primary={question.questiontext} />
+                </ListItem>
+              ))}
+            </List>
+          </DialogContent>
+        </PerfectScrollbar>
 
-      <Divider />
+        <Divider />
 
-      <DialogActions>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Add
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={handleClose}>
-          Cancel
-        </Button>
-      </DialogActions>
-    </Dialog>
+        <DialogActions>
+          <Button variant="contained" color="primary" onClick={handleSubmit}>
+            Add
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <ToastContainer
+        position={isMobile ? "top-center" : "top-right"}
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 };
 

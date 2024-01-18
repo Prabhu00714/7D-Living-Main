@@ -1,8 +1,14 @@
 const mongoose = require("mongoose");
 
 const categoriesSchema = new mongoose.Schema({
-  subCategoryId: String,
-  questionId: String,
+  subCategoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "SubCategory",
+  },
+  questionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Qna",
+  },
 });
 
 const categorySchema = new mongoose.Schema({
@@ -12,6 +18,6 @@ const categorySchema = new mongoose.Schema({
   categories: [categoriesSchema],
 });
 
-const Category = mongoose.model("Category", categorySchema);
+const Category = mongoose.model("Category", categorySchema, "Category");
 
 module.exports = Category;

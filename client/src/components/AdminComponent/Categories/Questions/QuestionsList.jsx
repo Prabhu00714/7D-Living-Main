@@ -5,12 +5,46 @@ import ListItemText from "@mui/material/ListItemText";
 import axios from "axios";
 
 const QuestionsList = ({ state, dispatch }) => {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (
+          state.selectedCategoryGroupItem &&
+          state.selectedCategoryItem &&
+          state.selectedSubCategoryItem
+        ) {
+          const response = await axios.get(
+            `http://localhost:3001/api/qna/get/each/subcategory/questions/${state.selectedSubCategoryItem._id}`
+          );
+          setItems(response.data);
+        } else if (
+          state.selectedCategoryGroupItem &&
+          !state.selectedCategoryItem &&
+          !state.selectedSubCategoryItem
+        ) {
+          setItems("");
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchData();
+  }, [
+    state.questionsRefreshFlag,
+    state.selectedCategoryGroupItem,
+    state.selectedCategoryItem,
+    state.selectedSubCategoryItem,
+    dispatch,
+  ]);
+
   useEffect(() => {
     dispatch({
       type: "set_selected_question_item",
-      payload: state.questions[0],
+      payload: items[0],
     });
-  }, [state.questions, dispatch]);
+  }, [items, dispatch]);
 
   const handleItemClick = (item) => {
     dispatch({ type: "set_selected_question_item", payload: item });
@@ -20,11 +54,11 @@ const QuestionsList = ({ state, dispatch }) => {
     <div>
       <div>
         <List>
-          {Array.isArray(state.questions) &&
-            state.questions.map((item) => (
+          {items &&
+            items.map((item, index) => (
               <ListItem
                 component="div"
-                key={item._id}
+                key={index}
                 onClick={() => handleItemClick(item)}
                 sx={{
                   backgroundColor:

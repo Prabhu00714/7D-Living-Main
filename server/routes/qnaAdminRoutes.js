@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 
 const QuestionAnswer = require("../models/QuestionAnswer");
 const CategoryGroup = require("../models/CategoryGroup");
@@ -167,6 +168,36 @@ router.get("/get/all/subcategory/:categoryId", async (req, res) => {
   }
 });
 
+router.get(
+  "/get/each/subcategory/questions/:subcategoryId",
+  async (req, res) => {
+    try {
+      const { subcategoryId } = req.params;
+
+      const subcategory = await SubCategory.findById(subcategoryId);
+
+      if (!subcategory) {
+        return res.status(404).json({ error: "SubCategory not found" });
+      }
+
+      const questionIds = subcategory.questions.map(
+        (question) => question.questionId
+      );
+      console.log("questionIds", questionIds);
+
+      const questions = await QNA.find({
+        _id: { $in: questionIds },
+      });
+      console.log("questions", questions);
+
+      res.json(questions);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
 router.get("/get/all/question", async (req, res) => {
   try {
     const result = await QNA.find({});
@@ -232,7 +263,6 @@ router.post("/post/new/subcategory/:categoryId", async (req, res) => {
     const { header, description, image } = req.body;
     const { categoryId } = req.params;
 
-    // Create a new Category
     const newSubCategory = await SubCategory.create({
       subCategoryHeading: header,
       subCategoryDescription: description,
@@ -323,6 +353,30 @@ router.post("/post/edit/:modelType/:itemId", async (req, res) => {
     res.status(200).json(updatedItem);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/post/questions/:subcategoryId", async (req, res) => {
+  try {
+    const { subcategoryId } = req.params;
+    const formattedQuestionIds = req.body.questions;
+
+    const updatedSubCategory = await SubCategory.findByIdAndUpdate(
+      subcategoryId,
+      {
+        $addToSet: {
+          questions: {
+            $each: formattedQuestionIds.map((questionId) => ({ questionId })),
+          },
+        },
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ updatedSubCategory });
+  } catch (error) {
+    console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

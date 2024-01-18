@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 
 const categoryGroupsSchema = new mongoose.Schema({
-  categoryId: String,
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+  },
 });
 
 const categoryGroupSchema = new mongoose.Schema({
@@ -11,6 +14,10 @@ const categoryGroupSchema = new mongoose.Schema({
   categoryGroups: [categoryGroupsSchema],
 });
 
-const CategoryGroup = mongoose.model("CategoryGroup", categoryGroupSchema);
+const CategoryGroup = mongoose.model(
+  "CategoryGroup",
+  categoryGroupSchema,
+  "CategoryGroup"
+);
 
 module.exports = CategoryGroup;

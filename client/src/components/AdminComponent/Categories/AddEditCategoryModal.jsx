@@ -102,9 +102,6 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem }) => {
         description: formData.description,
         image: formData.image,
       };
-
-      console.log(requestData);
-
       // const cacheBuster = new Date().getTime();
       // `http://localhost:3001/api/qna/post/edit/${state.modelType}/${selectedItemId}?_=${cacheBuster}`,
 

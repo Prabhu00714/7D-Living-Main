@@ -8,7 +8,7 @@ import AddNewCategory from "./AdminComponent/AddNewCategory";
 import UpdateCategory from "./AdminComponent/UpdateCategory";
 import "react-toastify/dist/ReactToastify.css";
 import Categories from "./AdminComponent/Categories/Categories";
-import Qna from "./AdminComponent/Qna";
+import Qna from "./AdminComponent/QA/QA";
 import Users from "./AdminComponent/Users";
 
 const Admin = () => {
