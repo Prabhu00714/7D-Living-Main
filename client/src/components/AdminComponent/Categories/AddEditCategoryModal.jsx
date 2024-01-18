@@ -12,10 +12,8 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
-const AddEditCategoriesModal = ({ state, dispatch, onAddItem }) => {
-  const isMobile = useMediaQuery("(max-width: 600px)");
+const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
   const [formData, setFormData] = useState({
     header: "",
     description: "",

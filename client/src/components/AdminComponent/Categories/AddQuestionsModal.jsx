@@ -13,10 +13,8 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
-const AddQuestionsModal = ({ state, dispatch, onAddItem }) => {
-  const isMobile = useMediaQuery("(max-width: 600px)");
+const AddQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
   const [questions, setQuestions] = useState([]);
   const [selectedQuestions, setSelectedQuestions] = useState(new Set());
   const [selectedQuestionsArray, setSelectedQuestionsArray] = useState([]);

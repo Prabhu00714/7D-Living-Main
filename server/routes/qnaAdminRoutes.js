@@ -183,12 +183,10 @@ router.get(
       const questionIds = subcategory.questions.map(
         (question) => question.questionId
       );
-      console.log("questionIds", questionIds);
 
       const questions = await QNA.find({
         _id: { $in: questionIds },
       });
-      console.log("questions", questions);
 
       res.json(questions);
     } catch (error) {
@@ -381,10 +379,27 @@ router.post("/post/questions/:subcategoryId", async (req, res) => {
   }
 });
 
+router.delete("/delete/subcategory/:subcategoryId", async (req, res) => {
+  try {
+    const subcategoryId = req.params.subcategoryId;
+
+    const existingSubCategory = await SubCategory.findById(subcategoryId);
+    if (!existingSubCategory) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    await existingSubCategory.deleteOne();
+
+    res.status(200).json({ message: "Subcategory deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 router.delete("/delete/categorygroup/:categorygroupId", async (req, res) => {
   try {
     const categorygroupId = req.params.categorygroupId;
-    console.log(categorygroupId);
 
     // Check if the category exists
     // const existingCategory = await QuestionAnswer.findById(categoryId);

@@ -10,11 +10,7 @@ const QuestionsList = ({ state, dispatch }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (
-          state.selectedCategoryGroupItem &&
-          state.selectedCategoryItem &&
-          state.selectedSubCategoryItem
-        ) {
+        if (state.selectedSubCategoryItem) {
           const response = await axios.get(
             `http://localhost:3001/api/qna/get/each/subcategory/questions/${state.selectedSubCategoryItem._id}`
           );
@@ -24,6 +20,8 @@ const QuestionsList = ({ state, dispatch }) => {
           !state.selectedCategoryItem &&
           !state.selectedSubCategoryItem
         ) {
+          setItems("");
+        } else if (!state.selectedSubCategoryItem) {
           setItems("");
         }
       } catch (error) {

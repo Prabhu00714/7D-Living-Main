@@ -140,7 +140,7 @@ const Categories = () => {
             <CategoryGroupList state={state} dispatch={dispatch} />
           </PerfectScrollbar>
         </DemoPaper>
-        <CategoryGroup state={state} dispatch={dispatch} />
+        <CategoryGroup state={state} dispatch={dispatch} isMobile={isMobile} />
       </Stack>
       &nbsp;&nbsp;&nbsp;
       {/* Paper 2 */}
@@ -151,7 +151,7 @@ const Categories = () => {
             <CategoryList state={state} dispatch={dispatch} />
           </PerfectScrollbar>
         </DemoPaper>
-        <Category state={state} dispatch={dispatch} />
+        <Category state={state} dispatch={dispatch} isMobile={isMobile} />
       </Stack>
       &nbsp;&nbsp;&nbsp;
       {/* Paper 3 */}
@@ -162,7 +162,12 @@ const Categories = () => {
             <SubCategoryList state={state} dispatch={dispatch} />
           </PerfectScrollbar>
         </DemoPaper>
-        <SubCategory state={state} dispatch={dispatch} />
+        <SubCategory
+          state={state}
+          dispatch={dispatch}
+          isMobile={isMobile}
+          onAddItem={handleAddItem}
+        />
       </Stack>
       &nbsp;&nbsp;&nbsp;
       {/* Paper 4 */}
@@ -173,17 +178,19 @@ const Categories = () => {
             <QuestionsList state={state} dispatch={dispatch} />
           </PerfectScrollbar>
         </DemoPaper>
-        <Questions state={state} dispatch={dispatch} />
+        <Questions state={state} dispatch={dispatch} isMobile={isMobile} />
       </Stack>
       <AddEditCategoryModal
         state={state}
         dispatch={dispatch}
         onAddItem={handleAddItem}
+        isMobile={isMobile}
       />
       <AddQuestionsModal
         state={state}
         dispatch={dispatch}
         onAddItem={handleAddItem}
+        isMobile={isMobile}
       />
     </div>
   );

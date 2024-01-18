@@ -3,37 +3,89 @@ import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton, Tooltip } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+import axios from "axios";
 
-function Questions({ state, dispatch }) {
+function Questions({ state, dispatch, isMobile }) {
+  const handleDelete = () => {
+    const questionId = state.selectedquestionItem._id;
+    console.log("delete", questionId);
+
+    axios
+      .delete(
+        `http://localhost:3001/api/qna/delete/subcategory/question/${questionId}`
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success(`Question Deleted Successfully`);
+        }
+      })
+      .catch((error) => {
+        // Handle error, show error message, etc.
+        console.error("Error deleting category group", error);
+      });
+  };
+
+  const handleDeleteConfirmation = () => {
+    Swal.fire({
+      title: "Confirm Deletion",
+      text: "Are you sure you want to delete this sub category?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirm",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
+      } else {
+        // example codes to clear up
+      }
+    });
+  };
+
   return (
-    <Stack direction="row" spacing={1} justifyContent="center">
-      <Tooltip title="Add Category" arrow>
-        <IconButton
-          edge="end"
-          aria-label="add"
-          onClick={() => {
-            dispatch({ type: "set_question_modal", payload: true });
-          }}
-          sx={{ color: "black" }}
-          size="large"
-        >
-          <AddIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete Category" arrow>
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          // onClick={() =>
-          //   dispatch({ type: "set_question_modal", payload: false })
-          // }
-          sx={{ color: "black" }}
-          size="large"
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
-    </Stack>
+    <>
+      <Stack direction="row" spacing={1} justifyContent="center">
+        <Tooltip title="Add Category" arrow>
+          <IconButton
+            edge="end"
+            aria-label="add"
+            onClick={() => {
+              dispatch({ type: "set_question_modal", payload: true });
+            }}
+            sx={{ color: "black" }}
+            size="large"
+          >
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete Category" arrow>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={handleDeleteConfirmation}
+            sx={{ color: "black" }}
+            size="large"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+      <ToastContainer
+        position={isMobile ? "top-center" : "top-right"}
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 }
 
