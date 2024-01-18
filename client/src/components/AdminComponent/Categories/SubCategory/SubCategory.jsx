@@ -12,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 function SubCategory({ state, dispatch, isMobile, onAddItem }) {
   const handleDelete = () => {
     const subCategoryId = state.selectedSubCategoryItem._id;
-    console.log("delete", subCategoryId);
 
     axios
       .delete(

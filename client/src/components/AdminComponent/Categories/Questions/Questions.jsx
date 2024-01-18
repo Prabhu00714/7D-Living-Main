@@ -8,18 +8,19 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-function Questions({ state, dispatch, isMobile }) {
+function Questions({ state, dispatch, isMobile, onAddItem }) {
   const handleDelete = () => {
-    const questionId = state.selectedquestionItem._id;
-    console.log("delete", questionId);
+    const subCategoryId = state.selectedSubCategoryItem._id;
+    const questionId = state.selectedQuestionItem._id;
 
     axios
       .delete(
-        `http://localhost:3001/api/qna/delete/subcategory/question/${questionId}`
+        `http://localhost:3001/api/qna/delete/subcategory/question/${subCategoryId}/${questionId}`
       )
       .then((response) => {
         if (response.status === 200) {
           toast.success(`Question Deleted Successfully`);
+          onAddItem("questions");
         }
       })
       .catch((error) => {

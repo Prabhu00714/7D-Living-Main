@@ -9,16 +9,19 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-function Category({ state, dispatch, isMobile }) {
+function Category({ state, dispatch, isMobile, onAddItem }) {
   const handleDelete = () => {
     const categoryId = state.selectedCategoryItem._id;
-    console.log("delete", categoryId);
+    const subCategoryId = state.selectedSubCategoryItem._id;
 
     axios
-      .delete(`http://localhost:3001/api/qna/delete/category/${categoryId}`)
+      .delete(
+        `http://localhost:3001/api/qna/delete/category/${categoryId}/${subCategoryId}`
+      )
       .then((response) => {
         if (response.status === 200) {
           toast.success(`Category Deleted Successfully`);
+          onAddItem("questions");
         }
       })
       .catch((error) => {
@@ -28,6 +31,11 @@ function Category({ state, dispatch, isMobile }) {
   };
 
   const handleDeleteConfirmation = () => {
+    dispatch({
+      type: "set_model_type",
+      payload: "category",
+    });
+
     Swal.fire({
       title: "Confirm Deletion",
       text: "Are you sure you want to delete this category?",

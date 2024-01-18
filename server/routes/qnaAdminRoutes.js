@@ -358,14 +358,30 @@ router.post("/post/edit/:modelType/:itemId", async (req, res) => {
 router.post("/post/questions/:subcategoryId", async (req, res) => {
   try {
     const { subcategoryId } = req.params;
-    const formattedQuestionIds = req.body.questions;
+    const selectedQuestionsArray = req.body.questions;
+    const formattedQuestionIds = selectedQuestionsArray.map(
+      (question) => question._id
+    );
+
+    const subCategory = await SubCategory.findById(subcategoryId);
+
+    // Check for duplicates
+    const newQuestionIds = formattedQuestionIds.filter((questionId) => {
+      return !subCategory.questions.some((existingQuestion) =>
+        existingQuestion.questionId.equals(questionId)
+      );
+    });
+
+    if (newQuestionIds.length === 0) {
+      return res.status(200).json({ updatedSubCategory: subCategory });
+    }
 
     const updatedSubCategory = await SubCategory.findByIdAndUpdate(
       subcategoryId,
       {
         $addToSet: {
           questions: {
-            $each: formattedQuestionIds.map((questionId) => ({ questionId })),
+            $each: newQuestionIds.map((questionId) => ({ questionId })),
           },
         },
       },
@@ -378,6 +394,35 @@ router.post("/post/questions/:subcategoryId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+router.delete(
+  "/delete/subcategory/question/:subcategoryId/:questionId",
+  async (req, res) => {
+    try {
+      const subcategoryId = req.params.subcategoryId;
+      const questionId = req.params.questionId;
+
+      const existingSubCategory = await SubCategory.findById(subcategoryId);
+      if (!existingSubCategory) {
+        return res.status(404).json({ error: "Subcategory not found" });
+      }
+
+      existingSubCategory.questions = existingSubCategory.questions.filter(
+        (question) => !question.questionId.equals(questionId)
+      );
+
+      await existingSubCategory.save();
+
+      res.status(200).json({
+        message: "Question deleted successfully",
+        updatedSubCategory: existingSubCategory,
+      });
+    } catch (error) {
+      console.error("Error deleting question:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
 
 router.delete("/delete/subcategory/:subcategoryId", async (req, res) => {
   try {
