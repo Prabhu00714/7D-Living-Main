@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function CategoryGroup({ state, dispatch, isMobile }) {
+function CategoryGroup({ state, dispatch, isMobile, onAddItem }) {
   const handleDelete = () => {
     const categoryGroupId = state.selectedCategoryGroupItem._id;
     console.log("delete", categoryGroupId);
@@ -21,6 +21,7 @@ function CategoryGroup({ state, dispatch, isMobile }) {
       .then((response) => {
         if (response.status === 200) {
           toast.success(`Category Group Deleted Successfully`);
+          onAddItem("categoryGroup");
         }
       })
       .catch((error) => {

@@ -12,16 +12,13 @@ import axios from "axios";
 function Category({ state, dispatch, isMobile, onAddItem }) {
   const handleDelete = () => {
     const categoryId = state.selectedCategoryItem._id;
-    const subCategoryId = state.selectedSubCategoryItem._id;
 
     axios
-      .delete(
-        `http://localhost:3001/api/qna/delete/category/${categoryId}/${subCategoryId}`
-      )
+      .delete(`http://localhost:3001/api/qna/delete/category/${categoryId}`)
       .then((response) => {
         if (response.status === 200) {
           toast.success(`Category Deleted Successfully`);
-          onAddItem("questions");
+          onAddItem("category");
         }
       })
       .catch((error) => {
@@ -31,11 +28,6 @@ function Category({ state, dispatch, isMobile, onAddItem }) {
   };
 
   const handleDeleteConfirmation = () => {
-    dispatch({
-      type: "set_model_type",
-      payload: "category",
-    });
-
     Swal.fire({
       title: "Confirm Deletion",
       text: "Are you sure you want to delete this category?",

@@ -24,7 +24,7 @@ function SubCategory({ state, dispatch, isMobile, onAddItem }) {
             type: "set_selected_subcategory_item",
             payload: null,
           });
-          onAddItem(state.modelType);
+          onAddItem("subCategory");
         }
       })
       .catch((error) => {
@@ -33,11 +33,6 @@ function SubCategory({ state, dispatch, isMobile, onAddItem }) {
   };
 
   const handleDeleteConfirmation = () => {
-    dispatch({
-      type: "set_model_type",
-      payload: "subCategory",
-    });
-
     Swal.fire({
       title: "Confirm Deletion",
       text: "Are you sure you want to delete this sub category?",

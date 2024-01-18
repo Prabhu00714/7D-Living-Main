@@ -430,7 +430,7 @@ router.delete("/delete/subcategory/:subcategoryId", async (req, res) => {
 
     const existingSubCategory = await SubCategory.findById(subcategoryId);
     if (!existingSubCategory) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Subcategory not found" });
     }
 
     await existingSubCategory.deleteOne();
@@ -442,22 +442,64 @@ router.delete("/delete/subcategory/:subcategoryId", async (req, res) => {
   }
 });
 
+router.delete("/delete/category/:categoryId", async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;
+
+    const existingCategory = await Category.findById(categoryId);
+    if (!existingCategory) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    const subcategoryIds = existingCategory.categories.map(
+      (subcategory) => subcategory.subCategoryId
+    );
+
+    await SubCategory.deleteMany({ _id: { $in: subcategoryIds } });
+
+    await existingCategory.deleteOne();
+
+    res.status(200).json({
+      message: "Category and associated subcategories deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 router.delete("/delete/categorygroup/:categorygroupId", async (req, res) => {
   try {
     const categorygroupId = req.params.categorygroupId;
 
-    // Check if the category exists
-    // const existingCategory = await QuestionAnswer.findById(categoryId);
-    // if (!existingCategory) {
-    //   return res.status(404).json({ error: "Category not found" });
-    // }
+    const existingCategoryGroup = await CategoryGroup.findById(categorygroupId);
+    if (!existingCategoryGroup) {
+      return res.status(404).json({ error: "CategoryGroup not found" });
+    }
 
-    // // Delete the category and its associated questions
-    // await existingCategory.deleteOne();
+    // Find associated Category IDs
+    const categoryIds = existingCategoryGroup.categoryGroups.map(
+      (categoryGroup) => categoryGroup.categoryId
+    );
 
-    res.status(200).json({ message: "Category deleted successfully" });
+    // Find and delete associated SubCategory documents
+    const subcategoryIds = await Category.find({
+      _id: { $in: categoryIds },
+    }).distinct("categories.subCategoryId");
+    await SubCategory.deleteMany({ _id: { $in: subcategoryIds } });
+
+    // Delete associated Category documents
+    await Category.deleteMany({ _id: { $in: categoryIds } });
+
+    // Delete the CategoryGroup
+    await existingCategoryGroup.deleteOne();
+
+    res.status(200).json({
+      message:
+        "CategoryGroup and associated Categories/Subcategories deleted successfully",
+    });
   } catch (error) {
-    console.error("Error deleting category:", error);
+    console.error("Error deleting category group:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

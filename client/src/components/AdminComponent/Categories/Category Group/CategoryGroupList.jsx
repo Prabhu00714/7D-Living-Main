@@ -37,27 +37,28 @@ const CategoryGroupList = ({ state, dispatch }) => {
     <div>
       <div>
         <List>
-          {items.map((item, index) => (
-            <ListItem
-              component="div"
-              key={index}
-              onClick={() => handleItemClick(item)}
-              sx={{
-                backgroundColor:
-                  state.selectedCategoryGroupItem &&
-                  state.selectedCategoryGroupItem._id === item._id
-                    ? "#c0c0c0"
-                    : "inherit",
-                "&:hover": {
-                  backgroundColor: "#f0f0f0",
-                  cursor: "default",
-                },
-                userSelect: "none",
-              }}
-            >
-              <ListItemText primary={item.categoryGroupHeading} />
-            </ListItem>
-          ))}
+          {items &&
+            items.map((item, index) => (
+              <ListItem
+                component="div"
+                key={index}
+                onClick={() => handleItemClick(item)}
+                sx={{
+                  backgroundColor:
+                    state.selectedCategoryGroupItem &&
+                    state.selectedCategoryGroupItem._id === item._id
+                      ? "#c0c0c0"
+                      : "inherit",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                    cursor: "default",
+                  },
+                  userSelect: "none",
+                }}
+              >
+                <ListItemText primary={item.categoryGroupHeading} />
+              </ListItem>
+            ))}
         </List>
       </div>
     </div>

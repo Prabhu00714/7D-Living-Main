@@ -15,6 +15,8 @@ const CategoryList = ({ state, dispatch }) => {
             `http://localhost:3001/api/qna/get/all/category/${state.selectedCategoryGroupItem._id}`
           );
           setItems(response.data);
+        } else if (!state.selectedCategoryGroupItem) {
+          setItems("");
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -39,27 +41,28 @@ const CategoryList = ({ state, dispatch }) => {
     <div>
       <div>
         <List>
-          {items.map((item, index) => (
-            <ListItem
-              component="div"
-              key={index}
-              onClick={() => handleItemClick(item)}
-              sx={{
-                backgroundColor:
-                  state.selectedCategoryItem &&
-                  state.selectedCategoryItem._id === item._id
-                    ? "#c0c0c0"
-                    : "inherit",
-                "&:hover": {
-                  backgroundColor: "#f0f0f0",
-                  cursor: "default",
-                },
-                userSelect: "none", // Prevent text selection
-              }}
-            >
-              <ListItemText primary={item.categoryHeading} />
-            </ListItem>
-          ))}
+          {items &&
+            items.map((item, index) => (
+              <ListItem
+                component="div"
+                key={index}
+                onClick={() => handleItemClick(item)}
+                sx={{
+                  backgroundColor:
+                    state.selectedCategoryItem &&
+                    state.selectedCategoryItem._id === item._id
+                      ? "#c0c0c0"
+                      : "inherit",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                    cursor: "default",
+                  },
+                  userSelect: "none", // Prevent text selection
+                }}
+              >
+                <ListItemText primary={item.categoryHeading} />
+              </ListItem>
+            ))}
         </List>
       </div>
     </div>
