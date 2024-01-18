@@ -30,6 +30,8 @@ const initialState = {
   categoryGroupRefreshFlag: false,
   categoryRefreshFlag: false,
   subCategoryRefreshFlag: false,
+  questionsRefreshFlag: false,
+  questions: [],
 };
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
@@ -75,6 +77,10 @@ const reducer = (state, action) => {
       return { ...state, categoryRefreshFlag: action.payload };
     case "set_subCategory_refresh_flag":
       return { ...state, subCategoryRefreshFlag: action.payload };
+    case "set_questions_refresh_flag":
+      return { ...state, questionsRefreshFlag: action.payload };
+    case "set_questions":
+      return { ...state, questions: action.payload };
     default:
       return state;
   }

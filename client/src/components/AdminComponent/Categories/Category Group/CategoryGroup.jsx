@@ -4,28 +4,48 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton, Tooltip } from "@mui/material";
-import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 function CategoryGroup({ state, dispatch }) {
+  const handleDelete = () => {
+    const categoryGroupId = state.selectedCategoryGroupItem._id;
+    console.log("delete", categoryGroupId);
+
+    axios
+      .delete(
+        `http://localhost:3001/api/qna/delete/categorygroup/${categoryGroupId}`
+      )
+      .then((response) => {
+        // Handle successful deletion, update state, etc.
+        console.log("Category group deleted successfully");
+      })
+      .catch((error) => {
+        // Handle error, show error message, etc.
+        console.error("Error deleting category group", error);
+      })
+      .finally(() => {
+        // You may want to perform some cleanup or additional actions here
+        // For example, close a modal, update state, etc.
+        dispatch({ type: "set_category_modal", payload: false });
+      });
+  };
+
   const handleDeleteConfirmation = () => {
-    confirmAlert({
+    Swal.fire({
       title: "Confirm Deletion",
-      message: "Are you sure you want to delete this category group?",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: () => {
-            // Dispatch your delete action here
-            dispatch({ type: "set_category_modal", payload: false });
-            // Add additional dispatch for deletion if needed
-          },
-        },
-        {
-          label: "No",
-          onClick: () => {}, // Do nothing on cancel
-        },
-      ],
+      text: "Are you sure you want to delete this category group?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
+      } else {
+        dispatch({ type: "set_category_modal", payload: false });
+      }
     });
   };
 

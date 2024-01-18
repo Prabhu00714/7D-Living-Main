@@ -11,17 +11,20 @@ const answerSchema = new mongoose.Schema({
   results: [resultSchema],
 });
 
-const questionSchema = new mongoose.Schema({
-  questionnumber: Number,
-  questiontext: String,
-  answers: [answerSchema],
-  questionimage: String,
-});
+// const questionSchema = new mongoose.Schema({
+//   questionnumber: Number,
+//   questiontext: String,
+//   answers: [answerSchema],
+//   questionimage: String,
+// });
 
 const qnaSchema = new mongoose.Schema({
-  questions: [questionSchema],
+  questionnumber: Number,
+  questiontext: String,
+  questionimage: String,
+  answers: [answerSchema],
 });
 
-const QuestionAnswer = mongoose.model("QNA", qnaSchema);
+const Qna = mongoose.model("qna", qnaSchema);
 
-module.exports = QuestionAnswer;
+module.exports = Qna;

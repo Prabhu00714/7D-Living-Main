@@ -4,6 +4,7 @@ const QuestionAnswer = require("../models/QuestionAnswer");
 const CategoryGroup = require("../models/CategoryGroup");
 const Category = require("../models/Category");
 const SubCategory = require("../models/SubCategory");
+const QNA = require("../models/QNA");
 
 const router = express.Router();
 
@@ -166,6 +167,17 @@ router.get("/get/all/subcategory/:categoryId", async (req, res) => {
   }
 });
 
+router.get("/get/all/question", async (req, res) => {
+  try {
+    const result = await QNA.find({});
+
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 router.post("/post/new/categorygroup", async (req, res) => {
   try {
     const { header, description, image } = req.body;
@@ -276,7 +288,6 @@ router.get("/get/edit/:modelType/:itemId", async (req, res) => {
 router.post("/post/edit/:modelType/:itemId", async (req, res) => {
   try {
     const { modelType, itemId } = req.params;
-    console.log(modelType);
 
     let Model;
 
@@ -305,8 +316,6 @@ router.post("/post/edit/:modelType/:itemId", async (req, res) => {
       new: true,
     });
 
-    console.log("updated data", updatedItem);
-
     if (!updatedItem) {
       return res.status(404).json({ error: "Item not found" });
     }
@@ -314,6 +323,27 @@ router.post("/post/edit/:modelType/:itemId", async (req, res) => {
     res.status(200).json(updatedItem);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.delete("/delete/categorygroup/:categorygroupId", async (req, res) => {
+  try {
+    const categorygroupId = req.params.categorygroupId;
+    console.log(categorygroupId);
+
+    // Check if the category exists
+    // const existingCategory = await QuestionAnswer.findById(categoryId);
+    // if (!existingCategory) {
+    //   return res.status(404).json({ error: "Category not found" });
+    // }
+
+    // // Delete the category and its associated questions
+    // await existingCategory.deleteOne();
+
+    res.status(200).json({ message: "Category deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting category:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

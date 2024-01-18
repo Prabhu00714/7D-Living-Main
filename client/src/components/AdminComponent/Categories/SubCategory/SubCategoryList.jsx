@@ -58,7 +58,7 @@ const SubCategoryList = ({ state, dispatch }) => {
                   backgroundColor:
                     state.selectedSubCategoryItem &&
                     state.selectedSubCategoryItem._id === item._id
-                      ? "#e0e0e0"
+                      ? "#c0c0c0"
                       : "inherit",
                   "&:hover": {
                     backgroundColor: "#f0f0f0",

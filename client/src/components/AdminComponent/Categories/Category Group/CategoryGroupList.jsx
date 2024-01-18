@@ -46,13 +46,13 @@ const CategoryGroupList = ({ state, dispatch }) => {
                 backgroundColor:
                   state.selectedCategoryGroupItem &&
                   state.selectedCategoryGroupItem._id === item._id
-                    ? "#e0e0e0"
+                    ? "#c0c0c0"
                     : "inherit",
                 "&:hover": {
                   backgroundColor: "#f0f0f0",
                   cursor: "default",
                 },
-                userSelect: "none", // Prevent text selection
+                userSelect: "none",
               }}
             >
               <ListItemText primary={item.categoryGroupHeading} />
