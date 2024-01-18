@@ -16,7 +16,7 @@ const SubCategoryList = ({ state, dispatch }) => {
           );
           setItems(response.data);
         } else if (
-          state.selectedCategoryGroupItem &&
+          !state.selectedCategoryGroupItem &&
           !state.selectedCategoryItem
         ) {
           setItems("");

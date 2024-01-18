@@ -8,7 +8,7 @@ import AddNewCategory from "./AdminComponent/AddNewCategory";
 import UpdateCategory from "./AdminComponent/UpdateCategory";
 import "react-toastify/dist/ReactToastify.css";
 import Categories from "./AdminComponent/Categories/Categories";
-import Qna from "./AdminComponent/QA/QA";
+import QAeditor from "./AdminComponent/QA/QAeditor";
 import Users from "./AdminComponent/Users";
 
 const Admin = () => {
@@ -82,7 +82,7 @@ const Admin = () => {
       </div> */}
       <div>
         {newCategory && <Categories />}
-        {newQna && <Qna />}
+        {newQna && <QAeditor />}
         {newUsers && <Users />}
       </div>
     </motion.div>
