@@ -13,7 +13,7 @@ const AddQuestionsList = ({ state, dispatch, fileInputRef }) => {
     const newAnswerId = updatedQuestions[qIndex].answers.length + 1;
     updatedQuestions[qIndex].answers.push({
       answer: "",
-      answerImage: "",
+      answerimage: "",
       results: [{ result: "", value: "" }],
     });
     dispatch({ type: "set_questions", payload: updatedQuestions });
@@ -46,7 +46,7 @@ const AddQuestionsList = ({ state, dispatch, fileInputRef }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const updatedQuestions = [...state.questions];
-        updatedQuestions[qIndex].questionImage = reader.result;
+        updatedQuestions[qIndex].questionimage = reader.result;
         dispatch({ type: "set_questions", payload: updatedQuestions });
       };
       reader.readAsDataURL(file);
@@ -71,7 +71,7 @@ const AddQuestionsList = ({ state, dispatch, fileInputRef }) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const updatedQuestions = [...state.questions];
-        updatedQuestions[qIndex].answers[aIndex].answerImage = reader.result;
+        updatedQuestions[qIndex].answers[aIndex].answerimage = reader.result;
         dispatch({ type: "set_questions", payload: updatedQuestions });
       };
       reader.readAsDataURL(file);
@@ -139,6 +139,7 @@ const AddQuestionsList = ({ state, dispatch, fileInputRef }) => {
                 {/* Answer Image Upload Input */}
                 <Typography variant="subtitle1">Answer Image:</Typography>
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleAnswerImageUpload(qIndex, aIndex, e)}

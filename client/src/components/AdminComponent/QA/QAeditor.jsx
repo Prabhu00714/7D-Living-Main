@@ -48,11 +48,11 @@ const DemoPaper2 = styled(Paper)(({ theme, isMobile }) => ({
 
 const initialQuestion = {
   questiontext: "",
-  questionImage: "",
+  questionimage: "",
   answers: [
     {
       answer: "",
-      answerImage: "",
+      answerimage: "",
       results: [{ result: "", value: "" }],
     },
   ],
@@ -109,7 +109,23 @@ const QaEditor = () => {
   };
 
   const resetForm = () => {
-    dispatch({ type: "set_questions", payload: [initialQuestion] });
+    console.log("reset");
+    dispatch({
+      type: "set_questions",
+      payload: [
+        {
+          questiontext: "",
+          questionimage: "",
+          answers: [
+            {
+              answer: "",
+              answerimage: "",
+              results: [{ result: "", value: "" }],
+            },
+          ],
+        },
+      ],
+    });
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";

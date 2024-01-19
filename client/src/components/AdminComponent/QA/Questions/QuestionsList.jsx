@@ -10,7 +10,6 @@ const QuestionsList = ({ state, dispatch }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(state.selectedCategoryItem._id);
         if (state.selectedCategoryItem) {
           const response = await axios.get(
             `http://localhost:3001/api/qna/get/each/category/questions/${state.selectedCategoryItem._id}`

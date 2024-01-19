@@ -48,22 +48,22 @@ router.get("/fetch", async (req, res) => {
   }
 });
 
-router.get("/get/each/category/qna/:categoryId", async (req, res) => {
-  const categoryId = req.params.categoryId;
+// router.get("/get/each/category/qna/:categoryId", async (req, res) => {
+//   const categoryId = req.params.categoryId;
 
-  try {
-    const categoryData = await QuestionAnswer.findById(categoryId);
+//   try {
+//     const categoryData = await QuestionAnswer.findById(categoryId);
 
-    if (!categoryData) {
-      return res.status(404).json({ message: "Category not found" });
-    }
+//     if (!categoryData) {
+//       return res.status(404).json({ message: "Category not found" });
+//     }
 
-    res.json(categoryData);
-  } catch (error) {
-    console.error("Error fetching category data:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+//     res.json(categoryData);
+//   } catch (error) {
+//     console.error("Error fetching category data:", error);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// });
 
 router.post("/update/each/category/qna", async (req, res) => {
   try {
@@ -545,7 +545,7 @@ router.post("/post/each/category/qna/:categoryId", async (req, res) => {
     const jsonData = req.body;
 
     const savedData = await Promise.all(
-      jsonData.map(async ({ questiontext, questionImage, answers }) => {
+      jsonData.map(async ({ questiontext, questionimage, answers }) => {
         const existingQuestion = await QNA.findOne({ questiontext });
 
         if (existingQuestion) {
@@ -555,15 +555,17 @@ router.post("/post/each/category/qna/:categoryId", async (req, res) => {
           };
         }
 
-        // Create a new question
+        // Create a new question with questionimage
         const savedQuestion = await QNA.create({
           questiontext,
-          questionImage,
-          answers: answers.map(({ answer, answerImage, results }) => ({
-            answer,
-            answerImage,
-            results,
-          })),
+          questionimage,
+          answers: answers.map(({ answer, answerimage, results }) => {
+            return {
+              answer,
+              answerimage,
+              results,
+            };
+          }),
         });
 
         // Update or create category with the new questionId
@@ -587,6 +589,45 @@ router.post("/post/each/category/qna/:categoryId", async (req, res) => {
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/get/each/question/:questionId", async (req, res) => {
+  const questionId = req.params.questionId;
+
+  try {
+    const result = await QNA.findById(questionId);
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching category data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.post("/update/each/question/:questionId", async (req, res) => {
+  const questionId = req.params.questionId;
+  const updatedQuestionData = req.body;
+  console.log("questionId", questionId);
+  console.log("updatedQuestionData", updatedQuestionData);
+
+  try {
+    const result = await QNA.findByIdAndUpdate(
+      questionId,
+      { $set: updatedQuestionData },
+      {
+        new: true, // Return the modified document
+        runValidators: true, // Validate the update operation
+      }
+    );
+
+    if (!result) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error updating question:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

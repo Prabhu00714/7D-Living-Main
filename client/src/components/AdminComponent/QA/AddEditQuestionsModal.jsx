@@ -56,13 +56,14 @@ const AddEditQuestionsModal = ({
 
       const jsonData = state.questions.map((question) => ({
         questiontext: question.questiontext,
-        questionImage: question.questionImage,
+        questionimage: question.questionimage,
         answers: question.answers.map((answer) => ({
           answer: answer.answer,
-          answerImage: answer.answerImage,
+          answerimage: answer.answerimage,
           results: answer.results,
         })),
       }));
+      console.log("jsonData", jsonData);
 
       await axios.post(
         `http://localhost:3001/api/qna/post/each/category/qna/${state.selectedCategoryItem._id}`,
@@ -111,7 +112,7 @@ const AddEditQuestionsModal = ({
                 fileInputRef={fileInputRef}
               />
             ) : (
-              <UpdateQuestionList />
+              <UpdateQuestionList state={state} dispatch={dispatch} />
             )}
           </DialogContent>
         </PerfectScrollbar>

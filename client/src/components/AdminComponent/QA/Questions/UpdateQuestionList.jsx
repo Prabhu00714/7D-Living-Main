@@ -4,154 +4,129 @@ import { Box, Typography, Button, TextField } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ToastContainer, toast } from "react-toastify";
 
-const UpdateQuestionList = ({ categoryId, getCategory, setGetCategory }) => {
+const UpdateQuestionList = ({ state, dispatch }) => {
   const fileInputRef = useRef(null);
 
   const isMobile = useMediaQuery("(max-width: 600px)");
 
-  const [category, setCategory] = useState({
-    _id: "",
-    category: "",
-    questions: [
-      {
-        questionid: "",
-        questionnumber: 1,
-        questiontext: "",
-        answers: [
-          {
-            answerid: "",
-            answer: "",
-            results: [{ result: "", value: "" }],
-          },
-        ],
-        image: "",
-      },
-    ],
-  });
-
-  useEffect(() => {
-    if (categoryId) {
-      axios
-        .get(
-          `http://localhost:3001/api/qna/get/each/category/qna/${categoryId}`
-        )
-        .then((response) => {
-          setCategory(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching category:", error);
-        });
-    }
-  }, [categoryId, getCategory]);
-
-  const handleChange = (field, value, qIndex, aIndex, rIndex) => {
-    setCategory((prevCategory) => {
-      if (
-        qIndex === undefined &&
-        aIndex === undefined &&
-        rIndex === undefined
-      ) {
-        return { ...prevCategory, [field]: value };
-      } else if (aIndex === undefined && rIndex === undefined) {
-        const updatedQuestions = [...prevCategory.questions];
-        updatedQuestions[qIndex][field] = value;
-        return { ...prevCategory, questions: updatedQuestions };
-      } else if (rIndex === undefined) {
-        const updatedQuestions = [...prevCategory.questions];
-        updatedQuestions[qIndex].answers[aIndex][field] = value;
-        return { ...prevCategory, questions: updatedQuestions };
-      } else {
-        const updatedQuestions = [...prevCategory.questions];
-        updatedQuestions[qIndex].answers[aIndex].results[rIndex][field] = value;
-        return { ...prevCategory, questions: updatedQuestions };
-      }
-    });
-  };
-
-  const handleAddQuestion = () => {
-    setCategory((prevCategory) => ({
-      ...prevCategory,
-      questions: [
-        ...prevCategory.questions,
+  const [questions, setQuestions] = useState([
+    {
+      questiontext: "",
+      answers: [
         {
-          questionid: "",
-          questionnumber: prevCategory.questions.length + 1,
-          questiontext: "",
-          answers: [
-            {
-              answerid: "",
-              answer: "",
-              results: [{ result: "", value: "" }],
-            },
-          ],
-          image: "",
+          answer: "",
+          answerimage: "", // Add answerImage property
+          results: [{ result: "", value: "" }],
         },
       ],
-    }));
-  };
+      questionimage: "",
+    },
+  ]);
 
-  const handleDeleteQuestion = (qIndex) => {
-    setCategory((prevCategory) => {
-      const updatedQuestions = [...prevCategory.questions];
-      updatedQuestions.splice(qIndex, 1);
-      return {
-        ...prevCategory,
-        questions: updatedQuestions.map((question, index) => ({
-          ...question,
-          questionnumber: index + 1,
-        })),
-      };
+  useEffect(() => {
+    if (state.selectedQuestionItem) {
+      axios
+        .get(
+          `http://localhost:3001/api/qna/get/each/question/${state.selectedQuestionItem._id}`
+        )
+        .then((response) => {
+          const { answers, questiontext, _id } = response.data;
+
+          // Convert the nested results array within answers
+          const updatedAnswers = answers.map((answer) => ({
+            answer: answer.answer,
+            answerimage: answer.answerimage || "", // Add default value
+            results: answer.results.map((result) => ({
+              result: result.result,
+              value: result.value,
+            })),
+          }));
+
+          const updatedQuestions = [
+            {
+              questiontext,
+              answers: updatedAnswers,
+              questionimage: "", // Update with your actual questionimage property
+            },
+          ];
+
+          setQuestions(updatedQuestions);
+        })
+        .catch((error) => {
+          console.error("Error fetching questions:", error);
+        });
+    }
+  }, [state.selectedQuestionItem]);
+
+  const handleChange = (field, value, qIndex, aIndex, rIndex) => {
+    setQuestions((prevQuestions) => {
+      const updatedQuestions = [...prevQuestions];
+      if (aIndex === undefined && rIndex === undefined) {
+        updatedQuestions[qIndex][field] = value;
+      } else if (rIndex === undefined) {
+        updatedQuestions[qIndex].answers[aIndex][field] = value;
+      } else {
+        updatedQuestions[qIndex].answers[aIndex].results[rIndex][field] = value;
+      }
+      return updatedQuestions;
     });
   };
 
   const handleAddAnswer = (qIndex) => {
-    setCategory((prevCategory) => {
-      const updatedQuestions = [...prevCategory.questions];
+    setQuestions((prevQuestions) => {
+      const updatedQuestions = [...prevQuestions];
       updatedQuestions[qIndex].answers.push({
-        answerid: "",
         answer: "",
+        answerimage: "",
         results: [{ result: "", value: "" }],
       });
-      return { ...prevCategory, questions: updatedQuestions };
+      return updatedQuestions;
     });
   };
 
   const handleDeleteAnswer = (qIndex, aIndex) => {
-    setCategory((prevCategory) => {
-      const updatedQuestions = [...prevCategory.questions];
+    setQuestions((prevQuestions) => {
+      const updatedQuestions = [...prevQuestions];
       updatedQuestions[qIndex].answers.splice(aIndex, 1);
-      return { ...prevCategory, questions: updatedQuestions };
+      return updatedQuestions;
     });
   };
 
   const handleAddResult = (qIndex, aIndex) => {
-    setCategory((prevCategory) => {
-      const updatedQuestions = [...prevCategory.questions];
+    setQuestions((prevQuestions) => {
+      const updatedQuestions = [...prevQuestions];
       updatedQuestions[qIndex].answers[aIndex].results.push({
         result: "",
         value: "",
       });
-      return { ...prevCategory, questions: updatedQuestions };
+      return updatedQuestions;
     });
   };
 
   const handleDeleteResult = (qIndex, aIndex, rIndex) => {
-    setCategory((prevCategory) => {
-      const updatedQuestions = [...prevCategory.questions];
+    setQuestions((prevQuestions) => {
+      const updatedQuestions = [...prevQuestions];
       updatedQuestions[qIndex].answers[aIndex].results.splice(rIndex, 1);
-      return { ...prevCategory, questions: updatedQuestions };
+      return updatedQuestions;
     });
   };
 
-  const handleImageUpload = (qIndex, e) => {
+  const handleImageUpload = (qIndex, aIndex, e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setCategory((prevCategory) => {
-          const updatedQuestions = [...prevCategory.questions];
-          updatedQuestions[qIndex].image = reader.result;
-          return { ...prevCategory, questions: updatedQuestions };
+        setQuestions((prevQuestions) => {
+          const updatedQuestions = [...prevQuestions];
+          if (aIndex === undefined) {
+            // Question image
+            updatedQuestions[qIndex].questionimage = reader.result;
+          } else {
+            // Answer image
+            updatedQuestions[qIndex].answers[aIndex].answerimage =
+              reader.result;
+          }
+          return updatedQuestions;
         });
       };
       reader.readAsDataURL(file);
@@ -160,7 +135,7 @@ const UpdateQuestionList = ({ categoryId, getCategory, setGetCategory }) => {
 
   const handleUpdate = async () => {
     try {
-      const isInvalidData = category.questions.some(
+      const isInvalidData = questions.some(
         (question) =>
           !question.questiontext.trim() ||
           !question.answers.every(
@@ -178,23 +153,21 @@ const UpdateQuestionList = ({ categoryId, getCategory, setGetCategory }) => {
       }
 
       const jsonData = {
-        categoryId: category._id,
-        category: category.category,
-        questions: category.questions.map((question) => ({
-          questionid: question._id,
-          questionnumber: question.questionnumber,
+        questions: questions.map((question) => ({
           questiontext: question.questiontext,
           answers: question.answers.map((answer) => ({
-            answerid: answer._id,
             answer: answer.answer,
+            answerimage: answer.answerimage,
             results: answer.results,
           })),
-          image: question.image,
+          questionimage: question.questionimage,
         })),
       };
 
+      console.log("jsonData", jsonData);
+
       await axios.post(
-        "http://localhost:3001/api/qna/update/each/category/qna",
+        `http://localhost:3001/api/qna/update/each/question/${state.selectedQuestionItem._id}`,
         jsonData,
         {
           headers: {
@@ -214,50 +187,12 @@ const UpdateQuestionList = ({ categoryId, getCategory, setGetCategory }) => {
     }
   };
 
-  const handleDeleteCategory = async () => {
-    try {
-      await axios.delete(
-        `http://localhost:3001/api/qna/delete/each/category/qna/${categoryId}`
-      );
-      toast.success("Category deleted successfully!");
-      let i = getCategory;
-      setGetCategory(i + 1);
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      toast.error("Failed to delete category!");
-    }
-  };
-
   return (
     <div>
       <Box>
-        {/* Category Input */}
-        <Typography variant="h6">Category:</Typography>
-        <TextField
-          type="text"
-          value={category.category}
-          onChange={(e) => handleChange("category", e.target.value)}
-          size="small"
-          fullWidth
-          margin="dense"
-        />
-
         {/* Question Section */}
-        {category.questions.map((question, qIndex) => (
+        {questions.map((question, qIndex) => (
           <div key={qIndex}>
-            {/* Question ID Input */}
-            <Typography variant="subtitle1">Question ID:</Typography>
-            <TextField
-              type="number"
-              value={question.questionnumber}
-              onChange={(e) =>
-                handleChange("questionnumber", e.target.value, qIndex)
-              }
-              size="small"
-              fullWidth
-              margin="dense"
-            />
-
             {/* Question Text Input */}
             <Typography variant="subtitle1">Question Text:</Typography>
             <TextField
@@ -269,24 +204,6 @@ const UpdateQuestionList = ({ categoryId, getCategory, setGetCategory }) => {
               size="small"
               fullWidth
               margin="dense"
-            />
-
-            {/* Delete Question Button */}
-            <Button
-              variant="outlined"
-              onClick={() => handleDeleteQuestion(qIndex)}
-              sx={{ mt: 1, mb: 2 }}
-            >
-              Delete Question
-            </Button>
-
-            {/* Image Upload Input */}
-            <Typography variant="subtitle1">Image:</Typography>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleImageUpload(qIndex, e)}
             />
 
             {/* Add Answer Button */}
@@ -312,6 +229,14 @@ const UpdateQuestionList = ({ categoryId, getCategory, setGetCategory }) => {
                   size="small"
                   fullWidth
                   margin="dense"
+                />
+
+                {/* Image Upload Input for Answer */}
+                <Typography variant="subtitle1">Answer Image:</Typography>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(qIndex, aIndex, e)}
                 />
 
                 {/* Delete Answer Button */}
@@ -385,28 +310,19 @@ const UpdateQuestionList = ({ categoryId, getCategory, setGetCategory }) => {
                 ))}
               </div>
             ))}
+
+            {/* Image Upload Input for Question */}
+            <Typography variant="subtitle1">Question Image:</Typography>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(qIndex, undefined, e)}
+            />
           </div>
         ))}
 
         <Box>
-          {/* Add Question Button */}
-          <Button
-            variant="outlined"
-            onClick={handleAddQuestion}
-            sx={{ mt: 1, mb: 2, display: "block" }}
-          >
-            Add Question
-          </Button>
-
-          {/* Delete Category Button */}
-          <Button
-            variant="outlined"
-            onClick={handleDeleteCategory}
-            sx={{ mt: 1, mb: 2, display: "block" }}
-          >
-            Delete Category
-          </Button>
-
           {/* Update Button */}
           <Button
             onClick={handleUpdate}
