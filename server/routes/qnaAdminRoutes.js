@@ -631,4 +631,48 @@ router.post("/update/each/question/:questionId", async (req, res) => {
   }
 });
 
+router.delete(
+  "/delete/category/question/:categoryId/:questionId",
+  async (req, res) => {
+    try {
+      const { categoryId, questionId } = req.params;
+
+      await Category.updateOne(
+        { _id: categoryId },
+        { $pull: { categories: { questionId: questionId } } }
+      );
+
+      // Assuming you have a Qna model and want to delete a specific question by ID
+      await QNA.findByIdAndDelete(questionId);
+
+      res.status(200).json({ message: "Question Deleted Successfully" });
+    } catch (error) {
+      console.error("Error deleting question", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
+router.delete(
+  "/delete/categoryonly/question/:categoryId/:questionId",
+  async (req, res) => {
+    try {
+      const { categoryId, questionId } = req.params;
+
+      // Assuming you have a Category model and want to remove a specific question ID from a category
+      await Category.updateOne(
+        { _id: categoryId },
+        { $pull: { categories: { questionId: questionId } } }
+      );
+
+      res
+        .status(200)
+        .json({ message: "Question ID Removed from Category Successfully" });
+    } catch (error) {
+      console.error("Error removing question ID from category", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
 module.exports = router;

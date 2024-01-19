@@ -10,14 +10,9 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 function Questions({ state, dispatch, isMobile, onAddItem }) {
-  const handleDelete = () => {
-    const categoryId = state.selectedCategoryItem._id;
-    const questionId = state.selectedQuestionItem._id;
-
+  const handleDelete = (API) => {
     axios
-      .delete(
-        `http://localhost:3001/api/qna/delete/category/question/${categoryId}/${questionId}`
-      )
+      .delete(API)
       .then((response) => {
         if (response.status === 200) {
           toast.success(`Question Deleted Successfully`);
@@ -31,6 +26,16 @@ function Questions({ state, dispatch, isMobile, onAddItem }) {
   };
 
   const handleDeleteConfirmation = () => {
+    const checkboxHtml = `
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div style="display: flex; flex-direction: column; align-items: start;">
+        <label style="margin-bottom: 5px;">
+          <input type="checkbox" id="checkbox" name="checkbox" value="value"> Delete Category and Question
+        </label>
+      </div>
+    </div>
+  `;
+
     Swal.fire({
       title: "Confirm Deletion",
       text: "Are you sure you want to delete this question?",
@@ -39,10 +44,27 @@ function Questions({ state, dispatch, isMobile, onAddItem }) {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Confirm",
+      html: checkboxHtml,
     }).then((result) => {
       if (result.isConfirmed) {
-        handleDelete();
+        const checkboxValue = document.getElementById("checkbox").checked;
+
+        let API;
+        const categoryId = state.selectedCategoryItem._id;
+        const questionId = state.selectedQuestionItem._id;
+
+        if (checkboxValue) {
+          API = `http://localhost:3001/api/qna/delete/category/question/${categoryId}/${questionId}`; // Replace with your actual value
+          console.log("Checkbox selected");
+          console.log("Variable:", API);
+        } else {
+          API = `http://localhost:3001/api/qna/delete/categoryonly/question/${categoryId}/${questionId}`; // Replace with your actual value
+          console.log("Checkbox not selected");
+        }
+
+        handleDelete(API);
       } else {
+        // Handle cancellation
         // example codes to clear up
       }
     });
