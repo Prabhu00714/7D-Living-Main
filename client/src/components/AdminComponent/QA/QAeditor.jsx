@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import CategoryList from "./Category/CategoryList";
-import AddQuestionsList from "./Questions/AddQuestionsList";
 import Questions from "./Questions/Questions";
 import AddEditQuestionsModal from "./AddEditQuestionsModal";
 import QuestionsList from "./Questions/QuestionsList";
@@ -31,7 +30,7 @@ const DemoPaper1 = styled(Paper)(({ theme }) => ({
 }));
 
 const DemoPaper2 = styled(Paper)(({ theme, isMobile }) => ({
-  width: isMobile ? 300 : 700, // Set width to 100% on mobile
+  width: isMobile ? 300 : 700,
   height: 340,
   padding: theme.spacing(2),
   ...theme.typography.body2,
@@ -48,48 +47,24 @@ const DemoPaper2 = styled(Paper)(({ theme, isMobile }) => ({
 }));
 
 const initialState = {
-  categoryModal: false,
-  categoryAction: "add",
-  selectedCategoryGroupItem: null,
-  selectedCategoryItem: null,
-  selectedSubCategoryItem: null,
   questionModal: false,
+  questionAction: "add",
+  selectedCategoryItem: null,
   selectedQuestionItem: null,
-  modelType: null,
-  modelName: null,
-  categoryGroupRefreshFlag: false,
-  categoryRefreshFlag: false,
-  subCategoryRefreshFlag: false,
   questionsRefreshFlag: false,
   questions: [],
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "set_category_modal":
-      return { ...state, categoryModal: action.payload };
-    case "set_category_action":
-      return { ...state, categoryAction: action.payload };
-    case "set_selected_categorygroup_item":
-      return { ...state, selectedCategoryGroupItem: action.payload };
-    case "set_selected_category_item":
-      return { ...state, selectedCategoryItem: action.payload };
-    case "set_selected_subcategory_item":
-      return { ...state, selectedSubCategoryItem: action.payload };
     case "set_question_modal":
       return { ...state, questionModal: action.payload };
+    case "set_question_action":
+      return { ...state, questionAction: action.payload };
+    case "set_selected_category_item":
+      return { ...state, selectedCategoryItem: action.payload };
     case "set_selected_question_item":
       return { ...state, selectedQuestionItem: action.payload };
-    case "set_model_type":
-      return { ...state, modelType: action.payload };
-    case "set_model_name":
-      return { ...state, modelName: action.payload };
-    case "set_categorygroup_refresh_flag":
-      return { ...state, categoryGroupRefreshFlag: action.payload };
-    case "set_category_refresh_flag":
-      return { ...state, categoryRefreshFlag: action.payload };
-    case "set_subCategory_refresh_flag":
-      return { ...state, subCategoryRefreshFlag: action.payload };
     case "set_questions_refresh_flag":
       return { ...state, questionsRefreshFlag: action.payload };
     case "set_questions":

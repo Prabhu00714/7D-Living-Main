@@ -13,6 +13,8 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddQuestionsList from "./Questions/AddQuestionsList";
+import UpdateQuestionList from "./Questions/UpdateQuestionList";
 
 const AddEditQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
   const [formData, setFormData] = useState({
@@ -22,7 +24,7 @@ const AddEditQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
   });
 
   const handleClose = () => {
-    dispatch({ type: "set_category_modal", payload: false });
+    dispatch({ type: "set_question_modal", payload: false });
   };
 
   const handleAdd = async () => {
@@ -215,9 +217,9 @@ const AddEditQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
       >
         {/* Header */}
         <DialogTitle>
-          {state.categoryAction === "add"
-            ? `Add New ${state.modelName}`
-            : "Edit Item"}
+          {state.questionAction === "add"
+            ? `Add New Question`
+            : "Edit Question"}
         </DialogTitle>
 
         {/* Divider above Body */}
@@ -225,42 +227,11 @@ const AddEditQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
         {/* Body */}
         <DialogContent>
-          {/* Text Fields for Header and Description */}
-          <TextField
-            autoFocus
-            margin="dense"
-            id="header"
-            label="Header"
-            type="text"
-            fullWidth
-            value={formData.header}
-            onChange={(e) =>
-              setFormData({ ...formData, header: e.target.value })
-            }
-          />
-          <TextField
-            multiline
-            rows={4}
-            margin="dense"
-            id="description"
-            label="Description"
-            type="text"
-            fullWidth
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            sx={{ mt: 2, mb: 2 }}
-          />
-
-          {/* File Input */}
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            style={{ margin: "auto", display: "block" }}
-            onChange={handleImageChange}
-          />
+          {state.questionAction === "add" ? (
+            <AddQuestionsList />
+          ) : (
+            <UpdateQuestionList />
+          )}
         </DialogContent>
         <Divider />
 
@@ -268,16 +239,16 @@ const AddEditQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={state.categoryAction === "add" ? handleAdd : handleEdit}
+            onClick={state.questionAction === "add" ? handleAdd : handleEdit}
             startIcon={
-              state.categoryAction === "add" ? (
+              state.questionAction === "add" ? (
                 <SaveIcon />
               ) : (
                 <BorderColorIcon />
               )
             }
           >
-            {state.categoryAction === "add" ? "Add" : "Edit"}
+            {state.questionAction === "add" ? "Add" : "Edit"}
           </Button>
           <Button
             variant="outlined"

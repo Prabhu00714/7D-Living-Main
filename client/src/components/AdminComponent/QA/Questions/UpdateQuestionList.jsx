@@ -4,17 +4,10 @@ import { Box, Typography, Button, TextField } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ToastContainer, toast } from "react-toastify";
 
-const UpdateCategory = ({ categoryId, getCategory, setGetCategory }) => {
+const UpdateQuestionList = ({ categoryId, getCategory, setGetCategory }) => {
   const fileInputRef = useRef(null);
 
   const isMobile = useMediaQuery("(max-width: 600px)");
-
-  const containerStyle = {
-    marginLeft: isMobile ? 0 : 400,
-    transition: "margin 0.5s",
-    position: "absolute",
-    top: 80,
-  };
 
   const [category, setCategory] = useState({
     _id: "",
@@ -236,7 +229,7 @@ const UpdateCategory = ({ categoryId, getCategory, setGetCategory }) => {
   };
 
   return (
-    <div style={containerStyle}>
+    <div>
       <Box>
         {/* Category Input */}
         <Typography variant="h6">Category:</Typography>
@@ -441,4 +434,4 @@ const UpdateCategory = ({ categoryId, getCategory, setGetCategory }) => {
   );
 };
 
-export default UpdateCategory;
+export default UpdateQuestionList;

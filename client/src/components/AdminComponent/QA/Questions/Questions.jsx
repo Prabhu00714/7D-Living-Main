@@ -11,12 +11,12 @@ import axios from "axios";
 
 function Questions({ state, dispatch, isMobile, onAddItem }) {
   const handleDelete = () => {
-    const subCategoryId = state.selectedSubCategoryItem._id;
+    const categoryId = state.selectedCategoryItem._id;
     const questionId = state.selectedQuestionItem._id;
 
     axios
       .delete(
-        `http://localhost:3001/api/qna/delete/category/question/${questionId}`
+        `http://localhost:3001/api/qna/delete/category/question/${categoryId}/${questionId}`
       )
       .then((response) => {
         if (response.status === 200) {
@@ -57,6 +57,10 @@ function Questions({ state, dispatch, isMobile, onAddItem }) {
             aria-label="add"
             onClick={() => {
               dispatch({ type: "set_question_modal", payload: true });
+              dispatch({
+                type: "set_question_action",
+                payload: "add",
+              });
             }}
             sx={{ color: "black" }}
             size="large"
@@ -70,6 +74,10 @@ function Questions({ state, dispatch, isMobile, onAddItem }) {
             aria-label="add"
             onClick={() => {
               dispatch({ type: "set_question_modal", payload: true });
+              dispatch({
+                type: "set_question_action",
+                payload: "edit",
+              });
             }}
             sx={{ color: "black" }}
             size="large"
