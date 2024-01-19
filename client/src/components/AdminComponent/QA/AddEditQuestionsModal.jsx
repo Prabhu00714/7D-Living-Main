@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -25,14 +25,22 @@ const AddEditQuestionsModal = ({
   fileInputRef,
   resetForm,
 }) => {
+  const [questions, setQuestions] = useState([
+    {
+      questiontext: "",
+      answers: [
+        {
+          answer: "",
+          answerimage: "", // Add answerImage property
+          results: [{ result: "", value: "" }],
+        },
+      ],
+      questionimage: "",
+    },
+  ]);
   const handleClose = (event, reason) => {
     if (reason && reason === "backdropClick") return;
     dispatch({ type: "set_question_modal", payload: false });
-  };
-
-  const handleEdit = async () => {
-    handleClose();
-    // edit function
   };
 
   const handleAdd = async () => {
@@ -85,6 +93,60 @@ const AddEditQuestionsModal = ({
     resetForm();
   };
 
+  const handleEdit = async () => {
+    try {
+      const isInvalidData = questions.some(
+        (question) =>
+          !question.questiontext.trim() ||
+          !question.answers.every(
+            (answer) =>
+              !!answer.answer.trim() &&
+              answer.results.every(
+                (result) => !!result.result.trim() && !!result.value.trim()
+              )
+          )
+      );
+
+      if (isInvalidData) {
+        toast.error("Please fill in all fields.");
+        return;
+      }
+
+      const jsonData = {
+        questiontext: questions[0].questiontext,
+        questionimage: questions[0].questionimage,
+        answers: questions[0].answers.map((answer) => ({
+          answer: answer.answer,
+          answerimage: answer.answerimage,
+          results: answer.results,
+        })),
+      };
+
+      console.log("jsonData", jsonData);
+
+      await axios.post(
+        `http://localhost:3001/api/qna/update/each/question/${state.selectedQuestionItem._id}`,
+        jsonData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast.success("Data updated successfully!");
+      onAddItem("questions");
+      dispatch({ type: "set_question_modal", payload: false });
+    } catch (error) {
+      console.error("Error sending data to the backend:", error);
+      toast.error("Failed to update data!");
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   return (
     <>
       <Dialog
@@ -112,7 +174,11 @@ const AddEditQuestionsModal = ({
                 fileInputRef={fileInputRef}
               />
             ) : (
-              <UpdateQuestionList state={state} dispatch={dispatch} />
+              <UpdateQuestionList
+                state={state}
+                questions={questions}
+                setQuestions={setQuestions}
+              />
             )}
           </DialogContent>
         </PerfectScrollbar>

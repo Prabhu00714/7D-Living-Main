@@ -4,24 +4,10 @@ import { Box, Typography, Button, TextField } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ToastContainer, toast } from "react-toastify";
 
-const UpdateQuestionList = ({ state, dispatch }) => {
+const UpdateQuestionList = ({ state, questions, setQuestions }) => {
   const fileInputRef = useRef(null);
 
   const isMobile = useMediaQuery("(max-width: 600px)");
-
-  const [questions, setQuestions] = useState([
-    {
-      questiontext: "",
-      answers: [
-        {
-          answer: "",
-          answerimage: "", // Add answerImage property
-          results: [{ result: "", value: "" }],
-        },
-      ],
-      questionimage: "",
-    },
-  ]);
 
   useEffect(() => {
     if (state.selectedQuestionItem) {
@@ -130,58 +116,6 @@ const UpdateQuestionList = ({ state, dispatch }) => {
         });
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const handleUpdate = async () => {
-    try {
-      const isInvalidData = questions.some(
-        (question) =>
-          !question.questiontext.trim() ||
-          !question.answers.every(
-            (answer) =>
-              !!answer.answer.trim() &&
-              answer.results.every(
-                (result) => !!result.result.trim() && !!result.value.trim()
-              )
-          )
-      );
-
-      if (isInvalidData) {
-        toast.error("Please fill in all fields.");
-        return;
-      }
-
-      const jsonData = {
-        questiontext: questions[0].questiontext,
-        questionimage: questions[0].questionimage,
-        answers: questions[0].answers.map((answer) => ({
-          answer: answer.answer,
-          answerimage: answer.answerimage,
-          results: answer.results,
-        })),
-      };
-
-      console.log("jsonData", jsonData);
-
-      await axios.post(
-        `http://localhost:3001/api/qna/update/each/question/${state.selectedQuestionItem._id}`,
-        jsonData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      toast.success("Data updated successfully!");
-    } catch (error) {
-      console.error("Error sending data to the backend:", error);
-      toast.error("Failed to update data!");
-    }
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
     }
   };
 
@@ -319,19 +253,6 @@ const UpdateQuestionList = ({ state, dispatch }) => {
             />
           </div>
         ))}
-
-        <Box>
-          {/* Update Button */}
-          <Button
-            onClick={handleUpdate}
-            variant="contained"
-            color="primary"
-            sx={{ mt: 1, mb: 2 }}
-          >
-            Update
-          </Button>
-        </Box>
-
         <ToastContainer
           position={isMobile ? "top-center" : "top-right"}
           autoClose={5000}
