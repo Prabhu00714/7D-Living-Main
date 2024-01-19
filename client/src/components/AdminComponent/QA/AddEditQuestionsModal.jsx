@@ -1,219 +1,95 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Divider from "@mui/material/Divider";
 import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import axios from "axios";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddQuestionsList from "./Questions/AddQuestionsList";
 import UpdateQuestionList from "./Questions/UpdateQuestionList";
 
-const AddEditQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
-  const [formData, setFormData] = useState({
-    header: "",
-    description: "",
-    image: null,
-  });
-
-  const handleClose = () => {
+const AddEditQuestionsModal = ({
+  state,
+  dispatch,
+  onAddItem,
+  isMobile,
+  fileInputRef,
+  resetForm,
+}) => {
+  const handleClose = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
     dispatch({ type: "set_question_modal", payload: false });
+  };
+
+  const handleEdit = async () => {
+    handleClose();
+    // edit function
   };
 
   const handleAdd = async () => {
     try {
-      if (!formData.header || !formData.description) {
-        toast.error("Both header and description are required");
-        return;
-      }
-
-      let apiEndpoint;
-
-      switch (state.modelType) {
-        case "categoryGroup":
-          apiEndpoint = "http://localhost:3001/api/qna/post/new/categorygroup";
-          break;
-        case "category":
-          apiEndpoint = `http://localhost:3001/api/qna/post/new/category/${state.selectedCategoryGroupItem._id}`;
-          break;
-        case "subCategory":
-          apiEndpoint = `http://localhost:3001/api/qna/post/new/subcategory/${state.selectedCategoryItem._id}`;
-          break;
-        default:
-          throw new Error("Invalid category action");
-      }
-
-      const requestData = {
-        header: formData.header,
-        description: formData.description,
-        image: formData.image,
-        categoryId:
-          state.modelType === "category" ? state.selectedItemId : undefined,
-        subCategoryId:
-          state.modelType === "subCategory" ? state.selectedItemId : undefined,
-      };
-
-      const response = await axios.post(apiEndpoint, requestData);
-
-      if (response.status === 200) {
-        toast.success(`${state.modelName} Added Successfully`);
-        setFormData({ header: "", description: "", image: null });
-      } else {
-        toast.error("Please fill all fields!!!");
-      }
-      onAddItem(state.modelType);
-      handleClose();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const handleEdit = async () => {
-    try {
-      if (!formData.header || !formData.description) {
-        toast.error("Both header and description are required");
-        return;
-      }
-
-      let selectedItemId;
-
-      switch (state.modelType) {
-        case "categoryGroup":
-          selectedItemId = state.selectedCategoryGroupItem._id;
-          break;
-        case "category":
-          selectedItemId = state.selectedCategoryItem._id;
-          break;
-        case "subCategory":
-          selectedItemId = state.selectedSubCategoryItem._id;
-          break;
-        default:
-          break;
-      }
-
-      const requestData = {
-        header: formData.header,
-        description: formData.description,
-        image: formData.image,
-      };
-      // const cacheBuster = new Date().getTime();
-      // `http://localhost:3001/api/qna/post/edit/${state.modelType}/${selectedItemId}?_=${cacheBuster}`,
-
-      const response = await axios.post(
-        `http://localhost:3001/api/qna/post/edit/${state.modelType}/${selectedItemId}`,
-        requestData
+      const isInvalidData = state.questions.some(
+        (question) =>
+          !question.questiontext.trim() ||
+          !question.answers.every(
+            (answer) =>
+              !!answer.answer.trim() &&
+              answer.results.every(
+                (result) => !!result.result.trim() && !!result.value.trim()
+              )
+          )
       );
 
-      if (response.status === 200) {
-        toast.success(`${state.modelName} Edited Successfully`);
-      } else {
-        toast.error("Failed to edit. Please fill all fields!!!");
+      if (isInvalidData) {
+        toast.error("Please fill in all fields.");
+        return;
       }
 
-      onAddItem(state.modelType);
-      handleClose();
+      const jsonData = state.questions.map((question) => ({
+        questiontext: question.questiontext,
+        questionImage: question.questionImage,
+        answers: question.answers.map((answer) => ({
+          answer: answer.answer,
+          answerImage: answer.answerImage,
+          results: answer.results,
+        })),
+      }));
+
+      await axios.post(
+        `http://localhost:3001/api/qna/post/each/category/qna/${state.selectedCategoryItem._id}`,
+        jsonData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      dispatch({ type: "set_question_modal", payload: false });
+      onAddItem("questions");
+      toast.success("Data added successfully!");
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error sending data to the backend:", error);
+      toast.error("Failed to add data!");
     }
-  };
-
-  const getModelData = () => {
-    switch (state.modelType) {
-      case "categoryGroup":
-        return {
-          headingKey: "categoryGroupHeading",
-          descriptionKey: "categoryGroupDescription",
-          imageKey: "categoryGroupImage",
-        };
-      case "category":
-        return {
-          headingKey: "categoryHeading",
-          descriptionKey: "categoryDescription",
-          imageKey: "categoryImage",
-        };
-      case "subCategory":
-        return {
-          headingKey: "subCategoryHeading",
-          descriptionKey: "subCategoryDescription",
-          imageKey: "subCategoryImage",
-        };
-      default:
-        return {};
-    }
-  };
-
-  const { headingKey, descriptionKey } = getModelData();
-
-  useEffect(() => {
-    if (state.categoryAction === "add" && state.modelType) {
-      setFormData({
-        header: "",
-        description: "",
-        image: null,
-      });
-    } else if (state.categoryAction === "edit" && state.modelType) {
-      let selectedItemId;
-
-      switch (state.modelType) {
-        case "categoryGroup":
-          selectedItemId = state.selectedCategoryGroupItem._id;
-          break;
-        case "category":
-          selectedItemId = state.selectedCategoryItem._id;
-          break;
-        case "subCategory":
-          selectedItemId = state.selectedSubCategoryItem._id;
-          break;
-        default:
-          break;
-      }
-
-      console.log("id", selectedItemId);
-
-      if (selectedItemId) {
-        axios
-          .get(
-            `http://localhost:3001/api/qna/get/edit/${state.modelType}/${selectedItemId}`
-          )
-          .then((response) => {
-            const data = response.data;
-            console.log("edit data", data);
-            setFormData({
-              header: data[headingKey] || "",
-              description: data[descriptionKey] || "",
-              image: data.image || null,
-            });
-          })
-          .catch((error) => console.error("Error fetching data:", error));
-      }
-    }
-  }, [state.categoryAction, state.modelType]);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setFormData({ ...formData, image: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
+    resetForm();
   };
 
   return (
     <>
       <Dialog
-        open={state.questionModal}
         onClose={handleClose}
-        fullWidth
-        maxWidth="xs"
+        aria-labelledby="simple-dialog-title"
+        open={state.questionModal}
       >
         {/* Header */}
         <DialogTitle>
@@ -226,13 +102,20 @@ const AddEditQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
         <Divider />
 
         {/* Body */}
-        <DialogContent>
-          {state.questionAction === "add" ? (
-            <AddQuestionsList />
-          ) : (
-            <UpdateQuestionList />
-          )}
-        </DialogContent>
+        <PerfectScrollbar>
+          <DialogContent>
+            {state.questionAction === "add" ? (
+              <AddQuestionsList
+                state={state}
+                dispatch={dispatch}
+                fileInputRef={fileInputRef}
+              />
+            ) : (
+              <UpdateQuestionList />
+            )}
+          </DialogContent>
+        </PerfectScrollbar>
+
         <Divider />
 
         <DialogActions>

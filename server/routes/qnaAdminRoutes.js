@@ -9,33 +9,33 @@ const QNA = require("../models/QNA");
 
 const router = express.Router();
 
-router.post("/post/each/category/qna", async (req, res) => {
-  try {
-    const jsonData = req.body;
+// router.post("/post/each/category/qna", async (req, res) => {
+//   try {
+//     const jsonData = req.body;
 
-    const categories = jsonData.map(({ category, questions }) => ({
-      category,
-      questions: questions.map(
-        ({ questionnumber, questiontext, answers, image }) => ({
-          questionnumber,
-          questiontext,
-          answers: answers.map(({ answer, results }) => ({
-            answer,
-            results,
-          })),
-          image,
-        })
-      ),
-    }));
+//     const categories = jsonData.map(({ category, questions }) => ({
+//       category,
+//       questions: questions.map(
+//         ({ questionnumber, questiontext, answers, image }) => ({
+//           questionnumber,
+//           questiontext,
+//           answers: answers.map(({ answer, results }) => ({
+//             answer,
+//             results,
+//           })),
+//           image,
+//         })
+//       ),
+//     }));
 
-    const savedData = await QuestionAnswer.create(categories);
+//     const savedData = await QuestionAnswer.create(categories);
 
-    res.json(savedData);
-  } catch (error) {
-    console.error("Error:", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//     res.json(savedData);
+//   } catch (error) {
+//     console.error("Error:", error.message);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
 router.get("/fetch", async (req, res) => {
   try {
@@ -515,13 +515,77 @@ router.get("/get/all/category", async (req, res) => {
   }
 });
 
-router.get("/get/each/category/questions", async (req, res) => {
+router.get("/get/each/category/questions/:categoryId", async (req, res) => {
   try {
-    const result = await QNA.find({});
+    const { categoryId } = req.params;
 
-    res.json(result);
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      return res.status(404).json({ error: "category not found" });
+    }
+
+    const questionIds = category.categories.map(
+      (categoryItem) => categoryItem.questionId
+    );
+
+    const questions = await QNA.find({
+      _id: { $in: questionIds },
+    });
+
+    res.json(questions);
   } catch (error) {
-    console.error("Error fetching data:", error.message);
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/post/each/category/qna/:categoryId", async (req, res) => {
+  try {
+    const jsonData = req.body;
+
+    const savedData = await Promise.all(
+      jsonData.map(async ({ questiontext, questionImage, answers }) => {
+        const existingQuestion = await QNA.findOne({ questiontext });
+
+        if (existingQuestion) {
+          // If questiontext already exists, return an error response
+          return {
+            error: `Question with text '${questiontext}' already exists.`,
+          };
+        }
+
+        // Create a new question
+        const savedQuestion = await QNA.create({
+          questiontext,
+          questionImage,
+          answers: answers.map(({ answer, answerImage, results }) => ({
+            answer,
+            answerImage,
+            results,
+          })),
+        });
+
+        // Update or create category with the new questionId
+        const category = await Category.findByIdAndUpdate(
+          req.params.categoryId,
+          {
+            $push: {
+              categories: {
+                questionId: savedQuestion._id,
+              },
+            },
+          },
+          { new: true, upsert: true }
+        );
+
+        return savedQuestion;
+      })
+    );
+
+    res.json(savedData);
+  } catch (error) {
+    console.error("Error:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

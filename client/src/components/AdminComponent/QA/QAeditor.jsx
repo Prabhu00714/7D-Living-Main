@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useReducer } from "react";
+import React, { useReducer, useRef } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -46,13 +46,25 @@ const DemoPaper2 = styled(Paper)(({ theme, isMobile }) => ({
   },
 }));
 
+const initialQuestion = {
+  questiontext: "",
+  questionImage: "",
+  answers: [
+    {
+      answer: "",
+      answerImage: "",
+      results: [{ result: "", value: "" }],
+    },
+  ],
+};
+
 const initialState = {
   questionModal: false,
   questionAction: "add",
   selectedCategoryItem: null,
   selectedQuestionItem: null,
   questionsRefreshFlag: false,
-  questions: [],
+  questions: [initialQuestion],
 };
 
 const reducer = (state, action) => {
@@ -76,38 +88,17 @@ const reducer = (state, action) => {
 
 const QaEditor = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
+  const fileInputRef = useRef(null); // Create a ref for questionImage input
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleAddItem = (data) => {
-    console.log("refresh", data);
-    switch (data) {
-      case "categoryGroup":
-        dispatch({
-          type: "set_categorygroup_refresh_flag",
-          payload: !state.categoryGroupRefreshFlag,
-        });
-        break;
-      case "category":
-        dispatch({
-          type: "set_category_refresh_flag",
-          payload: !state.categoryRefreshFlag,
-        });
-        break;
-      case "subCategory":
-        dispatch({
-          type: "set_subCategory_refresh_flag",
-          payload: !state.subCategoryRefreshFlag,
-        });
-        break;
-      case "questions":
-        dispatch({
-          type: "set_questions_refresh_flag",
-          payload: !state.questionsRefreshFlag,
-        });
-        break;
-      default:
-        throw new Error("Invalid category action");
+    if (data === "questions") {
+      dispatch({
+        type: "set_questions_refresh_flag",
+        payload: !state.questionsRefreshFlag,
+      });
     }
+    console.log("refresh", data);
   };
 
   const containerStyle = {
@@ -115,6 +106,14 @@ const QaEditor = () => {
     transition: "margin 0.5s",
     display: "flex",
     marginTop: 75,
+  };
+
+  const resetForm = () => {
+    dispatch({ type: "set_questions", payload: [initialQuestion] });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -150,6 +149,8 @@ const QaEditor = () => {
         dispatch={dispatch}
         onAddItem={handleAddItem}
         isMobile={isMobile}
+        fileInputRef={fileInputRef}
+        resetForm={resetForm}
       />
     </div>
   );

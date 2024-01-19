@@ -10,16 +10,19 @@ const QuestionsList = ({ state, dispatch }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3001/api/qna/get/each/category/questions`
-        );
-        setItems(response.data);
+        console.log(state.selectedCategoryItem._id);
+        if (state.selectedCategoryItem) {
+          const response = await axios.get(
+            `http://localhost:3001/api/qna/get/each/category/questions/${state.selectedCategoryItem._id}`
+          );
+          setItems(response.data);
+        }
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
     fetchData();
-  }, [state.questionsRefreshFlag, dispatch]);
+  }, [state.questionsRefreshFlag, state.selectedCategoryItem, dispatch]);
 
   useEffect(() => {
     dispatch({
