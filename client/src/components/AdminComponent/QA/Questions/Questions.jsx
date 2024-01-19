@@ -28,6 +28,9 @@ function Questions({ state, dispatch, isMobile, onAddItem }) {
   const handleDeleteConfirmation = () => {
     const checkboxHtml = `
     <div style="display: flex; flex-direction: column; align-items: center;">
+    <label style="margin-bottom: 5px;">
+      Are you sure you want to delete this question?"
+       </label>
       <div style="display: flex; flex-direction: column; align-items: start;">
         <label style="margin-bottom: 5px;">
           <input type="checkbox" id="checkbox" name="checkbox" value="value"> Delete Category and Question
