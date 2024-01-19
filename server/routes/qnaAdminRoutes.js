@@ -504,4 +504,26 @@ router.delete("/delete/categorygroup/:categorygroupId", async (req, res) => {
   }
 });
 
+router.get("/get/all/category", async (req, res) => {
+  try {
+    const result = await Category.find({});
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/get/each/category/questions", async (req, res) => {
+  try {
+    const result = await QNA.find({});
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = router;

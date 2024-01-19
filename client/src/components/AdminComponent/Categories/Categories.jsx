@@ -195,7 +195,7 @@ const Categories = () => {
           onAddItem={handleAddItem}
         />
       </Stack>
-      {isMobile && <>&nbsp;&nbsp;&nbsp;</>}
+      {isMobile && <>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</>}
       <AddEditCategoryModal
         state={state}
         dispatch={dispatch}

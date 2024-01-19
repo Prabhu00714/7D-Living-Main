@@ -4,11 +4,9 @@ import { motion } from "framer-motion";
 import TopBar from "./HomeComponent/TopBar";
 import SideBar from "./AdminComponent/SideBar";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import AddNewCategory from "./AdminComponent/AddNewCategory";
-import UpdateCategory from "./AdminComponent/UpdateCategory";
 import "react-toastify/dist/ReactToastify.css";
 import Categories from "./AdminComponent/Categories/Categories";
-import QAeditor from "./AdminComponent/QA/QAeditor";
+import QaEditor from "./AdminComponent/QA/QaEditor";
 import Users from "./AdminComponent/Users";
 
 const Admin = () => {
@@ -82,7 +80,7 @@ const Admin = () => {
       </div> */}
       <div>
         {newCategory && <Categories />}
-        {newQna && <QAeditor />}
+        {newQna && <QaEditor />}
         {newUsers && <Users />}
       </div>
     </motion.div>

@@ -116,7 +116,7 @@ const SideBarList = ({ onSelectCategory, getCategory }) => {
                 QA
               </Typography>
             }
-          />{" "}
+          />
         </ListItemButton>
 
         <ListItemButton
