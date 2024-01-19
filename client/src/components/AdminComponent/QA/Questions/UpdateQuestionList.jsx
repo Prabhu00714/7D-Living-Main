@@ -153,14 +153,12 @@ const UpdateQuestionList = ({ state, dispatch }) => {
       }
 
       const jsonData = {
-        questions: questions.map((question) => ({
-          questiontext: question.questiontext,
-          answers: question.answers.map((answer) => ({
-            answer: answer.answer,
-            answerimage: answer.answerimage,
-            results: answer.results,
-          })),
-          questionimage: question.questionimage,
+        questiontext: questions[0].questiontext,
+        questionimage: questions[0].questionimage,
+        answers: questions[0].answers.map((answer) => ({
+          answer: answer.answer,
+          answerimage: answer.answerimage,
+          results: answer.results,
         })),
       };
 

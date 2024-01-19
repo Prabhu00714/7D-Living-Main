@@ -606,25 +606,28 @@ router.get("/get/each/question/:questionId", async (req, res) => {
 
 router.post("/update/each/question/:questionId", async (req, res) => {
   const questionId = req.params.questionId;
-  const updatedQuestionData = req.body;
+  const questionData = req.body;
   console.log("questionId", questionId);
-  console.log("updatedQuestionData", updatedQuestionData);
+  console.log("updatedQuestionData", questionData);
 
   try {
-    const result = await QNA.findByIdAndUpdate(
+    const updatedQuestion = await QNA.findByIdAndUpdate(
       questionId,
-      { $set: updatedQuestionData },
       {
-        new: true, // Return the modified document
-        runValidators: true, // Validate the update operation
-      }
+        $set: {
+          questiontext: questionData.questiontext,
+          answers: questionData.answers,
+          questionimage: questionData.questionimage,
+        },
+      },
+      { new: true }
     );
 
-    if (!result) {
+    if (!updatedQuestion) {
       return res.status(404).json({ message: "Question not found" });
     }
 
-    res.json(result);
+    res.json(updatedQuestion);
   } catch (error) {
     console.error("Error updating question:", error);
     res.status(500).json({ message: "Internal Server Error" });
