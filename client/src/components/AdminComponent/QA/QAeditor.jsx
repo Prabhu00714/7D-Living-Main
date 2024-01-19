@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 
-// Styled component for Paper 1
 const DemoPaper1 = styled(Paper)(({ theme }) => ({
   width: 220,
   height: 300,
@@ -25,9 +24,8 @@ const DemoPaper1 = styled(Paper)(({ theme }) => ({
   },
 }));
 
-// Styled component for Paper 2
-const DemoPaper2 = styled(Paper)(({ theme }) => ({
-  width: 700,
+const DemoPaper2 = styled(Paper)(({ theme, isMobile }) => ({
+  width: isMobile ? 300 : 700, // Set width to 100% on mobile
   height: 300,
   padding: theme.spacing(2),
   ...theme.typography.body2,
@@ -69,13 +67,14 @@ const QAeditor = () => {
       {/* Paper 2 */}
       <Stack direction="column" spacing={2} alignItems="center">
         <Typography variant="h6">Question - Answer</Typography>
-        <DemoPaper2 square={false} elevation={12}>
+        <DemoPaper2 isMobile={isMobile} square={false} elevation={12}>
           <PerfectScrollbar options={{ wheelPropagation: false }}>
             {/* <CategoryList state={state} dispatch={dispatch} /> */}
           </PerfectScrollbar>
         </DemoPaper2>
         {/* <Category state={state} dispatch={dispatch} /> */}
       </Stack>
+      {isMobile && <>&nbsp;&nbsp;&nbsp;</>}
       {/* <AddEditCategoryModal
         state={state}
         dispatch={dispatch}

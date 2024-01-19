@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useReducer } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -195,6 +195,7 @@ const Categories = () => {
           onAddItem={handleAddItem}
         />
       </Stack>
+      {isMobile && <>&nbsp;&nbsp;&nbsp;</>}
       <AddEditCategoryModal
         state={state}
         dispatch={dispatch}
