@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -45,6 +45,18 @@ function Category({ state, dispatch, isMobile, onAddItem }) {
     });
   };
 
+  const dispatchEditCategory = () => {
+    dispatch({ type: "set_category_modal", payload: true });
+    dispatch({ type: "set_category_action", payload: "edit" });
+    dispatch({ type: "set_model_type", payload: "category" });
+    dispatch({ type: "set_model_name", payload: "Category" });
+  };
+
+  const showToastNotification = () => {
+    // Replace this with your preferred toast notification library
+    toast.warning("Please select a category before editing.");
+  };
+
   return (
     <>
       <Stack direction="row" spacing={1} justifyContent="center">
@@ -75,16 +87,9 @@ function Category({ state, dispatch, isMobile, onAddItem }) {
             edge="end"
             aria-label="edit"
             onClick={() => {
-              dispatch({ type: "set_category_modal", payload: true });
-              dispatch({ type: "set_category_action", payload: "edit" });
-              dispatch({
-                type: "set_model_type",
-                payload: "category",
-              });
-              dispatch({
-                type: "set_model_name",
-                payload: "Category",
-              });
+              state.selectedCategoryItem
+                ? dispatchEditCategory()
+                : showToastNotification();
             }}
             sx={{ color: "black" }}
             size="large"

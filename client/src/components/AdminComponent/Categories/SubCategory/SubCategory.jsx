@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -50,6 +50,23 @@ function SubCategory({ state, dispatch, isMobile, onAddItem }) {
     });
   };
 
+  const dispatchEditSubCategory = () => {
+    dispatch({ type: "set_category_modal", payload: true });
+    dispatch({ type: "set_category_action", payload: "edit" });
+    dispatch({
+      type: "set_model_type",
+      payload: "subCategory",
+    });
+    dispatch({
+      type: "set_model_name",
+      payload: "Sub Category",
+    });
+  };
+
+  const showToastNotification = () => {
+    toast.warning("Please select a sub category before editing.");
+  };
+
   return (
     <>
       <Stack direction="row" spacing={1} justifyContent="center">
@@ -77,16 +94,9 @@ function SubCategory({ state, dispatch, isMobile, onAddItem }) {
             edge="end"
             aria-label="edit"
             onClick={() => {
-              dispatch({ type: "set_category_modal", payload: true });
-              dispatch({ type: "set_category_action", payload: "edit" });
-              dispatch({
-                type: "set_model_type",
-                payload: "subCategory",
-              });
-              dispatch({
-                type: "set_model_name",
-                payload: "Sub Category",
-              });
+              state.selectedSubCategoryItem
+                ? dispatchEditSubCategory()
+                : showToastNotification();
             }}
             sx={{ color: "black" }}
             size="large"
