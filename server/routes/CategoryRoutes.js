@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const QuestionAnswer = require("../models/QuestionAnswer");
 const ResultModel = require("../models/Result");
+const CategoryGroup = require("../models/CategoryGroup");
+const Category = require("../models/Category");
+const SubCategory = require("../models/SubCategory");
+const QNA = require("../models/QNA");
 
 router.get("/get/each/Categories", async (req, res) => {
   try {
@@ -83,6 +87,33 @@ router.post("/post/saveResult", async (req, res) => {
     res.json({ savedData, aggregatedResultsArray });
   } catch (error) {
     console.error("Error:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// new structure
+
+router.get("/get/first/categorygroup", async (req, res) => {
+  try {
+    const categoryGroup = await CategoryGroup.findOne(
+      {},
+      {
+        categoryGroupHeading: 1,
+        categoryGroupDescription: 1,
+        categoryGroupImage: 1,
+        categoryGroups: 1, // Retrieve only the first item from the array
+      }
+    );
+
+    console.log("categoryGroup", categoryGroup);
+
+    if (!categoryGroup) {
+      return res.status(404).json({ error: "CategoryGroup not found" });
+    }
+
+    res.status(200).json({ categoryGroup });
+  } catch (error) {
+    console.error("Error retrieving categories from MongoDB:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

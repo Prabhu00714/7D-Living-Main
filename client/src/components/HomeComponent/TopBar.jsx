@@ -30,7 +30,7 @@ function TopBar({ isMobile, isMobileDrawerOpen, toggleMobileDrawer }) {
             {/* Add Header Data */}
           </Box>
           <Header />
-          {isMobile && !isMobileDrawerOpen && (
+          {/* {isMobile && !isMobileDrawerOpen && (
             <IconButton
               sx={{
                 position: "fixed",
@@ -42,7 +42,7 @@ function TopBar({ isMobile, isMobileDrawerOpen, toggleMobileDrawer }) {
             >
               <MenuIcon />
             </IconButton>
-          )}
+          )} */}
         </Toolbar>
       </Container>
     </AppBar>

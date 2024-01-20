@@ -1,33 +1,19 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import TopBar from "./HomeComponent/TopBar";
-import SideBar from "./HomeComponent/SideBar";
-import ListSelectedCategory from "./HomeComponent/ListSelectedCategory";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [selectedComponent, setSelectedComponent] = useState(null);
-  const isMobile = useMediaQuery("(max-width: 600px)");
-  const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const handleCategorySelect = (category) => {
-    setSelectedComponent(category);
+  const handleClick = () => {
+    navigate("/test");
   };
-
-  const toggleMobileDrawer = () => {
-    setMobileDrawerOpen(!isMobileDrawerOpen);
-  };
-
-  useEffect(() => {
-    // Show the toast message only if neither newCategory nor selectedComponent is true
-    if (!selectedComponent) {
-      toast.info("Please select any one option !!!");
-    }
-  }, [selectedComponent, isMobile]);
-
   return (
     <motion.div
       initial={{ opacity: 0, x: 0 }}
@@ -35,35 +21,52 @@ const Home = () => {
       exit={{ opacity: 0, x: 50 }}
       transition={{ duration: 0.5 }}
     >
-      <TopBar
-        isMobile={isMobile}
-        isMobileDrawerOpen={isMobileDrawerOpen}
-        toggleMobileDrawer={toggleMobileDrawer}
-      />
-      <SideBar
-        onSelectCategory={handleCategorySelect}
-        isMobile={isMobile}
-        isMobileDrawerOpen={isMobileDrawerOpen}
-        setMobileDrawerOpen={setMobileDrawerOpen}
-        toggleMobileDrawer={toggleMobileDrawer}
-      />
-      <div>
-        {/* Render component based on selected category */}
-        {selectedComponent && (
-          <ListSelectedCategory selectedComponent={selectedComponent} />
-        )}
+      <TopBar />
+      <CssBaseline />
+      <Container maxWidth="sm" sx={{ mt: 10 }}>
+        <Grid container>
+          <Grid item xs={12}>
+            <Box
+              sx={{ bgcolor: "#cfe8fc", height: "70vh", position: "relative" }}
+            >
+              <img
+                className="background-image"
+                src={`${process.env.PUBLIC_URL}/images/health.jpg`}
+                alt="Background"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "90%",
+          transform: "translate(-50%, -50%)",
+          textAlign: "center",
+          fontSize: "24px",
+          color: "black",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <span>Lets Take a Test..</span>
+        <Button
+          variant="outlined"
+          color="primary"
+          style={{ marginLeft: "10px" }}
+          onClick={handleClick}
+        >
+          Lets Go
+        </Button>
       </div>
-      <ToastContainer
-        position={isMobile ? "top-center" : "top-right"}
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </motion.div>
   );
 };
