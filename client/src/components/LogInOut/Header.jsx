@@ -13,17 +13,33 @@ import LoginIcon from "@mui/icons-material/Login";
 
 const ResponsiveMenu = styled(Menu)({
   width: "250px", // Set your desired width for PC
-  "@media (max-width: 600px)": {
+  "@media (max-width: 1000px)": {
     width: "150px", // Adjust for mobile view
   },
 });
 
-const ResponsiveMenuItem = styled(MenuItem)({
+const ResponsiveMenuItem = styled(MenuItem)(({ theme }) => ({
   height: "40px", // Set your desired height for PC
   "@media (max-width: 600px)": {
     height: "20px", // Adjust for mobile view
   },
-});
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(1), // Adjust padding as needed
+  "& > .username": {
+    flex: 1,
+    marginRight: theme.spacing(1),
+    maxWidth: "calc(100% - 24px)", // Adjust based on your needs
+  },
+}));
+
+function truncateEmail(email) {
+  const atIndex = email.indexOf("@");
+  return atIndex !== -1 ? email.substring(0, atIndex) : email;
+}
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -97,7 +113,9 @@ const Header = () => {
               <ListItemIcon>
                 <PersonIcon fontSize="small" />
               </ListItemIcon>
-              {user.username}
+              <span className="username">
+                {user ? truncateEmail(user.username) : ""}
+              </span>
             </ResponsiveMenuItem>
             <Link
               to="/"

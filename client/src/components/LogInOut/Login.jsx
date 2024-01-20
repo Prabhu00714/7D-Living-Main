@@ -42,7 +42,26 @@ const Login = () => {
   };
 
   const handleSignUpGoogle = () => {
-    toast.info("This Feature is coming Soon !!!");
+    // Open a popup window for Google Sign-In
+    const popupWindow = window.open(
+      "http://localhost:3001/auth/google",
+      "Google Sign-In",
+      "width=600,height=600"
+    );
+
+    window.addEventListener("message", (event) => {
+      if (event.source === popupWindow) {
+        const userObject = { username: event.data.email };
+
+        if (userObject) {
+          login(userObject);
+          localStorage.setItem("user", JSON.stringify(userObject));
+
+          navigate("/home");
+        }
+        popupWindow.close();
+      }
+    });
   };
 
   const handleSignUp = async () => {
