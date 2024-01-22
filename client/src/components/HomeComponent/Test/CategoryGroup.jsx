@@ -2,7 +2,7 @@ import { Paper, Typography, Box, useMediaQuery } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function CategoryGroup() {
+function CategoryGroup({ state, dispatch }) {
   const [categoryGroupData, setCategoryGroupData] = useState(null);
   const isMobile = useMediaQuery("(max-width: 600px)");
 
@@ -10,9 +10,21 @@ function CategoryGroup() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/category/get/first/categorygroup"
+          `http://localhost:3001/api/category/get/first/categorygroup/${state.categoryGroupNumber}`
         );
-        setCategoryGroupData(response.data.categoryGroup);
+
+        const categoryIds = response.data.categoryGroups.map(
+          (item) => item.categoryId
+        );
+        setCategoryGroupData(response.data);
+        dispatch({
+          type: "set_categorygroup_length",
+          payload: response.data.categoryGroups.length,
+        });
+        dispatch({
+          type: "set_category_ids",
+          payload: categoryIds, // Setting an array of categoryIds
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }

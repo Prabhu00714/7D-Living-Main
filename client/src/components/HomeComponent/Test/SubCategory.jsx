@@ -2,7 +2,7 @@ import { Paper, Typography, Box, useMediaQuery } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function Category({ state, dispatch }) {
+function SubCategory({ state, dispatch }) {
   const [categoryData, setCategoryData] = useState(null);
   const isMobile = useMediaQuery("(max-width: 600px)");
 
@@ -10,40 +10,13 @@ function Category({ state, dispatch }) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/category/get/first/category/${state.eachCategoryIds}`
+          `http://localhost:3001/api/category/get/first/subcategory/${state.subCategoryIds}`
         );
         setCategoryData(response.data);
-
-        // Check if there are subcategories or questions
-        if (response.data.categories && response.data.categories.length > 0) {
-          const hasSubcategories = response.data.categories.some(
-            (category) => category.subCategoryId
-          );
-
-          const hasQuestions = response.data.categories.some(
-            (category) => category.questionId
-          );
-
-          if (hasSubcategories) {
-            dispatch({
-              type: "set_common_type",
-              payload: "subcategory",
-            });
-            dispatch({
-              type: "set_subcategory_ids",
-              payload: response.data.categories,
-            });
-          } else {
-            dispatch({
-              type: "set_common_type",
-              payload: "questions",
-            });
-            dispatch({
-              type: "set_question_ids",
-              payload: response.data.categories,
-            });
-          }
-        }
+        dispatch({
+          type: "set_question_ids",
+          payload: response.data.categories,
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -103,4 +76,4 @@ function Category({ state, dispatch }) {
   );
 }
 
-export default Category;
+export default SubCategory;

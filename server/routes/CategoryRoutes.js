@@ -93,27 +93,54 @@ router.post("/post/saveResult", async (req, res) => {
 
 // new structure
 
-router.get("/get/first/categorygroup", async (req, res) => {
+router.get("/get/first/categorygroup/:categorygroup", async (req, res) => {
+  const { categorygroup } = req.params;
   try {
-    const categoryGroup = await CategoryGroup.findOne(
-      {},
-      {
-        categoryGroupHeading: 1,
-        categoryGroupDescription: 1,
-        categoryGroupImage: 1,
-        categoryGroups: 1, // Retrieve only the first item from the array
-      }
-    );
+    const index = parseInt(categorygroup) - 1;
 
-    console.log("categoryGroup", categoryGroup);
+    const categoryGroup = await CategoryGroup.findOne({}, null, {
+      skip: index,
+    });
 
     if (!categoryGroup) {
-      return res.status(404).json({ error: "CategoryGroup not found" });
+      return res.status(404).json({ error: "Category group not found" });
     }
-
-    res.status(200).json({ categoryGroup });
+    res.status(200).json(categoryGroup);
   } catch (error) {
-    console.error("Error retrieving categories from MongoDB:", error);
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/get/first/category/:categoryId", async (req, res) => {
+  const { categoryId } = req.params;
+  console.log("categoryId", categoryId);
+  try {
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+    res.status(200).json(category);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/get/first/questions/:questionIds", async (req, res) => {
+  const questionIds = req.params.questionIds.split(",");
+  try {
+    const result = await Promise.all(
+      questionIds.map(async (questionId) => {
+        const questionData = await QNA.findById(questionId);
+        return questionData;
+      })
+    );
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
