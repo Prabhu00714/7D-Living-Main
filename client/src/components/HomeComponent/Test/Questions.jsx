@@ -22,6 +22,7 @@ function Questions({ state, dispatch }) {
 
   useEffect(() => {
     const questionIds = state.questionIds;
+    console.log("questionIds", questionIds);
 
     const extractedQuestionIds = questionIds.map((obj) => obj.questionId);
 

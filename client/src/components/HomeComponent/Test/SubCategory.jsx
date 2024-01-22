@@ -3,19 +3,19 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function SubCategory({ state, dispatch }) {
-  const [categoryData, setCategoryData] = useState(null);
+  const [subCategoryData, setSubCategoryData] = useState(null);
   const isMobile = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/category/get/first/subcategory/${state.subCategoryIds}`
+          `http://localhost:3001/api/category/get/first/subcategory/${state.eachSubCategoryIds.subCategoryId}`
         );
-        setCategoryData(response.data);
+        setSubCategoryData(response.data);
         dispatch({
           type: "set_question_ids",
-          payload: response.data.categories,
+          payload: response.data.questions,
         });
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -43,10 +43,10 @@ function SubCategory({ state, dispatch }) {
         padding: isMobile ? "8px" : "16px",
       }}
     >
-      {categoryData ? (
+      {subCategoryData ? (
         <Box>
           <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
-            {categoryData.categoryHeading}
+            {subCategoryData.subCategoryHeading}
           </Typography>
           <Typography
             variant={isMobile ? "body2" : "body1"}
@@ -57,15 +57,17 @@ function SubCategory({ state, dispatch }) {
             }}
             paragraph
           >
-            {categoryData.categoryDescription}
+            {subCategoryData.subCategoryDescription}
           </Typography>
-          <img
-            width={isMobile ? 150 : 200}
-            height={isMobile ? 150 : 200}
-            src={categoryData.categoryImage}
-            alt="preview"
-            style={{ marginTop: isMobile ? "8px" : "16px" }}
-          />
+          {subCategoryData.subCategoryImage && (
+            <img
+              width={isMobile ? 150 : 200}
+              height={isMobile ? 150 : 200}
+              src={subCategoryData.subCategoryImage}
+              alt="preview"
+              style={{ marginTop: isMobile ? "8px" : "16px" }}
+            />
+          )}
         </Box>
       ) : (
         <Typography variant={isMobile ? "body2" : "body1"}>

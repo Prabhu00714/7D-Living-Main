@@ -16,22 +16,24 @@ function Category({ state, dispatch }) {
 
         // Check if there are subcategories or questions
         if (response.data.categories && response.data.categories.length > 0) {
-          const hasSubcategories = response.data.categories.some(
+          const subcategories = response.data.categories.filter(
             (category) => category.subCategoryId
           );
 
-          const hasQuestions = response.data.categories.some(
-            (category) => category.questionId
-          );
+          const hasSubcategories = subcategories.length > 0;
 
           if (hasSubcategories) {
+            dispatch({
+              type: "set_subcategory_length",
+              payload: subcategories.length,
+            });
             dispatch({
               type: "set_common_type",
               payload: "subcategory",
             });
             dispatch({
               type: "set_subcategory_ids",
-              payload: response.data.categories,
+              payload: subcategories,
             });
           } else {
             dispatch({

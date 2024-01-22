@@ -114,7 +114,6 @@ router.get("/get/first/categorygroup/:categorygroup", async (req, res) => {
 
 router.get("/get/first/category/:categoryId", async (req, res) => {
   const { categoryId } = req.params;
-  console.log("categoryId", categoryId);
   try {
     const category = await Category.findById(categoryId);
 
@@ -122,6 +121,22 @@ router.get("/get/first/category/:categoryId", async (req, res) => {
       return res.status(404).json({ error: "Category not found" });
     }
     res.status(200).json(category);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/get/first/subcategory/:subcategoryId", async (req, res) => {
+  const { subcategoryId } = req.params;
+  console.log("subcategoryId", subcategoryId);
+  try {
+    const subCategory = await SubCategory.findById(subcategoryId);
+
+    if (!subCategory) {
+      return res.status(404).json({ error: "sub category not found" });
+    }
+    res.status(200).json(subCategory);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
