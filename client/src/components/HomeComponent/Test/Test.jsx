@@ -185,6 +185,11 @@ const Test = () => {
             type: "set_model_type",
             payload: "category", // Update modelType to "category"
           });
+        } else {
+          dispatch({
+            type: "set_active_finish",
+            payload: true,
+          });
         }
         dispatch({
           type: "set_question_number",
