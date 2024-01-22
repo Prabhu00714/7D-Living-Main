@@ -21,9 +21,11 @@ const initialState = {
   eachSubCategoryIds: [],
   questionIds: [],
   categoryGroupLength: 0,
+  categoryLength: 0,
   subCategoryLength: 0,
   questionNumber: 0,
   eachQuestionIds: [],
+  questionLength: 0,
   activePrevious: false,
   activeFinish: false,
 };
@@ -58,6 +60,10 @@ const reducer = (state, action) => {
       return { ...state, eachQuestionIds: action.payload };
     case "set_categorygroup_length":
       return { ...state, categoryGroupLength: action.payload };
+    case "set_question_length":
+      return { ...state, questionLength: action.payload };
+    case "set_category_length":
+      return { ...state, categoryLength: action.payload };
     case "set_subcategory_length":
       return { ...state, subCategoryLength: action.payload };
     case "set_question_number":
@@ -274,6 +280,15 @@ const Test = () => {
     }
   };
 
+  const HandleFinish = () => {
+    if (state.activePrevious) {
+      dispatch({
+        type: "set_active_previous",
+        payload: false,
+      });
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 0 }}
@@ -321,8 +336,12 @@ const Test = () => {
           textAlign: "center",
         }}
       >
-        <Button onClick={handleNext} variant="outlined">
-          Next
+        <Button
+          onClick={!state.activeFinish ? handleNext : HandleFinish}
+          variant="outlined"
+          disabled={state.activeFinish}
+        >
+          {state.activeFinish ? "Finish" : "Next"}
         </Button>
       </div>
     </motion.div>

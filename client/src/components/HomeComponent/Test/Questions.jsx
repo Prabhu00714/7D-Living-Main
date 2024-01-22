@@ -31,6 +31,12 @@ function Questions({ state, dispatch }) {
           `http://localhost:3001/api/category/get/first/questions/${extractedQuestionIds}`
         );
         setQnasData(response.data);
+        if (response.data.length < 0) {
+          dispatch({
+            type: "set_active_finish",
+            payload: true,
+          });
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }

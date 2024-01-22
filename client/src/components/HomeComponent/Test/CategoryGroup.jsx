@@ -17,14 +17,21 @@ function CategoryGroup({ state, dispatch }) {
           (item) => item.categoryId
         );
         setCategoryGroupData(response.data);
-        dispatch({
-          type: "set_categorygroup_length",
-          payload: response.data.categoryGroups.length,
-        });
-        dispatch({
-          type: "set_category_ids",
-          payload: categoryIds, // Setting an array of categoryIds
-        });
+        if (response.data.categoryGroups.length > 0) {
+          dispatch({
+            type: "set_categorygroup_length",
+            payload: response.data.categoryGroups.length,
+          });
+          dispatch({
+            type: "set_category_ids",
+            payload: categoryIds, // Setting an array of categoryIds
+          });
+        } else {
+          dispatch({
+            type: "set_active_finish",
+            payload: true,
+          });
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }

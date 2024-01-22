@@ -13,10 +13,17 @@ function SubCategory({ state, dispatch }) {
           `http://localhost:3001/api/category/get/first/subcategory/${state.eachSubCategoryIds.subCategoryId}`
         );
         setSubCategoryData(response.data);
-        dispatch({
-          type: "set_question_ids",
-          payload: response.data.questions,
-        });
+        if (response.data.questions.length >= 0) {
+          dispatch({
+            type: "set_question_ids",
+            payload: response.data.questions,
+          });
+        } else {
+          dispatch({
+            type: "set_active_finish",
+            payload: true,
+          });
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }

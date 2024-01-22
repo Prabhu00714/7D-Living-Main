@@ -14,40 +14,46 @@ function Category({ state, dispatch }) {
         );
         setCategoryData(response.data);
 
-        // Check if there are subcategories or questions
-        if (response.data.categories && response.data.categories.length > 0) {
-          const subcategories = response.data.categories.filter(
-            (category) => category.subCategoryId
-          );
-          const hasSubcategories = subcategories.length > 0;
+        if (response.data.categories.length) {
+          if (response.data.categories && response.data.categories.length > 0) {
+            const subcategories = response.data.categories.filter(
+              (category) => category.subCategoryId
+            );
+            const hasSubcategories = subcategories.length > 0;
 
-          if (hasSubcategories) {
-            dispatch({
-              type: "set_subcategory_length",
-              payload: subcategories.length,
-            });
-            dispatch({
-              type: "set_common_type",
-              payload: "subcategory",
-            });
-            dispatch({
-              type: "set_subcategory_ids",
-              payload: subcategories,
-            });
-            dispatch({
-              type: "set_subcategory_number",
-              payload: 0,
-            });
-          } else {
-            dispatch({
-              type: "set_common_type",
-              payload: "questions",
-            });
-            dispatch({
-              type: "set_question_ids",
-              payload: response.data.categories,
-            });
+            if (hasSubcategories) {
+              dispatch({
+                type: "set_subcategory_length",
+                payload: subcategories.length,
+              });
+              dispatch({
+                type: "set_common_type",
+                payload: "subcategory",
+              });
+              dispatch({
+                type: "set_subcategory_ids",
+                payload: subcategories,
+              });
+              dispatch({
+                type: "set_subcategory_number",
+                payload: 0,
+              });
+            } else {
+              dispatch({
+                type: "set_common_type",
+                payload: "questions",
+              });
+              dispatch({
+                type: "set_question_ids",
+                payload: response.data.categories,
+              });
+            }
           }
+        } else {
+          dispatch({
+            type: "set_active_finish",
+            payload: true,
+          });
         }
       } catch (error) {
         console.error("Error fetching data:", error);
