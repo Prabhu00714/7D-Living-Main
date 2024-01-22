@@ -22,7 +22,8 @@ const initialState = {
   questionIds: [],
   categoryGroupLength: 0,
   subCategoryLength: 0,
-  questionNumber: 1,
+  questionNumber: 0,
+  eachQuestionIds: [],
   activePrevious: false,
   activeFinish: false,
 };
@@ -53,6 +54,8 @@ const reducer = (state, action) => {
       return { ...state, eachSubCategoryIds: action.payload };
     case "set_question_ids":
       return { ...state, questionIds: action.payload };
+    case "set_each_question_ids":
+      return { ...state, eachQuestionIds: action.payload };
     case "set_categorygroup_length":
       return { ...state, categoryGroupLength: action.payload };
     case "set_subcategory_length":
@@ -130,38 +133,29 @@ const Test = () => {
         }
         break;
       case "subcategory":
-        dispatch({
-          type: "set_model_type",
-          payload: "questions", // Update modelType to "questions"
-        });
-        dispatch({
-          type: "set_common_type",
-          payload: "questions", // Update modelType to "questions"
-        });
+        if (state.commonType === "subcategory") {
+          dispatch({
+            type: "set_model_type",
+            payload: "questions", // Update modelType to "questions"
+          });
+          dispatch({
+            type: "set_common_type",
+            payload: "questions", // Update modelType to "questions"
+          });
+        }
 
-        if (state.subCategoryNumber < state.subCategoryLength) {
+        if (state.subCategoryNumber <= state.subCategoryLength) {
           dispatch({
             type: "set_subcategory_number",
             payload: state.subCategoryNumber + 1,
           });
           dispatch({
-            type: "set_eachsubcategory_ids",
+            type: "set_each_subcategory_ids",
             payload: state.subCategoryIds[state.subCategoryNumber],
           });
         }
         break;
       case "questions":
-        if (state.commonType === "subcategory") {
-          dispatch({
-            type: "set_model_type",
-            payload: "subcategory", // Update modelType to "subcategory"
-          });
-        } else {
-          dispatch({
-            type: "set_model_type",
-            payload: "category", // Update modelType to "category"
-          });
-        }
         if (state.categoryNumber > state.categoryGroupLength) {
           dispatch({
             type: "set_categorygroup_number",
@@ -171,8 +165,21 @@ const Test = () => {
             type: "set_model_type",
             payload: "categorygroup", // Update modelType to "category"
           });
+        } else if (state.subCategoryNumber <= state.subCategoryLength) {
+          dispatch({
+            type: "set_model_type",
+            payload: "subcategory", // Update modelType to "subcategory"
+          });
+          dispatch({
+            type: "set_common_type",
+            payload: "subcategory", // Update modelType to "subcategory"
+          });
+        } else if (state.categoryNumber <= state.categoryGroupLength) {
+          dispatch({
+            type: "set_model_type",
+            payload: "category", // Update modelType to "category"
+          });
         }
-
         dispatch({
           type: "set_question_number",
           payload: state.questionNumber + 1,
@@ -241,13 +248,6 @@ const Test = () => {
             payload: "subcategory", // Update modelType to "subcategory"
           });
         } else {
-          console.log("before state.categoryNumber", state.categoryNumber);
-          console.log(
-            "before state.categoryGroupLength",
-            state.categoryGroupLength
-          );
-          console.log("before state.categoryIds", state.categoryIds);
-
           if (state.categoryNumber <= state.categoryGroupLength) {
             dispatch({
               type: "set_category_number",
@@ -257,13 +257,6 @@ const Test = () => {
               type: "set_each_category_ids",
               payload: state.categoryIds[state.categoryNumber],
             });
-            console.log("inside if statement");
-            console.log("after state.categoryNumber", state.categoryNumber);
-            console.log(
-              "after state.categoryGroupLength",
-              state.categoryGroupLength
-            );
-            console.log("after state.categoryIds", state.categoryIds);
           }
 
           dispatch({

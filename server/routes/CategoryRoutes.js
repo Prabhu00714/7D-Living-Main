@@ -48,9 +48,6 @@ router.post("/post/saveResult", async (req, res) => {
         aggregatedResults[result] += value;
       });
     });
-
-    console.log("Aggregated Results:", aggregatedResults);
-
     // Transform aggregatedResults into an array of objects
     const aggregatedResultsArray = Object.keys(aggregatedResults).map(
       (resultName) => ({
@@ -129,7 +126,6 @@ router.get("/get/first/category/:categoryId", async (req, res) => {
 
 router.get("/get/first/subcategory/:subcategoryId", async (req, res) => {
   const { subcategoryId } = req.params;
-  console.log("subcategoryId", subcategoryId);
   try {
     const subCategory = await SubCategory.findById(subcategoryId);
 

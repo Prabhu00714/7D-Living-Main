@@ -19,7 +19,6 @@ function Category({ state, dispatch }) {
           const subcategories = response.data.categories.filter(
             (category) => category.subCategoryId
           );
-
           const hasSubcategories = subcategories.length > 0;
 
           if (hasSubcategories) {
@@ -34,6 +33,10 @@ function Category({ state, dispatch }) {
             dispatch({
               type: "set_subcategory_ids",
               payload: subcategories,
+            });
+            dispatch({
+              type: "set_subcategory_number",
+              payload: 0,
             });
           } else {
             dispatch({
