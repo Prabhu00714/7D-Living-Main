@@ -17,19 +17,15 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
-  const [formData, setFormData] = useState({
-    header: "",
-    description: "",
-    image: null,
-  });
+  const [header, setHeader] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
 
   const handleClose = () => {
     dispatch({ type: "set_category_modal", payload: false });
-    setFormData({
-      header: "",
-      description: "",
-      image: null,
-    });
+    setHeader("");
+    setDescription("");
+    setImage(null);
     dispatch({ type: "set_category_action", payload: "" });
     dispatch({ type: "set_model_type", payload: null });
     dispatch({ type: "set_model_name", payload: null });
@@ -37,7 +33,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
   const handleAdd = async () => {
     try {
-      if (!formData.header || !formData.description) {
+      if (!header || !description) {
         toast.error("Both header and description are required");
         return;
       }
@@ -59,9 +55,9 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
       }
 
       const requestData = {
-        header: formData.header,
-        description: formData.description,
-        image: formData.image,
+        header,
+        description,
+        image,
         categoryId:
           state.modelType === "category" ? state.selectedItemId : undefined,
         subCategoryId:
@@ -72,11 +68,9 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`${state.modelName} Added Successfully`);
-        setFormData({
-          header: "",
-          description: "",
-          image: null,
-        });
+        setHeader("");
+        setDescription("");
+        setImage(null);
         dispatch({ type: "set_category_action", payload: "" });
         dispatch({ type: "set_model_type", payload: null });
         dispatch({ type: "set_model_name", payload: null });
@@ -92,7 +86,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
   const handleEdit = async () => {
     try {
-      if (!formData.header || !formData.description) {
+      if (!header || !description) {
         toast.error("Both header and description are required");
         return;
       }
@@ -114,12 +108,10 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
       }
 
       const requestData = {
-        header: formData.header,
-        description: formData.description,
-        image: formData.image,
+        header,
+        description,
+        image,
       };
-      // const cacheBuster = new Date().getTime();
-      // `http://localhost:3001/api/qna/post/edit/${state.modelType}/${selectedItemId}?_=${cacheBuster}`,
 
       const response = await axios.post(
         `http://localhost:3001/api/qna/post/edit/${state.modelType}/${selectedItemId}`,
@@ -128,11 +120,9 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`${state.modelName} Edited Successfully`);
-        setFormData({
-          header: "",
-          description: "",
-          image: null,
-        });
+        setHeader("");
+        setDescription("");
+        setImage(null);
         dispatch({ type: "set_category_action", payload: "" });
         dispatch({ type: "set_model_type", payload: null });
         dispatch({ type: "set_model_name", payload: null });
@@ -147,38 +137,39 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
     }
   };
 
-  const getModelData = () => {
-    switch (state.modelType) {
-      case "categoryGroup":
-        return {
-          headingKey: "categoryGroupHeading",
-          descriptionKey: "categoryGroupDescription",
-        };
-      case "category":
-        return {
-          headingKey: "categoryHeading",
-          descriptionKey: "categoryDescription",
-        };
-      case "subCategory":
-        return {
-          headingKey: "subCategoryHeading",
-          descriptionKey: "subCategoryDescription",
-        };
-      default:
-        return {};
-    }
-  };
-
-  const { headingKey, descriptionKey } = getModelData();
-
   useEffect(() => {
+    console.log("state.modelType", state.modelType);
+    const getModelData = () => {
+      switch (state.modelType) {
+        case "categoryGroup":
+          return {
+            headingKey: "categoryGroupHeading",
+            descriptionKey: "categoryGroupDescription",
+          };
+        case "category":
+          return {
+            headingKey: "categoryHeading",
+            descriptionKey: "categoryDescription",
+          };
+        case "subCategory":
+          return {
+            headingKey: "subCategoryHeading",
+            descriptionKey: "subCategoryDescription",
+          };
+        default:
+          return {
+            headingKey: "",
+            descriptionKey: "",
+          };
+      }
+    };
+
+    const { headingKey, descriptionKey } = getModelData();
+
     if (state.categoryAction === "add" && state.modelType) {
-      console.log("if");
-      setFormData({
-        header: "",
-        description: "",
-        image: null,
-      });
+      setHeader("");
+      setDescription("");
+      setImage(null);
     } else if (state.categoryAction === "edit" && state.modelType) {
       let selectedItemId;
 
@@ -203,11 +194,10 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
           )
           .then((response) => {
             const data = response.data;
-            setFormData({
-              header: data[headingKey],
-              description: data[descriptionKey],
-              image: data.image || null,
-            });
+            console.log("data", data);
+            setHeader(data[headingKey]);
+            setDescription(data[descriptionKey]);
+            setImage(data.image || null);
           })
           .catch((error) => console.error("Error fetching data:", error));
       }
@@ -219,14 +209,14 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setFormData({ ...formData, image: reader.result });
+        setImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleQuillChange = (value) => {
-    setFormData({ ...formData, description: value });
+    setDescription(value);
   };
 
   return (
@@ -257,21 +247,19 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
             label="Header"
             type="text"
             fullWidth
-            value={formData.header}
-            onChange={(e) =>
-              setFormData({ ...formData, header: e.target.value })
-            }
+            value={header}
+            onChange={(e) => setHeader(e.target.value)}
           />
 
           <ReactQuill
             theme="snow"
-            value={formData.description}
+            value={description}
             onChange={handleQuillChange}
             modules={{
               toolbar: [
-                ["bold", "italic", "underline", "strike"],
+                ["bold", "italic", "underline"],
                 [{ list: "ordered" }, { list: "bullet" }],
-                ["link", "image"],
+                ["link"],
               ],
             }}
           />
@@ -283,10 +271,8 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
             label="Description"
             type="text"
             fullWidth
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             sx={{ mt: 2, mb: 2 }}
           /> */}
 
