@@ -173,8 +173,6 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
           break;
       }
 
-      console.log("id", selectedItemId);
-
       if (selectedItemId) {
         axios
           .get(
@@ -182,7 +180,6 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
           )
           .then((response) => {
             const data = response.data;
-            console.log("edit data", data);
             setFormData({
               header: data[headingKey] || "",
               description: data[descriptionKey] || "",

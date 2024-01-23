@@ -550,8 +550,6 @@ router.get("/get/each/question/:questionId", async (req, res) => {
 router.post("/update/each/question/:questionId", async (req, res) => {
   const questionId = req.params.questionId;
   const questionData = req.body;
-  console.log("questionId", questionId);
-  console.log("updatedQuestionData", questionData);
 
   try {
     const updatedQuestion = await QNA.findByIdAndUpdate(

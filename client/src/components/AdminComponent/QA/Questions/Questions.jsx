@@ -58,11 +58,8 @@ function Questions({ state, dispatch, isMobile, onAddItem }) {
 
         if (checkboxValue) {
           API = `http://localhost:3001/api/qna/delete/category/question/${categoryId}/${questionId}`; // Replace with your actual value
-          console.log("Checkbox selected");
-          console.log("Variable:", API);
         } else {
           API = `http://localhost:3001/api/qna/delete/categoryonly/question/${categoryId}/${questionId}`; // Replace with your actual value
-          console.log("Checkbox not selected");
         }
 
         handleDelete(API);

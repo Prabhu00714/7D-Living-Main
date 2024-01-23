@@ -12,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 function CategoryGroup({ state, dispatch, isMobile, onAddItem }) {
   const handleDelete = () => {
     const categoryGroupId = state.selectedCategoryGroupItem._id;
-    console.log("delete", categoryGroupId);
 
     axios
       .delete(

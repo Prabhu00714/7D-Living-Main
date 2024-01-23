@@ -32,7 +32,6 @@ const AddQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
     const formattedQuestionIds = selectedQuestionsArray.map((question) => ({
       _id: question._id,
     }));
-    console.log("ids", formattedQuestionIds);
 
     try {
       const response = await axios.post(
@@ -40,8 +39,6 @@ const AddQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
         { questions: formattedQuestionIds }
       );
 
-      // Handle the response if needed
-      console.log("Backend response:", response.data);
       if (response.status === 200) {
         toast.success(`New Question Added Successfully`);
         setSelectedQuestions(new Set());

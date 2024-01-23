@@ -68,7 +68,6 @@ const QuestionAnswer = ({ data, fetchData }) => {
       );
 
       if (response.ok) {
-        console.log("Data submitted successfully!");
         toast.success("Data submitted successfully!");
 
         // Update the aggregated results array state

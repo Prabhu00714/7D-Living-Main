@@ -92,7 +92,6 @@ const Categories = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleAddItem = (data) => {
-    console.log("refresh", data);
     switch (data) {
       case "categoryGroup":
         dispatch({

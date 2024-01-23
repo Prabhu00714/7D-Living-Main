@@ -98,7 +98,6 @@ const QaEditor = () => {
         payload: !state.questionsRefreshFlag,
       });
     }
-    console.log("refresh", data);
   };
 
   const containerStyle = {
@@ -109,7 +108,6 @@ const QaEditor = () => {
   };
 
   const resetForm = () => {
-    console.log("reset");
     dispatch({
       type: "set_questions",
       payload: [
