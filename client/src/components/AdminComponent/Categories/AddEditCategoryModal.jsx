@@ -25,6 +25,11 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
   const handleClose = () => {
     dispatch({ type: "set_category_modal", payload: false });
+    setFormData({
+      header: "",
+      description: "",
+      image: null,
+    });
   };
 
   const handleAdd = async () => {
@@ -149,7 +154,10 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
   const { headingKey, descriptionKey } = getModelData();
 
   useEffect(() => {
+    console.log("state.categoryAction", state.categoryAction);
+    console.log("state.modelType", state.modelType);
     if (state.categoryAction === "add" && state.modelType) {
+      console.log("if");
       setFormData({
         header: "",
         description: "",
