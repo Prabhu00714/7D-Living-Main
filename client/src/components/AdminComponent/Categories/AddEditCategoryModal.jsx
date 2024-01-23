@@ -30,6 +30,9 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
       description: "",
       image: null,
     });
+    dispatch({ type: "set_category_action", payload: "" });
+    dispatch({ type: "set_model_type", payload: null });
+    dispatch({ type: "set_model_name", payload: null });
   };
 
   const handleAdd = async () => {
@@ -69,7 +72,14 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`${state.modelName} Added Successfully`);
-        setFormData({ header: "", description: "", image: null });
+        setFormData({
+          header: "",
+          description: "",
+          image: null,
+        });
+        dispatch({ type: "set_category_action", payload: "" });
+        dispatch({ type: "set_model_type", payload: null });
+        dispatch({ type: "set_model_name", payload: null });
       } else {
         toast.error("Please fill all fields!!!");
       }
@@ -118,6 +128,14 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`${state.modelName} Edited Successfully`);
+        setFormData({
+          header: "",
+          description: "",
+          image: null,
+        });
+        dispatch({ type: "set_category_action", payload: "" });
+        dispatch({ type: "set_model_type", payload: null });
+        dispatch({ type: "set_model_name", payload: null });
       } else {
         toast.error("Failed to edit. Please fill all fields!!!");
       }
@@ -154,8 +172,6 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
   const { headingKey, descriptionKey } = getModelData();
 
   useEffect(() => {
-    console.log("state.categoryAction", state.categoryAction);
-    console.log("state.modelType", state.modelType);
     if (state.categoryAction === "add" && state.modelType) {
       console.log("if");
       setFormData({
@@ -188,8 +204,8 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
           .then((response) => {
             const data = response.data;
             setFormData({
-              header: data[headingKey] || "",
-              description: data[descriptionKey] || "",
+              header: data[headingKey],
+              description: data[descriptionKey],
               image: data.image || null,
             });
           })
