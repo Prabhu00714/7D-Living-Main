@@ -19,7 +19,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 
 const initialState = {
   categoryModal: false,
-  categoryAction: "add",
+  categoryAction: "",
   selectedCategoryGroupItem: null,
   selectedCategoryItem: null,
   selectedSubCategoryItem: null,

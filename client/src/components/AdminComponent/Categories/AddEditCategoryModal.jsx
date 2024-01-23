@@ -13,6 +13,8 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
   const [formData, setFormData] = useState({
@@ -128,19 +130,16 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
         return {
           headingKey: "categoryGroupHeading",
           descriptionKey: "categoryGroupDescription",
-          imageKey: "categoryGroupImage",
         };
       case "category":
         return {
           headingKey: "categoryHeading",
           descriptionKey: "categoryDescription",
-          imageKey: "categoryImage",
         };
       case "subCategory":
         return {
           headingKey: "subCategoryHeading",
           descriptionKey: "subCategoryDescription",
-          imageKey: "subCategoryImage",
         };
       default:
         return {};
@@ -202,6 +201,10 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
     }
   };
 
+  const handleQuillChange = (value) => {
+    setFormData({ ...formData, description: value });
+  };
+
   return (
     <>
       <Dialog
@@ -235,7 +238,20 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
               setFormData({ ...formData, header: e.target.value })
             }
           />
-          <TextField
+
+          <ReactQuill
+            theme="snow"
+            value={formData.description}
+            onChange={handleQuillChange}
+            modules={{
+              toolbar: [
+                ["bold", "italic", "underline", "strike"],
+                [{ list: "ordered" }, { list: "bullet" }],
+                ["link", "image"],
+              ],
+            }}
+          />
+          {/* <TextField
             multiline
             rows={4}
             margin="dense"
@@ -248,14 +264,14 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
               setFormData({ ...formData, description: e.target.value })
             }
             sx={{ mt: 2, mb: 2 }}
-          />
+          /> */}
 
           {/* File Input */}
           <input
             type="file"
             id="image"
             accept="image/*"
-            style={{ margin: "auto", display: "block" }}
+            style={{ margin: "auto", display: "block", marginTop: "8px" }}
             onChange={handleImageChange}
           />
         </DialogContent>

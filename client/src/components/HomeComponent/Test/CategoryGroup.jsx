@@ -1,6 +1,8 @@
 import { Paper, Typography, Box, useMediaQuery } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 function CategoryGroup({ state, dispatch }) {
   const [categoryGroupData, setCategoryGroupData] = useState(null);
@@ -58,35 +60,42 @@ function CategoryGroup({ state, dispatch }) {
         padding: isMobile ? "8px" : "16px",
       }}
     >
-      {categoryGroupData ? (
-        <Box>
-          <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
-            {categoryGroupData.categoryGroupHeading}
+      <PerfectScrollbar options={{ wheelPropagation: false }}>
+        {categoryGroupData ? (
+          <Box>
+            <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
+              {categoryGroupData.categoryGroupHeading}
+            </Typography>
+            <Typography
+              variant={isMobile ? "body2" : "body1"}
+              style={{
+                justifyContent: "space-between",
+                alignItems: "center",
+                textAlign: "center",
+                marginRight: "10px",
+              }}
+              paragraph
+              dangerouslySetInnerHTML={{
+                __html: categoryGroupData.categoryGroupDescription,
+              }}
+            />
+            <img
+              width={isMobile ? 250 : 400}
+              height={isMobile ? 250 : 400}
+              src={categoryGroupData.categoryGroupImage}
+              alt="preview"
+              style={{
+                marginTop: isMobile ? "8px" : "16px",
+                marginBottom: isMobile ? "8px" : "5px",
+              }}
+            />
+          </Box>
+        ) : (
+          <Typography variant={isMobile ? "body2" : "body1"}>
+            Loading...
           </Typography>
-          <Typography
-            variant={isMobile ? "body2" : "body1"}
-            style={{
-              justifyContent: "space-between",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-            paragraph
-          >
-            {categoryGroupData.categoryGroupDescription}
-          </Typography>
-          <img
-            width={isMobile ? 150 : 200}
-            height={isMobile ? 150 : 200}
-            src={categoryGroupData.categoryGroupImage}
-            alt="preview"
-            style={{ marginTop: isMobile ? "8px" : "16px" }}
-          />
-        </Box>
-      ) : (
-        <Typography variant={isMobile ? "body2" : "body1"}>
-          Loading...
-        </Typography>
-      )}
+        )}
+      </PerfectScrollbar>
     </Paper>
   );
 }

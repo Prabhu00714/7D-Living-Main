@@ -1,6 +1,8 @@
 import { Paper, Typography, Box, useMediaQuery } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 function SubCategory({ state, dispatch }) {
   const [subCategoryData, setSubCategoryData] = useState(null);
@@ -50,37 +52,40 @@ function SubCategory({ state, dispatch }) {
         padding: isMobile ? "8px" : "16px",
       }}
     >
-      {subCategoryData ? (
-        <Box>
-          <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
-            {subCategoryData.subCategoryHeading}
-          </Typography>
-          <Typography
-            variant={isMobile ? "body2" : "body1"}
-            style={{
-              justifyContent: "space-between",
-              alignItems: "center",
-              textAlign: "center",
-            }}
-            paragraph
-          >
-            {subCategoryData.subCategoryDescription}
-          </Typography>
-          {subCategoryData.subCategoryImage && (
-            <img
-              width={isMobile ? 150 : 200}
-              height={isMobile ? 150 : 200}
-              src={subCategoryData.subCategoryImage}
-              alt="preview"
-              style={{ marginTop: isMobile ? "8px" : "16px" }}
+      <PerfectScrollbar options={{ wheelPropagation: false }}>
+        {subCategoryData ? (
+          <Box>
+            <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
+              {subCategoryData.subCategoryHeading}
+            </Typography>
+            <Typography
+              variant={isMobile ? "body2" : "body1"}
+              style={{
+                justifyContent: "space-between",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+              paragraph
+              dangerouslySetInnerHTML={{
+                __html: subCategoryData.subCategoryDescription,
+              }}
             />
-          )}
-        </Box>
-      ) : (
-        <Typography variant={isMobile ? "body2" : "body1"}>
-          Loading...
-        </Typography>
-      )}
+            {subCategoryData.subCategoryImage && (
+              <img
+                width={isMobile ? 250 : 400}
+                height={isMobile ? 250 : 400}
+                src={subCategoryData.subCategoryImage}
+                alt="preview"
+                style={{ marginTop: isMobile ? "8px" : "16px" }}
+              />
+            )}
+          </Box>
+        ) : (
+          <Typography variant={isMobile ? "body2" : "body1"}>
+            Loading...
+          </Typography>
+        )}
+      </PerfectScrollbar>
     </Paper>
   );
 }
