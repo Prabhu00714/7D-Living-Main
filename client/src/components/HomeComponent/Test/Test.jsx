@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { motion } from "framer-motion";
 import TopBar from "../TopBar";
 import CategoryGroup from "./CategoryGroup";
@@ -7,6 +7,7 @@ import { Button } from "@mui/material";
 import Category from "./Category";
 import Questions from "./Questions";
 import SubCategory from "./SubCategory";
+import axios from "axios";
 
 const initialState = {
   next: 0,
@@ -80,8 +81,31 @@ const reducer = (state, action) => {
 
 const Test = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [categoryGroupsLength, setCategoryGroupsLength] = useState(null);
+
+  useEffect(() => {
+    const fetchCategoryGroupsLength = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/category/get/categorygroup/length"
+        );
+        console.log("response.data", response.data);
+        const categoryGroupLength = response.data.length;
+
+        // Update state after fetching length
+        setCategoryGroupsLength(categoryGroupLength);
+      } catch (error) {
+        console.error("Error fetching categoryGroups length:", error);
+      }
+    };
+
+    fetchCategoryGroupsLength(); // Call the function when the component mounts
+  }, []);
 
   const handleNext = () => {
+    console.log("categoryGroupsLength", categoryGroupsLength);
+    console.log("state.categoryGroupLength", state.categoryGroupLength);
+    console.log("state.categoryNumber", state.categoryNumber);
     switch (state.modelType) {
       case "categorygroup":
         dispatch({
@@ -161,9 +185,16 @@ const Test = () => {
             payload: state.subCategoryIds[state.subCategoryNumber],
           });
         }
+        if (state.categoryGroupLength === categoryGroupsLength) {
+          dispatch({
+            type: "set_active_finish",
+            payload: true,
+          });
+        }
         break;
       case "questions":
-        if (state.categoryNumber > state.categoryGroupLength) {
+        if (state.categoryNumber === state.categoryGroupLength) {
+          console.log("if statement");
           dispatch({
             type: "set_categorygroup_number",
             payload: state.categoryGroupNumber + 1,
@@ -185,11 +216,6 @@ const Test = () => {
           dispatch({
             type: "set_model_type",
             payload: "category", // Update modelType to "category"
-          });
-        } else {
-          dispatch({
-            type: "set_active_finish",
-            payload: true,
           });
         }
         dispatch({

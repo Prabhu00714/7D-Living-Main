@@ -6,6 +6,7 @@ const CategoryGroup = require("../models/CategoryGroup");
 const Category = require("../models/Category");
 const SubCategory = require("../models/SubCategory");
 const QNA = require("../models/QNA");
+const UserResult = require("../models/UserResult");
 
 router.get("/get/each/Categories", async (req, res) => {
   try {
@@ -152,6 +153,44 @@ router.get("/get/first/questions/:questionIds", async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error("Error fetching data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/get/categorygroup/length", async (req, res) => {
+  try {
+    const categoryGroupLength = await CategoryGroup.countDocuments();
+
+    res.json({ length: categoryGroupLength });
+  } catch (error) {
+    console.error("Error fetching category groups length:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/post/user/result", async (req, res) => {
+  try {
+    const { username, result } = req.body;
+
+    // Assuming you want to update existing user results or create a new user
+    const existingUserResult = await UserResult.findOne({ username });
+
+    if (existingUserResult) {
+      // If the user already exists, update the results
+      existingUserResult.userresults = result;
+      await existingUserResult.save();
+      res.status(200).json({ message: "User results updated successfully." });
+    } else {
+      // If the user doesn't exist, create a new user
+      const newUserResult = new UserResult({
+        username,
+        userresults: result,
+      });
+      await newUserResult.save();
+      res.status(200).json({ message: "User results saved successfully." });
+    }
+  } catch (error) {
+    console.error("Error saving user results:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
