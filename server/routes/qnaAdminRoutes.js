@@ -5,6 +5,7 @@ const CategoryGroup = require("../models/CategoryGroup");
 const Category = require("../models/Category");
 const SubCategory = require("../models/SubCategory");
 const QNA = require("../models/QNA");
+const Topic = require("../models/Topic");
 
 const router = express.Router();
 
@@ -618,5 +619,91 @@ router.delete(
     }
   }
 );
+
+router.get("/get/all/topics", async (req, res) => {
+  try {
+    const topics = await Topic.find({});
+    res.json(topics);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.post("/post/new/topic", async (req, res) => {
+  try {
+    const { header, description, image } = req.body;
+
+    const newTopic = await Topic.create({
+      topicHeading: header,
+      topicDescription: description,
+      topicImage: image,
+    });
+
+    console.log("newTopic", newTopic);
+
+    // Send a response with the new topic or a success message
+    res.status(200).json({ message: "Topic created successfully", newTopic });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/post/edit/topic/:itemId", async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    // Create the update data object based on the modelType
+    const updateData = {
+      topicHeading: req.body.header,
+      topicDescription: req.body.description,
+      topicImage: req.body.image,
+    };
+
+    const updatedItem = await Topic.findByIdAndUpdate(itemId, updateData, {
+      new: true,
+    });
+
+    if (!updatedItem) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/get/edit/topic/:itemId", async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    const item = await Topic.findById(itemId);
+    res.json(item);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.delete("/delete/topic/:topicId", async (req, res) => {
+  try {
+    const topicId = req.params.topicId; // Fix: Use req.params.topicId
+
+    const existingTopic = await Topic.findById(topicId);
+    if (!existingTopic) {
+      return res.status(404).json({ error: "Topic not found" });
+    }
+
+    await existingTopic.deleteOne();
+
+    res.status(200).json({ message: "Topic deleted successfully" }); // Add a response
+  } catch (error) {
+    console.error("Error deleting topic:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 module.exports = router;

@@ -14,7 +14,7 @@ const Admin = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [newCategory, setNewCategory] = useState("new category");
   const [newQna, setNewQna] = useState("");
-  const [newTopic, setNewTopic] = useState("new category");
+  const [newTopic, setNewTopic] = useState("");
   const [newUsers, setNewUsers] = useState("");
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
