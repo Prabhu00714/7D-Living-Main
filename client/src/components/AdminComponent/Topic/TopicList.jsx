@@ -13,7 +13,6 @@ const TopicList = ({ state, dispatch }) => {
         const response = await axios.get(
           "http://localhost:3001/api/qna/get/all/topics"
         );
-        console.log("response.data", response.data);
         setItems(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);

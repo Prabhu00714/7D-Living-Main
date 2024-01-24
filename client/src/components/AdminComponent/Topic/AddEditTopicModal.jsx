@@ -17,6 +17,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
+  const [code, setCode] = useState("");
   const [header, setHeader] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
@@ -25,6 +26,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
     if (reason && reason === "backdropClick") return;
 
     dispatch({ type: "set_topic_modal", payload: false });
+    setCode("");
     setHeader("");
     setDescription("");
     setImage(null);
@@ -33,12 +35,13 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
   const handleAdd = async () => {
     try {
-      if (!header || !description) {
+      if (!header || !description || !code) {
         toast.error("Both header and description are required");
         return;
       }
 
       const requestData = {
+        code,
         header,
         description,
         image,
@@ -48,11 +51,10 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
         "http://localhost:3001/api/qna/post/new/topic",
         requestData
       );
-      console.log("response.status", response.status);
 
       if (response.status === 200) {
-        console.log("response.status");
         toast.success(`New Topic Added Successfully`);
+        setCode("");
         setHeader("");
         setDescription("");
         setImage(null);
@@ -68,15 +70,14 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
   };
 
   const handleEdit = async () => {
-    console.log("state.selectedTopicItem", state.selectedTopicItem);
-
     try {
-      if (!header || !description) {
+      if (!header || !description || !code) {
         toast.error("Both header and description are required");
         return;
       }
 
       const requestData = {
+        code,
         header,
         description,
         image,
@@ -89,6 +90,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`Topic Edited Successfully`);
+        setCode("");
         setHeader("");
         setDescription("");
         setImage(null);
@@ -106,11 +108,11 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
   useEffect(() => {
     if (state.topicAction === "add") {
+      setCode("");
       setHeader("");
       setDescription("");
       setImage(null);
     } else if (state.topicAction === "edit") {
-      console.log("selectedTopicItem", state.selectedTopicItem._id);
       if (state.selectedTopicItem) {
         axios
           .get(
@@ -118,7 +120,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
           )
           .then((response) => {
             const data = response.data;
-            console.log("data", data);
+            setCode(data.topicCode);
             setHeader(data.topicHeading);
             setDescription(data.topicDescription);
             setImage(data.topicImage || null);
@@ -162,6 +164,17 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
         {/* Body */}
         <DialogContent>
           {/* Text Fields for Header and Description */}
+          <TextField
+            autoFocus
+            margin="dense"
+            id="code"
+            label="Code"
+            type="text"
+            fullWidth
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+
           <TextField
             autoFocus
             margin="dense"

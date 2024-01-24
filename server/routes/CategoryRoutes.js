@@ -195,8 +195,6 @@ router.post("/post/user/result", async (req, res) => {
       })
     );
 
-    console.log("aggregatedResultsArray", aggregatedResultsArray);
-
     // Assuming you want to update existing user results or create a new user
     const existingUserResult = await UserResult.findOne({ username });
 

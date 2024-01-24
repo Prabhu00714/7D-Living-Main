@@ -90,7 +90,6 @@ const Test = () => {
         const response = await axios.get(
           "http://localhost:3001/api/category/get/categorygroup/length"
         );
-        console.log("response.data", response.data);
         const categoryGroupLength = response.data.length;
 
         // Update state after fetching length

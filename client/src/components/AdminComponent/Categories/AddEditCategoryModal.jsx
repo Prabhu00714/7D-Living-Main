@@ -140,7 +140,6 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
   };
 
   useEffect(() => {
-    console.log("state.modelType", state.modelType);
     const getModelData = () => {
       switch (state.modelType) {
         case "categoryGroup":
@@ -196,7 +195,6 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
           )
           .then((response) => {
             const data = response.data;
-            console.log("data", data);
             setHeader(data[headingKey]);
             setDescription(data[descriptionKey]);
             setImage(data.image || null);

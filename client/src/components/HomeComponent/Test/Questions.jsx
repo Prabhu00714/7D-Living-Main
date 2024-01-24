@@ -83,8 +83,6 @@ function Questions({ state, dispatch }) {
 
     const resultsJSON = JSON.stringify(results);
 
-    console.log("resultsJSON", resultsJSON);
-
     try {
       const response = await axios.post(
         "http://localhost:3001/api/category/post/user/result",
@@ -93,7 +91,6 @@ function Questions({ state, dispatch }) {
 
       if (response.status === 200) {
         toast.success("Answers saved successfully.");
-        console.log("Server response:", response.data);
       } else {
         toast.error("Failed to save answers. Please try again.");
       }

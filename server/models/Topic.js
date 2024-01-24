@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const topicSchema = new mongoose.Schema({
+  topicCode: String,
   topicHeading: String,
   topicDescription: String,
   topicImage: String,

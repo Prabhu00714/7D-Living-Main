@@ -6,6 +6,7 @@ const Category = require("../models/Category");
 const SubCategory = require("../models/SubCategory");
 const QNA = require("../models/QNA");
 const Topic = require("../models/Topic");
+const UserResult = require("../models/UserResult");
 
 const router = express.Router();
 
@@ -623,7 +624,6 @@ router.delete(
 router.get("/get/topic/edit/:topicId", async (req, res) => {
   try {
     const { topicId } = req.params;
-    console.log("topicId", topicId);
 
     const item = await Topic.findById(topicId);
     res.json(item);
@@ -712,6 +712,27 @@ router.get("/get/first/topic", async (req, res) => {
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/get/aggregatedResults/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+    console.log("username", username);
+
+    // Find the document with the specified username
+    const result = await UserResult.findOne({ username });
+
+    if (!result) {
+      return res.status(404).json({ error: "Username not found" });
+    }
+
+    // Extract and send the aggregated results to the frontend
+    const aggregatedResults = result.aggregatedResults || [];
+    res.json(aggregatedResults);
+  } catch (error) {
+    console.error("Error fetching aggregated results:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
