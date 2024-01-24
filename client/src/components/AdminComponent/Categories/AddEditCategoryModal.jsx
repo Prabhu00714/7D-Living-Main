@@ -21,7 +21,9 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
+
     dispatch({ type: "set_category_modal", payload: false });
     setHeader("");
     setDescription("");

@@ -7,12 +7,14 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import "react-toastify/dist/ReactToastify.css";
 import Categories from "./AdminComponent/Categories/Categories";
 import QaEditor from "./AdminComponent/QA/QaEditor";
+import Topic from "./AdminComponent/Topic/Topic";
 import Users from "./AdminComponent/Users";
 
 const Admin = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [newCategory, setNewCategory] = useState("new category");
   const [newQna, setNewQna] = useState("");
+  const [newTopic, setNewTopic] = useState("new category");
   const [newUsers, setNewUsers] = useState("");
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -25,14 +27,24 @@ const Admin = () => {
       setGetCategory(""); // Reset getCategory
       setNewQna("");
       setNewUsers("");
+      setNewTopic("");
     } else if (category === "new qna") {
       setNewQna(category);
+      setNewCategory("");
+      setGetCategory("");
+      setNewTopic("");
+      // setSelectedComponent(category);
+      setNewUsers("");
+    } else if (category === "new topic") {
+      setNewTopic(category);
+      setNewQna("");
       setNewCategory("");
       setGetCategory("");
       // setSelectedComponent(category);
       setNewUsers("");
     } else if (category === "new users") {
       setNewUsers(category);
+      setNewTopic("");
       setNewQna("");
       setNewCategory("");
       setGetCategory("");
@@ -81,6 +93,7 @@ const Admin = () => {
       <div>
         {newCategory && <Categories />}
         {newQna && <QaEditor />}
+        {newTopic && <Topic />}
         {newUsers && <Users />}
       </div>
     </motion.div>

@@ -13,13 +13,29 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Switch from "@mui/material/Switch";
+import { Typography } from "@mui/material";
 
 const AddQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
   const [questions, setQuestions] = useState([]);
   const [selectedQuestions, setSelectedQuestions] = useState(new Set());
   const [selectedQuestionsArray, setSelectedQuestionsArray] = useState([]);
+  const [checked, setChecked] = useState(true);
+  const [apiEndpoint, setApiEndpoint] = useState(
+    "http://localhost:3001/api/qna/get/all/question"
+  );
 
-  const handleClose = () => {
+  const handleChange = (event) => {
+    const newApiEndpoint = event.target.checked
+      ? "http://localhost:3001/api/qna/get/all/question"
+      : `http://localhost:3001/api/qna/get/each/category/questions/${state.selectedCategoryItem._id}`;
+
+    setApiEndpoint(newApiEndpoint);
+    setChecked(event.target.checked);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason && reason === "backdropClick") return;
     dispatch({ type: "set_question_modal", payload: false });
   };
 
@@ -55,9 +71,7 @@ const AddQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/api/qna/get/all/question"
-        );
+        const response = await axios.get(apiEndpoint);
         setQuestions(response.data); // Assuming the API response is an array of questions
       } catch (error) {
         console.error("Error fetching questions:", error);
@@ -65,7 +79,7 @@ const AddQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
     };
 
     fetchData();
-  }, []); // Run the effect only once when the component mounts
+  }, [apiEndpoint, state.selectedCategoryItem]); // Include apiEndpoint as a dependency for useEffect
 
   const handleListItemClick = (question) => {
     const newSelectedQuestions = new Set(selectedQuestions);
@@ -101,29 +115,39 @@ const AddQuestionsModal = ({ state, dispatch, onAddItem, isMobile }) => {
       >
         <DialogTitle>Title</DialogTitle>
         <Divider />
+        <div style={{ alignSelf: "flex-end", marginRight: "10px" }}>
+          <Typography variant="body2">List All Questions</Typography>
+
+          <Switch
+            checked={checked}
+            onChange={handleChange}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        </div>
         <PerfectScrollbar>
           <DialogContent>
             <List>
-              {questions.map((question) => (
-                <ListItem
-                  key={question._id}
-                  onClick={() => handleListItemClick(question)}
-                  sx={{
-                    backgroundColor: selectedQuestions.has(
-                      question.questiontext
-                    )
-                      ? "#c0c0c0"
-                      : "inherit",
-                    "&:hover": {
-                      backgroundColor: "#f0f0f0",
-                      cursor: "default",
-                    },
-                    userSelect: "none",
-                  }}
-                >
-                  <ListItemText primary={question.questiontext} />
-                </ListItem>
-              ))}
+              {questions &&
+                questions.map((question) => (
+                  <ListItem
+                    key={question._id}
+                    onClick={() => handleListItemClick(question)}
+                    sx={{
+                      backgroundColor: selectedQuestions.has(
+                        question.questiontext
+                      )
+                        ? "#c0c0c0"
+                        : "inherit",
+                      "&:hover": {
+                        backgroundColor: "#f0f0f0",
+                        cursor: "default",
+                      },
+                      userSelect: "none",
+                    }}
+                  >
+                    <ListItemText primary={question.questiontext} />
+                  </ListItem>
+                ))}
             </List>
           </DialogContent>
         </PerfectScrollbar>
