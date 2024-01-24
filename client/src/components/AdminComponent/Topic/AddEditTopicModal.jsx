@@ -17,6 +17,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
+  const [prompt, setPrompt] = useState("");
   const [code, setCode] = useState("");
   const [header, setHeader] = useState("");
   const [description, setDescription] = useState("");
@@ -26,6 +27,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
     if (reason && reason === "backdropClick") return;
 
     dispatch({ type: "set_topic_modal", payload: false });
+    setPrompt("");
     setCode("");
     setHeader("");
     setDescription("");
@@ -41,6 +43,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
       }
 
       const requestData = {
+        prompt,
         code,
         header,
         description,
@@ -54,6 +57,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`New Topic Added Successfully`);
+        setPrompt("");
         setCode("");
         setHeader("");
         setDescription("");
@@ -77,6 +81,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
       }
 
       const requestData = {
+        prompt,
         code,
         header,
         description,
@@ -90,6 +95,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`Topic Edited Successfully`);
+        setPrompt("");
         setCode("");
         setHeader("");
         setDescription("");
@@ -108,6 +114,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
   useEffect(() => {
     if (state.topicAction === "add") {
+      setPrompt("");
       setCode("");
       setHeader("");
       setDescription("");
@@ -120,6 +127,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
           )
           .then((response) => {
             const data = response.data;
+            setPrompt(data.prompt);
             setCode(data.topicCode);
             setHeader(data.topicHeading);
             setDescription(data.topicDescription);
@@ -164,6 +172,17 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
         {/* Body */}
         <DialogContent>
           {/* Text Fields for Header and Description */}
+          <TextField
+            autoFocus
+            margin="dense"
+            id="prompt"
+            label="Prompt"
+            type="text"
+            fullWidth
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
+
           <TextField
             autoFocus
             margin="dense"

@@ -154,9 +154,10 @@ router.get("/get/all/question", async (req, res) => {
 
 router.post("/post/new/categorygroup", async (req, res) => {
   try {
-    const { header, description, image } = req.body;
+    const { prompt, header, description, image } = req.body;
 
     const item = await CategoryGroup.create({
+      prompt: prompt,
       categoryGroupHeading: header,
       categoryGroupDescription: description,
       categoryGroupImage: image,
@@ -171,11 +172,12 @@ router.post("/post/new/categorygroup", async (req, res) => {
 
 router.post("/post/new/category/:categorygroupId", async (req, res) => {
   try {
-    const { header, description, image } = req.body;
+    const { prompt, header, description, image } = req.body;
     const { categorygroupId } = req.params;
 
     // Create a new Category
     const newCategory = await Category.create({
+      prompt: prompt,
       categoryHeading: header,
       categoryDescription: description,
       categoryImage: image,
@@ -203,10 +205,11 @@ router.post("/post/new/category/:categorygroupId", async (req, res) => {
 
 router.post("/post/new/subcategory/:categoryId", async (req, res) => {
   try {
-    const { header, description, image } = req.body;
+    const { prompt, header, description, image } = req.body;
     const { categoryId } = req.params;
 
     const newSubCategory = await SubCategory.create({
+      prompt: prompt,
       subCategoryHeading: header,
       subCategoryDescription: description,
       subCategoryImage: image,
@@ -280,6 +283,7 @@ router.post("/post/edit/:modelType/:itemId", async (req, res) => {
 
     // Create the update data object based on the modelType
     const updateData = {
+      [`prompt`]: req.body.prompt,
       [`${modelType}Heading`]: req.body.header,
       [`${modelType}Description`]: req.body.description,
       [`${modelType}Image`]: req.body.image,
@@ -490,7 +494,7 @@ router.post("/post/each/category/qna/:categoryId", async (req, res) => {
     const jsonData = req.body;
 
     const savedData = await Promise.all(
-      jsonData.map(async ({ questiontext, questionimage, answers }) => {
+      jsonData.map(async ({ prompt, questiontext, questionimage, answers }) => {
         const existingQuestion = await QNA.findOne({ questiontext });
 
         if (existingQuestion) {
@@ -502,6 +506,7 @@ router.post("/post/each/category/qna/:categoryId", async (req, res) => {
 
         // Create a new question with questionimage
         const savedQuestion = await QNA.create({
+          prompt,
           questiontext,
           questionimage,
           answers: answers.map(({ answer, answerimage, results }) => {
@@ -558,6 +563,7 @@ router.post("/update/each/question/:questionId", async (req, res) => {
       questionId,
       {
         $set: {
+          prompt: questionData.prompt,
           questiontext: questionData.questiontext,
           answers: questionData.answers,
           questionimage: questionData.questionimage,
@@ -645,9 +651,11 @@ router.get("/get/all/topics", async (req, res) => {
 
 router.post("/post/new/topic", async (req, res) => {
   try {
-    const { header, description, image } = req.body;
+    const { prompt, code, header, description, image } = req.body;
 
     const newTopic = await Topic.create({
+      prompt: prompt,
+      topicCode: code,
       topicHeading: header,
       topicDescription: description,
       topicImage: image,
@@ -667,6 +675,7 @@ router.post("/post/topic/edit/:itemId", async (req, res) => {
 
     // Create the update data object based on the modelType
     const updateData = {
+      prompt: req.body.prompt,
       topicHeading: req.body.header,
       topicDescription: req.body.description,
       topicImage: req.body.image,

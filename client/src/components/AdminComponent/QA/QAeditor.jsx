@@ -47,6 +47,7 @@ const DemoPaper2 = styled(Paper)(({ theme, isMobile }) => ({
 }));
 
 const initialQuestion = {
+  prompt: "",
   questiontext: "",
   questionimage: "",
   answers: [
@@ -112,6 +113,7 @@ const QaEditor = () => {
       type: "set_questions",
       payload: [
         {
+          prompt: "",
           questiontext: "",
           questionimage: "",
           answers: [

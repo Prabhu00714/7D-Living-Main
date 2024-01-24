@@ -12,6 +12,7 @@ const categoriesSchema = new mongoose.Schema({
 });
 
 const categorySchema = new mongoose.Schema({
+  prompt: String,
   categoryHeading: String,
   categoryDescription: String,
   categoryImage: String,

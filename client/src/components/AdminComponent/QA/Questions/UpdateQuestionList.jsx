@@ -16,7 +16,7 @@ const UpdateQuestionList = ({ state, questions, setQuestions }) => {
           `http://localhost:3001/api/qna/get/each/question/${state.selectedQuestionItem._id}`
         )
         .then((response) => {
-          const { answers, questiontext, _id } = response.data;
+          const { answers, questiontext, prompt } = response.data;
 
           // Convert the nested results array within answers
           const updatedAnswers = answers.map((answer) => ({
@@ -30,6 +30,7 @@ const UpdateQuestionList = ({ state, questions, setQuestions }) => {
 
           const updatedQuestions = [
             {
+              prompt,
               questiontext,
               answers: updatedAnswers,
               questionimage: "", // Update with your actual questionimage property
@@ -125,6 +126,17 @@ const UpdateQuestionList = ({ state, questions, setQuestions }) => {
         {/* Question Section */}
         {questions.map((question, qIndex) => (
           <div key={qIndex}>
+            {/* Prompt Input */}
+            <Typography variant="subtitle1">Prompt:</Typography>
+            <TextField
+              type="text"
+              value={question.prompt}
+              onChange={(e) => handleChange("prompt", e.target.value, qIndex)}
+              size="small"
+              fullWidth
+              margin="dense"
+            />
+
             {/* Question Text Input */}
             <Typography variant="subtitle1">Question Text:</Typography>
             <TextField

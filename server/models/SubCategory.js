@@ -8,6 +8,7 @@ const subCategoriesSchema = new mongoose.Schema({
 });
 
 const subCategorySchema = new mongoose.Schema({
+  prompt: String,
   subCategoryHeading: String,
   subCategoryDescription: String,
   subCategoryImage: String,

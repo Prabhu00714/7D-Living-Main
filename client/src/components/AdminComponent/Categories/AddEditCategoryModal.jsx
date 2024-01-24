@@ -17,6 +17,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
+  const [prompt, setPrompt] = useState("");
   const [header, setHeader] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
@@ -25,6 +26,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
     if (reason && reason === "backdropClick") return;
 
     dispatch({ type: "set_category_modal", payload: false });
+    setHeader("");
     setHeader("");
     setDescription("");
     setImage(null);
@@ -57,6 +59,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
       }
 
       const requestData = {
+        prompt,
         header,
         description,
         image,
@@ -70,6 +73,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`${state.modelName} Added Successfully`);
+        setPrompt("");
         setHeader("");
         setDescription("");
         setImage(null);
@@ -110,6 +114,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
       }
 
       const requestData = {
+        prompt,
         header,
         description,
         image,
@@ -122,6 +127,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
 
       if (response.status === 200) {
         toast.success(`${state.modelName} Edited Successfully`);
+        setPrompt("");
         setHeader("");
         setDescription("");
         setImage(null);
@@ -168,6 +174,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
     const { headingKey, descriptionKey } = getModelData();
 
     if (state.categoryAction === "add" && state.modelType) {
+      setPrompt("");
       setHeader("");
       setDescription("");
       setImage(null);
@@ -195,6 +202,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
           )
           .then((response) => {
             const data = response.data;
+            setPrompt(data.prompt);
             setHeader(data[headingKey]);
             setDescription(data[descriptionKey]);
             setImage(data.image || null);
@@ -240,6 +248,17 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
         {/* Body */}
         <DialogContent>
           {/* Text Fields for Header and Description */}
+          <TextField
+            autoFocus
+            margin="dense"
+            id="prompt"
+            label="Prompt"
+            type="text"
+            fullWidth
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
+
           <TextField
             autoFocus
             margin="dense"

@@ -8,6 +8,7 @@ const categoryGroupsSchema = new mongoose.Schema({
 });
 
 const categoryGroupSchema = new mongoose.Schema({
+  prompt: String,
   categoryGroupHeading: String,
   categoryGroupDescription: String,
   categoryGroupImage: String,

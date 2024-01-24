@@ -27,6 +27,7 @@ const AddEditQuestionsModal = ({
 }) => {
   const [questions, setQuestions] = useState([
     {
+      prompt: "", // Added prompt field
       questiontext: "",
       answers: [
         {
@@ -38,15 +39,34 @@ const AddEditQuestionsModal = ({
       questionimage: "",
     },
   ]);
+
   const handleClose = (event, reason) => {
     if (reason && reason === "backdropClick") return;
     dispatch({ type: "set_question_modal", payload: false });
+    dispatch({
+      type: "set_questions",
+      payload: [
+        {
+          prompt: "",
+          questiontext: "",
+          questionimage: "",
+          answers: [
+            {
+              answer: "",
+              answerimage: "",
+              results: [{ result: "", value: "" }],
+            },
+          ],
+        },
+      ],
+    });
   };
 
   const handleAdd = async () => {
     try {
       const isInvalidData = state.questions.some(
         (question) =>
+          !question.prompt.trim() ||
           !question.questiontext.trim() ||
           !question.answers.every(
             (answer) =>
@@ -63,6 +83,7 @@ const AddEditQuestionsModal = ({
       }
 
       const jsonData = state.questions.map((question) => ({
+        prompt: question.prompt, // Added prompt field
         questiontext: question.questiontext,
         questionimage: question.questionimage,
         answers: question.answers.map((answer) => ({
@@ -96,6 +117,7 @@ const AddEditQuestionsModal = ({
     try {
       const isInvalidData = questions.some(
         (question) =>
+          !question.prompt.trim() ||
           !question.questiontext.trim() ||
           !question.answers.every(
             (answer) =>
@@ -112,6 +134,7 @@ const AddEditQuestionsModal = ({
       }
 
       const jsonData = {
+        prompt: questions[0].prompt, // Added prompt field
         questiontext: questions[0].questiontext,
         questionimage: questions[0].questionimage,
         answers: questions[0].answers.map((answer) => ({

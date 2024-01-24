@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useEffect } from "react";
 import { Button, Dialog, DialogContent, Typography } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
@@ -16,11 +17,11 @@ const TopicModal = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [resultsSummary, setResultsSummary] = useState({});
-  const [conditions, setConditions] = useState([]);
+  const [conditions, setConditions] = useState("");
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/api/qna/get/first/topic")
+      .get("http://localhost:3001/api/qna/get/first/topic/conditions")
       .then((response) => {
         const data = response.data;
         setHeader(data.topicHeading);
@@ -31,6 +32,28 @@ const TopicModal = () => {
         console.error("Error fetching data:", error);
       });
   }, []);
+
+  const handleConditions = () => {
+    if (
+      aggregatedResults.results &&
+      aggregatedResults.results.V > aggregatedResults.results.P &&
+      aggregatedResults.results.V > aggregatedResults.results.K
+    ) {
+      setConditions("V");
+    } else if (
+      aggregatedResults.results &&
+      aggregatedResults.results.P > aggregatedResults.results.V &&
+      aggregatedResults.results.P > aggregatedResults.results.K
+    ) {
+      setConditions("P");
+    } else if (
+      aggregatedResults.results &&
+      aggregatedResults.results.K > aggregatedResults.results.V &&
+      aggregatedResults.results.K > aggregatedResults.results.P
+    ) {
+      setConditions("K");
+    }
+  };
 
   useEffect(() => {
     axios
@@ -61,20 +84,9 @@ const TopicModal = () => {
         setResultsSummary(summary);
 
         // Define conditions based on the aggregated results
-        const newConditions = [];
+        handleConditions();
 
-        // Example condition: V > P and V > K
-        if (
-          summary.results &&
-          summary.results.V > summary.results.P &&
-          summary.results.V > summary.results.K
-        ) {
-          newConditions.push("V > P and V > K");
-        }
-
-        // Add more conditions as needed
-
-        setConditions(newConditions);
+        // Example conditions based on counts
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -140,16 +152,6 @@ const TopicModal = () => {
                   </li>
                 )
               )}
-            </ul>
-          </div>
-
-          {/* Display the conditions */}
-          <div style={{ marginTop: 16 }}>
-            <Typography variant="h6">Conditions:</Typography>
-            <ul>
-              {conditions.map((condition, index) => (
-                <li key={index}>{condition}</li>
-              ))}
             </ul>
           </div>
         </div>

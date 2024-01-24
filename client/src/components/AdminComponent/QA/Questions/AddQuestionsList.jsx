@@ -8,6 +8,12 @@ import { ToastContainer, toast } from "react-toastify";
 const AddQuestionsList = ({ state, dispatch, fileInputRef }) => {
   const isMobile = useMediaQuery("(max-width: 600px)");
 
+  const updatePrompt = (qIndex, value) => {
+    const updatedQuestions = [...state.questions];
+    updatedQuestions[qIndex].prompt = value;
+    dispatch({ type: "set_questions", payload: updatedQuestions });
+  };
+
   const addAnswer = (qIndex) => {
     const updatedQuestions = [...state.questions];
     const newAnswerId = updatedQuestions[qIndex].answers.length + 1;
@@ -89,6 +95,17 @@ const AddQuestionsList = ({ state, dispatch, fileInputRef }) => {
       <Box component="main" sx={{ flexGrow: 1, p: 3, ml: "auto" }}>
         {state.questions.map((question, qIndex) => (
           <div key={qIndex}>
+            {/* Prompt Input */}
+            <Typography variant="subtitle1">Prompt:</Typography>
+            <TextField
+              type="text"
+              value={question.prompt}
+              onChange={(e) => updatePrompt(qIndex, e.target.value)}
+              size="small"
+              fullWidth
+              margin="dense"
+            />
+
             {/* Question Text Input */}
             <Typography variant="subtitle1">Question Text:</Typography>
             <TextField

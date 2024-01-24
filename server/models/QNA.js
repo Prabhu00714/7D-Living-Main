@@ -12,6 +12,7 @@ const answerSchema = new mongoose.Schema({
 });
 
 const qnaSchema = new mongoose.Schema({
+  prompt: String,
   questiontext: String,
   questionimage: String,
   answers: [answerSchema],
