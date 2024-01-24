@@ -10,15 +10,12 @@ const SubCategoryList = ({ state, dispatch }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (state.selectedCategoryGroupItem && state.selectedCategoryItem) {
+        if (state.selectedCategoryItem) {
           const response = await axios.get(
             `http://localhost:3001/api/qna/get/all/subcategory/${state.selectedCategoryItem._id}`
           );
           setItems(response.data);
-        } else if (
-          !state.selectedCategoryGroupItem &&
-          !state.selectedCategoryItem
-        ) {
+        } else if (!state.selectedCategoryItem) {
           setItems("");
         }
       } catch (error) {
@@ -26,12 +23,7 @@ const SubCategoryList = ({ state, dispatch }) => {
       }
     };
     fetchData();
-  }, [
-    state.subCategoryRefreshFlag,
-    state.selectedCategoryGroupItem,
-    state.selectedCategoryItem,
-    dispatch,
-  ]);
+  }, [state.subCategoryRefreshFlag, state.selectedCategoryItem, dispatch]);
 
   useEffect(() => {
     dispatch({
