@@ -185,12 +185,6 @@ const Test = () => {
             payload: state.subCategoryIds[state.subCategoryNumber],
           });
         }
-        if (state.categoryGroupLength === categoryGroupsLength) {
-          dispatch({
-            type: "set_active_finish",
-            payload: true,
-          });
-        }
         break;
       case "questions":
         if (state.categoryNumber === state.categoryGroupLength) {
@@ -216,6 +210,11 @@ const Test = () => {
           dispatch({
             type: "set_model_type",
             payload: "category", // Update modelType to "category"
+          });
+        } else if (state.categoryGroupLength === categoryGroupsLength) {
+          dispatch({
+            type: "set_active_finish",
+            payload: true,
           });
         }
         dispatch({

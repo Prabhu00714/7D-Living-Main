@@ -172,12 +172,38 @@ router.post("/post/user/result", async (req, res) => {
   try {
     const { username, result } = req.body;
 
+    // Calculate aggregated results
+    const aggregatedResults = {};
+
+    result.forEach(({ results }) => {
+      results.forEach(({ result, value }) => {
+        if (!aggregatedResults[result]) {
+          aggregatedResults[result] = 0;
+        }
+        aggregatedResults[result] += value;
+      });
+    });
+
+    // Transform aggregatedResults into an array of objects
+    const aggregatedResultsArray = Object.keys(aggregatedResults).map(
+      (resultName) => ({
+        resultName,
+        totalScore: [...aggregatedResults[resultName].toString()].reduce(
+          (acc, digit) => acc + parseInt(digit),
+          0
+        ),
+      })
+    );
+
+    console.log("aggregatedResultsArray", aggregatedResultsArray);
+
     // Assuming you want to update existing user results or create a new user
     const existingUserResult = await UserResult.findOne({ username });
 
     if (existingUserResult) {
       // If the user already exists, update the results
       existingUserResult.userresults = result;
+      existingUserResult.aggregatedResults = aggregatedResultsArray;
       await existingUserResult.save();
       res.status(200).json({ message: "User results updated successfully." });
     } else {
@@ -185,6 +211,7 @@ router.post("/post/user/result", async (req, res) => {
       const newUserResult = new UserResult({
         username,
         userresults: result,
+        aggregatedResults: aggregatedResultsArray,
       });
       await newUserResult.save();
       res.status(200).json({ message: "User results saved successfully." });
