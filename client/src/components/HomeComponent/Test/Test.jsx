@@ -185,34 +185,28 @@ const Test = () => {
         break;
       case "questions":
         if (state.categoryNumber === state.categoryGroupLength) {
-          console.log("if statement");
           dispatch({
             type: "set_categorygroup_number",
             payload: state.categoryGroupNumber + 1,
           });
+          dispatch({ type: "set_model_type", payload: "categorygroup" });
+        } else if (state.subCategoryNumber < state.subCategoryLength) {
+          dispatch({ type: "set_model_type", payload: "subcategory" });
+          dispatch({ type: "set_common_type", payload: "subcategory" });
+        } else if (state.categoryNumber < state.categoryGroupLength) {
+          dispatch({ type: "set_model_type", payload: "category" });
+        } else if (
+          state.categoryGroupLength === categoryGroupsLength ||
+          state.categoryGroupNumber > state.categoryGroupLength
+        ) {
+          dispatch({ type: "set_active_finish", payload: true });
+        } else {
           dispatch({
-            type: "set_model_type",
-            payload: "categorygroup", // Update modelType to "category"
+            type: "set_categorygroup_number",
+            payload: state.categoryGroupNumber + 1,
           });
-        } else if (state.subCategoryNumber <= state.subCategoryLength) {
-          dispatch({
-            type: "set_model_type",
-            payload: "subcategory", // Update modelType to "subcategory"
-          });
-          dispatch({
-            type: "set_common_type",
-            payload: "subcategory", // Update modelType to "subcategory"
-          });
-        } else if (state.categoryNumber <= state.categoryGroupLength) {
-          dispatch({
-            type: "set_model_type",
-            payload: "category", // Update modelType to "category"
-          });
-        } else if (state.categoryGroupLength === categoryGroupsLength) {
-          dispatch({
-            type: "set_active_finish",
-            payload: true,
-          });
+          dispatch({ type: "set_model_type", payload: "categorygroup" });
+          dispatch({ type: "set_category_number", payload: 0 });
         }
         dispatch({
           type: "set_question_number",
