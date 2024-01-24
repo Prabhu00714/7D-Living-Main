@@ -620,6 +620,19 @@ router.delete(
   }
 );
 
+router.get("/get/topic/edit/:topicId", async (req, res) => {
+  try {
+    const { topicId } = req.params;
+    console.log("topicId", topicId);
+
+    const item = await Topic.findById(topicId);
+    res.json(item);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 router.get("/get/all/topics", async (req, res) => {
   try {
     const topics = await Topic.find({});
@@ -640,8 +653,6 @@ router.post("/post/new/topic", async (req, res) => {
       topicImage: image,
     });
 
-    console.log("newTopic", newTopic);
-
     // Send a response with the new topic or a success message
     res.status(200).json({ message: "Topic created successfully", newTopic });
   } catch (error) {
@@ -650,7 +661,7 @@ router.post("/post/new/topic", async (req, res) => {
   }
 });
 
-router.post("/post/edit/topic/:itemId", async (req, res) => {
+router.post("/post/topic/edit/:itemId", async (req, res) => {
   try {
     const { itemId } = req.params;
 
@@ -672,18 +683,6 @@ router.post("/post/edit/topic/:itemId", async (req, res) => {
     res.status(200).json(updatedItem);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-router.get("/get/edit/topic/:itemId", async (req, res) => {
-  try {
-    const { itemId } = req.params;
-
-    const item = await Topic.findById(itemId);
-    res.json(item);
-  } catch (error) {
-    console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

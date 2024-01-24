@@ -68,8 +68,9 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
   };
 
   const handleEdit = async () => {
+    console.log("state.selectedTopicItem", state.selectedTopicItem);
+
     try {
-      console.log("state.selectedTopicItem", state.selectedTopicItem);
       if (!header || !description) {
         toast.error("Both header and description are required");
         return;
@@ -82,7 +83,7 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
       };
 
       const response = await axios.post(
-        `http://localhost:3001/api/qna/post/edit/topic/${state.selectedTopicItem._id}`,
+        `http://localhost:3001/api/qna/post/topic/edit/${state.selectedTopicItem._id}`,
         requestData
       );
 
@@ -109,23 +110,23 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
       setDescription("");
       setImage(null);
     } else if (state.topicAction === "edit") {
-      console.log("selectedTopicItem", state.selectedTopicItem);
+      console.log("selectedTopicItem", state.selectedTopicItem._id);
       if (state.selectedTopicItem) {
         axios
           .get(
-            `http://localhost:3001/api/qna/get/edit/topic/${state.selectedTopicItem._id}`
+            `http://localhost:3001/api/qna/get/topic/edit/${state.selectedTopicItem._id}`
           )
           .then((response) => {
             const data = response.data;
             console.log("data", data);
-            setHeader(data.header);
-            setDescription(data.description);
-            setImage(data.image || null);
+            setHeader(data.topicHeading);
+            setDescription(data.topicDescription);
+            setImage(data.topicImage || null);
           })
           .catch((error) => console.error("Error fetching data:", error));
       }
     }
-  }, [state.selectedTopicItem]);
+  }, [state.topicAction, state.selectedTopicItem]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
