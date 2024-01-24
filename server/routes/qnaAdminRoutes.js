@@ -705,4 +705,14 @@ router.delete("/delete/topic/:topicId", async (req, res) => {
   }
 });
 
+router.get("/get/first/topic", async (req, res) => {
+  try {
+    const firstTopic = await Topic.findOne(); // Fetch the first document from the Topic collection
+    res.json(firstTopic);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = router;
