@@ -106,6 +106,7 @@ const Test = () => {
     console.log("categoryGroupsLength", categoryGroupsLength);
     console.log("state.categoryGroupLength", state.categoryGroupLength);
     console.log("state.categoryNumber", state.categoryNumber);
+    console.log("state.categoryGroupNumber", state.categoryGroupNumber);
     switch (state.modelType) {
       case "categorygroup":
         dispatch({
@@ -215,6 +216,24 @@ const Test = () => {
           dispatch({
             type: "set_active_finish",
             payload: true,
+          });
+        } else if (state.categoryGroupNumber > state.categoryGroupLength) {
+          dispatch({
+            type: "set_active_finish",
+            payload: true,
+          });
+        } else {
+          dispatch({
+            type: "set_categorygroup_number",
+            payload: state.categoryGroupNumber + 1,
+          });
+          dispatch({
+            type: "set_model_type",
+            payload: "categorygroup", // Update modelType to "category"
+          });
+          dispatch({
+            type: "set_category_number",
+            payload: 0,
           });
         }
         dispatch({
