@@ -8,10 +8,10 @@ import Category from "./Category";
 import Questions from "./Questions";
 import SubCategory from "./SubCategory";
 import axios from "axios";
-import TopicModal from "./TopicModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   next: 0,
@@ -84,6 +84,7 @@ const reducer = (state, action) => {
 };
 
 const Test = () => {
+  const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [state, dispatch] = useReducer(reducer, initialState);
   const [categoryGroupsLength, setCategoryGroupsLength] = useState(null);
@@ -239,12 +240,7 @@ const Test = () => {
   };
 
   const HandleFinish = () => {
-    if (state.activePrevious) {
-      dispatch({
-        type: "set_active_previous",
-        payload: false,
-      });
-    }
+    navigate("/report");
   };
 
   return (
