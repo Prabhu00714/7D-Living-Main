@@ -149,7 +149,7 @@ const Test = () => {
           });
         }
 
-        if (state.categoryNumber <= state.categoryGroupLength) {
+        if (state.categoryNumber <= state.categoryLength) {
           dispatch({
             type: "set_category_number",
             payload: state.categoryNumber + 1,
@@ -184,16 +184,10 @@ const Test = () => {
         }
         break;
       case "questions":
-        if (state.categoryNumber === state.categoryGroupLength) {
-          dispatch({
-            type: "set_categorygroup_number",
-            payload: state.categoryGroupNumber + 1,
-          });
-          dispatch({ type: "set_model_type", payload: "categorygroup" });
-        } else if (state.subCategoryNumber < state.subCategoryLength) {
+        if (state.subCategoryNumber <= state.subCategoryLength) {
           dispatch({ type: "set_model_type", payload: "subcategory" });
           dispatch({ type: "set_common_type", payload: "subcategory" });
-        } else if (state.categoryNumber < state.categoryGroupLength) {
+        } else if (state.categoryNumber <= state.categoryLength) {
           dispatch({ type: "set_model_type", payload: "category" });
         } else if (
           state.categoryGroupLength === categoryGroupsLength ||
@@ -202,16 +196,10 @@ const Test = () => {
           dispatch({ type: "set_active_finish", payload: true });
         } else {
           dispatch({
-            type: "set_categorygroup_number",
-            payload: state.categoryGroupNumber + 1,
+            type: "set_active_finish",
+            payload: true,
           });
-          dispatch({ type: "set_model_type", payload: "categorygroup" });
-          dispatch({ type: "set_category_number", payload: 0 });
         }
-        dispatch({
-          type: "set_question_number",
-          payload: state.questionNumber + 1,
-        });
         break;
       default:
         throw new Error("Invalid category action");
@@ -292,10 +280,6 @@ const Test = () => {
             payload: "category", // Update modelType to "category"
           });
         }
-        dispatch({
-          type: "set_question_number",
-          payload: state.questionNumber - 1,
-        });
         break;
       default:
         throw new Error("Invalid category action");

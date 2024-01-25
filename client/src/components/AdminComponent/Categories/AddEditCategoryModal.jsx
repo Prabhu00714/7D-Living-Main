@@ -62,7 +62,6 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
         prompt,
         header,
         description,
-        image,
         categoryId:
           state.modelType === "category" ? state.selectedItemId : undefined,
         subCategoryId:
@@ -117,7 +116,7 @@ const AddEditCategoriesModal = ({ state, dispatch, onAddItem, isMobile }) => {
         prompt,
         header,
         description,
-        image,
+        ...(image && { image }),
       };
 
       const response = await axios.post(

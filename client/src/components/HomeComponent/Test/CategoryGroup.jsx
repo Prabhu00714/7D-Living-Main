@@ -18,8 +18,10 @@ function CategoryGroup({ state, dispatch }) {
         const categoryIds = response.data.categoryGroups.map(
           (item) => item.categoryId
         );
+
         setCategoryGroupData(response.data);
         if (response.data.categoryGroups.length > 0) {
+          const categoryIdsLength = categoryIds.length;
           dispatch({
             type: "set_categorygroup_length",
             payload: response.data.categoryGroups.length,
@@ -27,6 +29,10 @@ function CategoryGroup({ state, dispatch }) {
           dispatch({
             type: "set_category_ids",
             payload: categoryIds, // Setting an array of categoryIds
+          });
+          dispatch({
+            type: "set_category_length",
+            payload: categoryIdsLength, // Setting the length of categoryIds
           });
         } else {
           dispatch({

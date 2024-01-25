@@ -382,11 +382,25 @@ router.delete("/delete/subcategory/:subcategoryId", async (req, res) => {
       return res.status(404).json({ error: "Subcategory not found" });
     }
 
+    // Find the categories that reference this subcategory
+    const categoriesWithSubcategory = await Category.find({
+      "categories.subCategoryId": subcategoryId,
+    });
+
+    // Remove the subcategory reference from each category
+    for (const category of categoriesWithSubcategory) {
+      category.categories = category.categories.filter(
+        (cat) => String(cat.subCategoryId) !== subcategoryId
+      );
+      await category.save();
+    }
+
+    // Delete the subcategory
     await existingSubCategory.deleteOne();
 
     res.status(200).json({ message: "Subcategory deleted successfully" });
   } catch (error) {
-    console.error("Error deleting category:", error);
+    console.error("Error deleting subcategory:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -398,6 +412,19 @@ router.delete("/delete/category/:categoryId", async (req, res) => {
     const existingCategory = await Category.findById(categoryId);
     if (!existingCategory) {
       return res.status(404).json({ error: "Category not found" });
+    }
+
+    // Find the CategoryGroups that reference this category
+    const categoryGroupsWithCategory = await CategoryGroup.find({
+      "categoryGroups.categoryId": categoryId,
+    });
+
+    // Remove the category reference from each CategoryGroup
+    for (const categoryGroup of categoryGroupsWithCategory) {
+      categoryGroup.categoryGroups = categoryGroup.categoryGroups.filter(
+        (group) => String(group.categoryId) !== categoryId
+      );
+      await categoryGroup.save();
     }
 
     const subcategoryIds = existingCategory.categories.map(
@@ -727,7 +754,6 @@ router.get("/get/first/topic", async (req, res) => {
 router.get("/get/aggregatedResults/:username", async (req, res) => {
   try {
     const { username } = req.params;
-    console.log("username", username);
 
     // Find the document with the specified username
     const result = await UserResult.findOne({ username });
