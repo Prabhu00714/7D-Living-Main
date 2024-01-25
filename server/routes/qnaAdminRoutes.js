@@ -589,12 +589,7 @@ router.post("/update/each/question/:questionId", async (req, res) => {
     const updatedQuestion = await QNA.findByIdAndUpdate(
       questionId,
       {
-        $set: {
-          prompt: questionData.prompt,
-          questiontext: questionData.questiontext,
-          answers: questionData.answers,
-          questionimage: questionData.questionimage,
-        },
+        $set: questionData,
       },
       { new: true }
     );
