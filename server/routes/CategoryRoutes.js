@@ -195,13 +195,13 @@ router.post("/post/user/result", async (req, res) => {
       })
     );
 
-    // Assuming you want to update existing user results or create a new user
+    // Find the existing user result
     const existingUserResult = await UserResult.findOne({ username });
 
     if (existingUserResult) {
-      // If the user already exists, update the results
-      existingUserResult.userresults = result;
-      existingUserResult.aggregatedResults = aggregatedResultsArray;
+      // If the user already exists, append the new results and aggregated results
+      existingUserResult.userresults.push(...result);
+      existingUserResult.aggregatedResults.push(...aggregatedResultsArray);
       await existingUserResult.save();
       res.status(200).json({ message: "User results updated successfully." });
     } else {
