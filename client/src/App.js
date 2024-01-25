@@ -12,7 +12,7 @@ import Welcome from "./components/Welcome";
 import { useAuth } from "./AuthContext";
 import LogOut from "./components/LogInOut/LogOut";
 import Test from "./components/HomeComponent/Test/Test";
-import Report from "./components/UserComponent/Report";
+import User from "./components/UserComponent/User";
 
 const pageTransition = {
   initial: { opacity: 0 },
@@ -118,10 +118,10 @@ function App() {
 
             {/* Report route */}
             <Route
-              path="/report"
+              path="/user"
               element={
                 <motion.div {...pageTransition}>
-                  <Report />
+                  <User />
                 </motion.div>
               }
             />

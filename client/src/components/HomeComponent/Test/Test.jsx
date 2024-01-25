@@ -240,7 +240,7 @@ const Test = () => {
   };
 
   const HandleFinish = () => {
-    navigate("/report");
+    navigate("/user");
   };
 
   return (
