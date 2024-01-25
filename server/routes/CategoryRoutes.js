@@ -111,8 +111,6 @@ router.get("/get/first/categorygroup/:categorygroup", async (req, res) => {
 
 router.get("/get/first/category/:categoryId", async (req, res) => {
   const { categoryId } = req.params;
-  console.log("categoryId", categoryId);
-
   try {
     const category = await Category.findById(categoryId);
 

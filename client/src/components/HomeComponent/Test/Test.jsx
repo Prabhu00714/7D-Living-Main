@@ -9,6 +9,9 @@ import Questions from "./Questions";
 import SubCategory from "./SubCategory";
 import axios from "axios";
 import TopicModal from "./TopicModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const initialState = {
   next: 0,
@@ -28,7 +31,7 @@ const initialState = {
   subCategoryLength: 0,
   questionNumber: 0,
   eachQuestionIds: [],
-  questionLength: 0,
+  lastQuestion: false,
   activePrevious: false,
   activeFinish: false,
 };
@@ -63,8 +66,8 @@ const reducer = (state, action) => {
       return { ...state, eachQuestionIds: action.payload };
     case "set_categorygroup_length":
       return { ...state, categoryGroupLength: action.payload };
-    case "set_question_length":
-      return { ...state, questionLength: action.payload };
+    case "set_last_question":
+      return { ...state, lastQuestion: action.payload };
     case "set_category_length":
       return { ...state, categoryLength: action.payload };
     case "set_subcategory_length":
@@ -81,6 +84,7 @@ const reducer = (state, action) => {
 };
 
 const Test = () => {
+  const isMobile = useMediaQuery("(max-width: 600px)");
   const [state, dispatch] = useReducer(reducer, initialState);
   const [categoryGroupsLength, setCategoryGroupsLength] = useState(null);
 
@@ -105,10 +109,8 @@ const Test = () => {
   const handleNext = () => {
     switch (state.modelType) {
       case "categorygroup":
-        dispatch({
-          type: "set_model_type",
-          payload: "category", // Update modelType to "category"
-        });
+        // Update modelType to "category"
+        dispatch({ type: "set_model_type", payload: "category" });
 
         if (state.categoryNumber === 0) {
           dispatch({
@@ -123,14 +125,8 @@ const Test = () => {
         break;
       case "category":
         if (state.commonType === "subcategory") {
-          dispatch({
-            type: "set_model_type",
-            payload: "subcategory", // Update modelType to "subcategory"
-          });
-          dispatch({
-            type: "set_model_type",
-            payload: "subcategory", // Update modelType to "subcategory"
-          });
+          // Update modelType to "subcategory"
+          dispatch({ type: "set_model_type", payload: "subcategory" });
 
           if (state.subCategoryNumber === 0) {
             dispatch({
@@ -143,10 +139,8 @@ const Test = () => {
             });
           }
         } else {
-          dispatch({
-            type: "set_model_type",
-            payload: "questions", // Update modelType to "questions"
-          });
+          // Update modelType to "questions"
+          dispatch({ type: "set_model_type", payload: "questions" });
         }
 
         if (state.categoryNumber <= state.categoryLength) {
@@ -162,14 +156,9 @@ const Test = () => {
         break;
       case "subcategory":
         if (state.commonType === "subcategory") {
-          dispatch({
-            type: "set_model_type",
-            payload: "questions", // Update modelType to "questions"
-          });
-          dispatch({
-            type: "set_common_type",
-            payload: "questions", // Update modelType to "questions"
-          });
+          // Update modelType to "questions"
+          dispatch({ type: "set_model_type", payload: "questions" });
+          dispatch({ type: "set_common_type", payload: "questions" });
         }
 
         if (state.subCategoryNumber <= state.subCategoryLength) {
@@ -185,36 +174,31 @@ const Test = () => {
         break;
       case "questions":
         if (state.subCategoryNumber <= state.subCategoryLength) {
+          // Update modelType to "subcategory"
           dispatch({ type: "set_model_type", payload: "subcategory" });
           dispatch({ type: "set_common_type", payload: "subcategory" });
         } else if (state.categoryNumber <= state.categoryLength) {
+          // Update modelType to "category"
           dispatch({ type: "set_model_type", payload: "category" });
-        } else if (state.categoryGroupNumber < state.categoryGroupLength) {
-          console.log("next group");
+        } else if (state.categoryGroupNumber < categoryGroupsLength) {
           dispatch({
-            type: "set_model_type",
-            payload: "categorygroup", // Update modelType to "questions"
+            type: "set_category_number",
+            payload: 0,
           });
-
-          if (state.categoryGroupNumber <= state.categoryGroupLength) {
-            dispatch({
-              type: "set_category_number",
-              payload: 0,
-            });
-            dispatch({
-              type: "set_subcategory_number",
-              payload: 0,
-            });
-            dispatch({
-              type: "set_categorygroup_number",
-              payload: state.categoryGroupNumber + 1,
-            });
-          }
+          dispatch({
+            type: "set_subcategory_number",
+            payload: 0,
+          });
+          dispatch({
+            type: "set_categorygroup_number",
+            payload: state.categoryGroupNumber + 1,
+          });
+          // Update modelType to "categorygroup"
+          dispatch({ type: "set_model_type", payload: "categorygroup" });
         } else {
-          dispatch({
-            type: "set_active_finish",
-            payload: true,
-          });
+          toast.info("This is the last one!");
+          // Set last question to true
+          dispatch({ type: "set_last_question", payload: true });
         }
         break;
       default:
@@ -222,80 +206,32 @@ const Test = () => {
     }
 
     if (!state.activePrevious) {
+      dispatch({ type: "set_active_previous", payload: true });
+    }
+  };
+
+  useEffect(() => {
+    if (state.lastQuestion) {
       dispatch({
-        type: "set_active_previous",
+        type: "set_active_finish",
         payload: true,
       });
     }
-  };
+  }, [state.lastQuestion]);
 
   const handlePrevious = () => {
     switch (state.modelType) {
       case "categorygroup":
-        if (state.activePrevious) {
-          dispatch({
-            type: "set_active_previous",
-            payload: false,
-          });
-        }
+        // categorygroup
         break;
       case "category":
-        dispatch({
-          type: "set_model_type",
-          payload: "categorygroup", // Update modelType to "categorygroup"
-        });
-
-        if (state.categoryNumber !== 0) {
-          dispatch({
-            type: "set_category_number",
-            payload: state.categoryNumber - 1,
-          });
-          dispatch({
-            type: "set_each_category_ids",
-            payload: state.categoryIds[state.categoryNumber],
-          });
-        }
+        // category
         break;
       case "subcategory":
-        dispatch({
-          type: "set_model_type",
-          payload: "questions", // Update modelType to "questions"
-        });
-
-        if (state.subCategoryNumber < state.categoryLength) {
-          dispatch({
-            type: "set_subcategory_ids",
-            payload: state.subCategoryIds[state.subCategoryNumber],
-          });
-        }
+        // subcategory
         break;
       case "questions":
-        if (state.commonType === "subcategory") {
-          dispatch({
-            type: "set_model_type",
-            payload: "subcategory", // Update modelType to "subcategory"
-          });
-          dispatch({
-            type: "set_model_type",
-            payload: "subcategory", // Update modelType to "subcategory"
-          });
-        } else {
-          if (state.categoryNumber <= state.categoryGroupLength) {
-            dispatch({
-              type: "set_category_number",
-              payload: state.categoryNumber - 3,
-            });
-            dispatch({
-              type: "set_each_category_ids",
-              payload: state.categoryIds[state.categoryNumber],
-            });
-          }
-
-          dispatch({
-            type: "set_model_type",
-            payload: "category", // Update modelType to "category"
-          });
-        }
+        // questions
         break;
       default:
         throw new Error("Invalid category action");
@@ -361,12 +297,21 @@ const Test = () => {
         <Button
           onClick={!state.activeFinish ? handleNext : HandleFinish}
           variant="outlined"
-          // disabled={state.activeFinish}
         >
           {state.activeFinish ? "Finish" : "Next"}
         </Button>
       </div>
-      {state.activeFinish && <TopicModal />}
+      <ToastContainer
+        position={isMobile ? "top-center" : "top-right"}
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </motion.div>
   );
 };

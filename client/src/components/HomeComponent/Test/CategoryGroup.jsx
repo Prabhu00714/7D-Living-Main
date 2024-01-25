@@ -36,7 +36,7 @@ function CategoryGroup({ state, dispatch }) {
           });
         } else {
           dispatch({
-            type: "set_active_finish",
+            type: "set_last_question",
             payload: true,
           });
         }
