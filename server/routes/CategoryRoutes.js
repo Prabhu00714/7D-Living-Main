@@ -96,13 +96,12 @@ router.get("/get/first/categorygroup/:categorygroup", async (req, res) => {
   try {
     const index = parseInt(categorygroup) - 1;
 
-    const categoryGroup = await CategoryGroup.findOne({}, null, {
-      skip: index,
-    });
+    const categoryGroup = await CategoryGroup.findOne({}).skip(index).limit(1);
 
     if (!categoryGroup) {
       return res.status(404).json({ error: "Category group not found" });
     }
+
     res.status(200).json(categoryGroup);
   } catch (error) {
     console.error(error);
@@ -112,6 +111,8 @@ router.get("/get/first/categorygroup/:categorygroup", async (req, res) => {
 
 router.get("/get/first/category/:categoryId", async (req, res) => {
   const { categoryId } = req.params;
+  console.log("categoryId", categoryId);
+
   try {
     const category = await Category.findById(categoryId);
 

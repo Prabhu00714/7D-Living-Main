@@ -189,11 +189,27 @@ const Test = () => {
           dispatch({ type: "set_common_type", payload: "subcategory" });
         } else if (state.categoryNumber <= state.categoryLength) {
           dispatch({ type: "set_model_type", payload: "category" });
-        } else if (
-          state.categoryGroupLength === categoryGroupsLength ||
-          state.categoryGroupNumber > state.categoryGroupLength
-        ) {
-          dispatch({ type: "set_active_finish", payload: true });
+        } else if (state.categoryGroupNumber < state.categoryGroupLength) {
+          console.log("next group");
+          dispatch({
+            type: "set_model_type",
+            payload: "categorygroup", // Update modelType to "questions"
+          });
+
+          if (state.categoryGroupNumber <= state.categoryGroupLength) {
+            dispatch({
+              type: "set_category_number",
+              payload: 0,
+            });
+            dispatch({
+              type: "set_subcategory_number",
+              payload: 0,
+            });
+            dispatch({
+              type: "set_categorygroup_number",
+              payload: state.categoryGroupNumber + 1,
+            });
+          }
         } else {
           dispatch({
             type: "set_active_finish",

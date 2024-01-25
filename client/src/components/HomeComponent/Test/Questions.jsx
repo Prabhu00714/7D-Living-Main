@@ -114,6 +114,7 @@ function Questions({ state, dispatch }) {
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
+          padding: isMobile ? "8px" : "16px",
         }}
       >
         <PerfectScrollbar>
