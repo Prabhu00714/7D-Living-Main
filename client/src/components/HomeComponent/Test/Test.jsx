@@ -174,14 +174,23 @@ const Test = () => {
         }
         break;
       case "questions":
-        if (state.subCategoryNumber <= state.subCategoryLength) {
+        if (
+          state.subCategoryNumber &&
+          state.subCategoryNumber <= state.subCategoryLength
+        ) {
           // Update modelType to "subcategory"
           dispatch({ type: "set_model_type", payload: "subcategory" });
           dispatch({ type: "set_common_type", payload: "subcategory" });
-        } else if (state.categoryNumber <= state.categoryLength) {
+        } else if (
+          state.categoryNumber &&
+          state.categoryNumber <= state.categoryLength
+        ) {
           // Update modelType to "category"
           dispatch({ type: "set_model_type", payload: "category" });
-        } else if (state.categoryGroupNumber < categoryGroupsLength) {
+        } else if (
+          state.categoryGroupNumber &&
+          state.categoryGroupNumber < categoryGroupsLength
+        ) {
           dispatch({
             type: "set_category_number",
             payload: 0,

@@ -749,6 +749,7 @@ router.get("/get/first/topic", async (req, res) => {
 router.get("/get/aggregatedResults/:username", async (req, res) => {
   try {
     const { username } = req.params;
+    console.log("Username found", username);
 
     // Find the document with the specified username
     const result = await UserResult.findOne({ username });
@@ -759,6 +760,7 @@ router.get("/get/aggregatedResults/:username", async (req, res) => {
 
     // Extract and send the aggregated results to the frontend
     const aggregatedResults = result.aggregatedResults || [];
+    console.log("aggregatedResults", aggregatedResults);
     res.json(aggregatedResults);
   } catch (error) {
     console.error("Error fetching aggregated results:", error);

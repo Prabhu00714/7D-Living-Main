@@ -36,8 +36,6 @@ const Report = () => {
     description: "",
     image: "",
   });
-  const [resultsSummary, setResultsSummary] = useState({});
-  const [resultNameCounts, setResultNameCounts] = useState([]);
   const [conditions, setConditions] = useState("");
 
   useEffect(() => {
@@ -79,7 +77,9 @@ const Report = () => {
   };
 
   useEffect(() => {
-    if (user && user.username) {
+    if (user) {
+      console.log("user.username", user.username);
+
       axios
         .get(
           `http://localhost:3001/api/qna/get/aggregatedResults/${user.username}`
@@ -87,30 +87,6 @@ const Report = () => {
         .then((response) => {
           const data = response.data;
           setAggregatedResults(data);
-
-          // Calculate the summary of results
-          const summary = data.reduce((acc, result) => {
-            const { resultName, totalScore } = result;
-
-            // Update resultName count
-            acc.results[resultName] = (acc.results[resultName] || 0) + 1;
-
-            // Update totalScore sum
-            acc.scores[resultName] = (acc.scores[resultName] || 0) + totalScore;
-
-            return acc;
-          }, {});
-          console.log("summary", summary);
-
-          setResultsSummary(summary);
-
-          // Define conditions based on the aggregated results
-          handleConditions();
-
-          // Store resultName counts in a new state variable as an array
-          setResultNameCounts(Object.values(summary.results));
-
-          // Example conditions based on counts
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -127,7 +103,6 @@ const Report = () => {
 
   return (
     <div style={containerStyle}>
-      {console.log("resultNameCounts", resultNameCounts)}
       <DemoPaper square={false} elevation={12}>
         <PerfectScrollbar options={{ wheelPropagation: false }}>
           <Typography variant="h6" style={{ marginBottom: 8 }}>

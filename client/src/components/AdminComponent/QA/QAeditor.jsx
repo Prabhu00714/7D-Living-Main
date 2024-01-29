@@ -98,6 +98,23 @@ const QaEditor = () => {
         type: "set_questions_refresh_flag",
         payload: !state.questionsRefreshFlag,
       });
+      dispatch({
+        type: "set_questions",
+        payload: [
+          {
+            prompt: "",
+            questiontext: "",
+            questionimage: "",
+            answers: [
+              {
+                answer: "",
+                answerimage: "",
+                results: [{ result: "", value: "" }],
+              },
+            ],
+          },
+        ],
+      });
     }
   };
 
