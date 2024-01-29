@@ -13,7 +13,7 @@ const app = express();
 const PORT = 3001;
 
 mongoose.connect(
-  "mongodb+srv://sai:Fgx9tXOa8lnsE1DE@7dlivingcluster.g7tl9dh.mongodb.net/store",
+  "mongodb+srv://admin:7dlivingadmin@cluster0.x96foef.mongodb.net/store",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
