@@ -55,20 +55,19 @@ function Questions({ state, dispatch }) {
   };
 
   const handleSaveAnswers = async () => {
-    console.log("state.categoryQuestionNumber", state.categoryQuestionNumber);
     // Check if all questions are answered
     const unansweredQuestions = qnas.filter((qna) => !selectedAnswers[qna._id]);
 
-    // if (unansweredQuestions.length > 0) {
-    //   toast.error("Please answer all questions before submitting.");
-    //   return;
-    // }
+    if (unansweredQuestions.length > 0) {
+      toast.error("Please answer all questions before submitting.");
+      return;
+    }
 
     const userResults = {
       username: user.username,
       userresults: [
         {
-          categoryid: state.categoryQuestionNumber, // Assuming this is the category ID
+          categoryId: state.categoryQuestionNumber, // Assuming this is the category ID
           questions: Object.entries(selectedAnswers).map(
             ([questionId, answerId]) => {
               const qna = qnas.find((qna) => qna._id === questionId);
@@ -77,8 +76,8 @@ function Questions({ state, dispatch }) {
               );
 
               return {
-                questionid: questionId,
-                answerid: selectedAnswer._id,
+                questionId: questionId,
+                answerId: selectedAnswer._id,
                 results: selectedAnswer.results.map((result) => ({
                   result: result.result,
                   value: result.value,

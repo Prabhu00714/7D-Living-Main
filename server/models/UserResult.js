@@ -6,8 +6,14 @@ const resultSchema = new mongoose.Schema({
 });
 
 const questionSchema = new mongoose.Schema({
-  questionid: String,
-  answerid: String,
+  questionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Qna",
+  },
+  answerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Qna",
+  },
   results: [resultSchema],
 });
 
@@ -17,7 +23,10 @@ const aggregatedResultSchema = new mongoose.Schema({
 });
 
 const userresultsSchema = new mongoose.Schema({
-  categoryid: String,
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+  },
   questions: [questionSchema],
   aggregatedResults: [aggregatedResultSchema],
 });

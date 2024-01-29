@@ -175,71 +175,52 @@ router.post("/post/user/result", async (req, res) => {
     let existingUserResult = await UserResult.findOne({ username });
 
     if (existingUserResult) {
-      // Update existing user results if categoryid, questionid, and answerid already exist
-      userresults.forEach(({ categoryid, questions }) => {
-        const existingCategoryIndex = existingUserResult.userresults.findIndex(
-          (userResult) => userResult.categoryid === categoryid
+      // Update existing user results if categoryId, questionId, and answerId already exist
+      userresults.forEach(({ categoryId, questions }) => {
+        const existingCategory = existingUserResult.userresults.find(
+          (userResult) => userResult.categoryId.toString() === categoryId
         );
 
-        if (existingCategoryIndex !== -1) {
-          questions.forEach(({ questionid, answerid, results }) => {
-            const existingQuestionIndex = existingUserResult.userresults[
-              existingCategoryIndex
-            ].questions.findIndex(
-              (question) =>
-                question.questionid === questionid &&
-                question.answerid === answerid
+        if (existingCategory) {
+          questions.forEach(({ questionId, answerId, results }) => {
+            const existingQuestion = existingCategory.questions.find(
+              (question) => question.questionId.toString() === questionId
             );
 
-            if (existingQuestionIndex !== -1) {
-              results.forEach(({ result, value }) => {
-                const existingResultIndex = existingUserResult.userresults[
-                  existingCategoryIndex
-                ].questions[existingQuestionIndex].results.findIndex(
-                  (existingResult) => existingResult.result === result
-                );
-                if (existingResultIndex === -1) {
-                  existingUserResult.userresults[
-                    existingCategoryIndex
-                  ].questions[existingQuestionIndex].results.push({
-                    result,
-                    value,
-                  });
-                }
-              });
+            if (existingQuestion) {
+              // Overwrite existing question's results
+              existingQuestion.results = results;
             } else {
-              existingUserResult.userresults[
-                existingCategoryIndex
-              ].questions.push({
-                questionid,
-                answerid,
+              // Push new question
+              existingCategory.questions.push({
+                questionId,
+                answerId,
                 results,
               });
             }
           });
         } else {
+          // Push new category with all questions
           existingUserResult.userresults.push({
-            categoryid,
+            categoryId,
             questions,
+            aggregatedResults: [],
           });
         }
       });
 
       // Recalculate aggregated results
-      const aggregatedResults = userresults.reduce(
-        (accumulator, currentValue) => {
-          currentValue.questions.forEach(({ results }) => {
-            results.forEach(({ result, value }) => {
-              if (!accumulator[result]) {
-                accumulator[result] = 0;
-              }
-              accumulator[result] += value;
-            });
+      const aggregatedResults = {};
+      existingUserResult.userresults.forEach(({ questions }) => {
+        questions.forEach(({ results }) => {
+          results.forEach(({ result, value }) => {
+            if (!aggregatedResults[result]) {
+              aggregatedResults[result] = 0;
+            }
+            aggregatedResults[result] += value;
           });
-          return accumulator;
-        },
-        {}
-      );
+        });
+      });
 
       // Transform aggregatedResults into an array of objects
       const aggregatedResultsArray = Object.keys(aggregatedResults).map(
@@ -257,23 +238,18 @@ router.post("/post/user/result", async (req, res) => {
       await existingUserResult.save();
       res.status(200).json({ message: "User results updated successfully." });
     } else {
-      // Calculate aggregated results for new user
-      const aggregatedResults = userresults.reduce(
-        (accumulator, currentValue) => {
-          currentValue.questions.forEach(({ results }) => {
-            results.forEach(({ result, value }) => {
-              if (!accumulator[result]) {
-                accumulator[result] = 0;
-              }
-              accumulator[result] += value;
-            });
+      // If no existing user result found, create a new one
+      const aggregatedResults = {};
+      userresults.forEach(({ questions }) => {
+        questions.forEach(({ results }) => {
+          results.forEach(({ result, value }) => {
+            if (!aggregatedResults[result]) {
+              aggregatedResults[result] = 0;
+            }
+            aggregatedResults[result] += value;
           });
-          return accumulator;
-        },
-        {}
-      );
-
-      console.log("aggregatedResults", aggregatedResults);
+        });
+      });
 
       // Transform aggregatedResults into an array of objects
       const aggregatedResultsArray = Object.keys(aggregatedResults).map(
@@ -283,19 +259,15 @@ router.post("/post/user/result", async (req, res) => {
         })
       );
 
-      console.log("aggregatedResultsArray", aggregatedResultsArray);
-
-      // Create new user with userresults and aggregatedResults
       // Create new user with userresults and aggregatedResults
       const newUserResult = new UserResult({
         username,
-        userresults: userresults.map(({ categoryid, questions }) => ({
-          categoryid,
+        userresults: userresults.map(({ categoryId, questions }) => ({
+          categoryId,
           questions,
-          aggregatedResults: aggregatedResultsArray, // Assign aggregatedResultsArray to each userresults object
+          aggregatedResults: aggregatedResultsArray,
         })),
       });
-      console.log("newUserResult", newUserResult);
 
       await newUserResult.save();
       res.status(200).json({ message: "New user results saved successfully." });
