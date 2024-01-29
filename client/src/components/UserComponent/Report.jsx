@@ -8,6 +8,7 @@ import axios from "axios";
 import { useAuth } from "../../AuthContext";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
+import { Box } from "@mui/material";
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
   width: "90%",
@@ -36,50 +37,12 @@ const Report = () => {
     description: "",
     image: "",
   });
+  const [mostOccurringResult, setMostOccurringResult] = useState("");
+
   const [conditions, setConditions] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/api/qna/get/first/topic/${conditions}`)
-      .then((response) => {
-        const data = response.data;
-        setResult({
-          header: data.topicHeading,
-          description: data.topicDescription,
-          image: data.topicImage,
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [conditions]);
-
-  const handleConditions = () => {
-    if (
-      aggregatedResults.results &&
-      aggregatedResults.results.V > aggregatedResults.results.P &&
-      aggregatedResults.results.V > aggregatedResults.results.K
-    ) {
-      setConditions("V");
-    } else if (
-      aggregatedResults.results &&
-      aggregatedResults.results.P > aggregatedResults.results.V &&
-      aggregatedResults.results.P > aggregatedResults.results.K
-    ) {
-      setConditions("P");
-    } else if (
-      aggregatedResults.results &&
-      aggregatedResults.results.K > aggregatedResults.results.V &&
-      aggregatedResults.results.K > aggregatedResults.results.P
-    ) {
-      setConditions("K");
-    }
-  };
-
-  useEffect(() => {
     if (user) {
-      console.log("user.username", user.username);
-
       axios
         .get(
           `http://localhost:3001/api/qna/get/aggregatedResults/${user.username}`
@@ -87,12 +50,78 @@ const Report = () => {
         .then((response) => {
           const data = response.data;
           setAggregatedResults(data);
+
+          // Finding the result with the highest total score
+          let maxScore = -1;
+          let mostOccurring = "";
+          for (const result of data) {
+            if (result.totalScore > maxScore) {
+              maxScore = result.totalScore;
+              mostOccurring = result.resultName;
+            } else if (result.totalScore === maxScore) {
+              mostOccurring += result.resultName;
+            }
+          }
+          setMostOccurringResult(mostOccurring);
+
+          // Handle conditions after setting mostOccurringResult
+          if (mostOccurring === "V") {
+            setConditions("V");
+          } else if (mostOccurring === "P") {
+            setConditions("P");
+          } else if (mostOccurring === "K") {
+            setConditions("K");
+          } else if (mostOccurring === "VP" || mostOccurring === "PV") {
+            if (mostOccurring === "PV") {
+              setConditions("VP");
+            } else setConditions("VP");
+          } else if (mostOccurring === "VK" || mostOccurring === "KV") {
+            if (mostOccurring === "KV") {
+              setConditions("VK");
+            } else setConditions("VK");
+          } else if (mostOccurring === "PK" || mostOccurring === "KP") {
+            if (mostOccurring === "KP") {
+              setConditions("PK");
+            } else setConditions("PK");
+          } else if (
+            mostOccurring === "VPK" ||
+            mostOccurring === "VKP" ||
+            mostOccurring === "PVK" ||
+            mostOccurring === "PKV" ||
+            mostOccurring === "KVP" ||
+            mostOccurring === "KPV"
+          ) {
+            if (
+              mostOccurring === "VKP" ||
+              mostOccurring === "PVK" ||
+              mostOccurring === "PKV" ||
+              mostOccurring === "KVP" ||
+              mostOccurring === "KPV"
+            ) {
+              setConditions("VPK");
+            } else setConditions("K");
+          }
+
+          // Now make the second axios call
+          axios
+            .get(`http://localhost:3001/api/qna/get/first/topic/${conditions}`)
+            .then((response) => {
+              const data = response.data;
+              setResult({
+                header: data.topicHeading,
+                description: data.topicDescription,
+                image: data.topicImage,
+              });
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
     }
-  }, [user]);
+  }, [user, mostOccurringResult, conditions]);
 
   const containerStyle = {
     marginLeft: isMobile ? 0 : 50,
@@ -105,20 +134,37 @@ const Report = () => {
     <div style={containerStyle}>
       <DemoPaper square={false} elevation={12}>
         <PerfectScrollbar options={{ wheelPropagation: false }}>
-          <Typography variant="h6" style={{ marginBottom: 8 }}>
-            Header: {result.header}
-          </Typography>
-          <Typography
-            variant="body1"
-            dangerouslySetInnerHTML={{ __html: result.description }}
-          />
-          <img
-            width={isMobile ? "80%" : "60%"}
-            height="auto"
-            src={result.image}
-            alt="answer image"
-            style={{ marginTop: "16px" }}
-          />
+          {result ? (
+            <Box>
+              <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
+                {result.header}
+              </Typography>
+              <Typography
+                variant={isMobile ? "body2" : "body1"}
+                style={{
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  textAlign: "center",
+                  marginRight: "10px",
+                }}
+                paragraph
+                dangerouslySetInnerHTML={{
+                  __html: result.description,
+                }}
+              />
+              <img
+                width={isMobile ? 250 : 500}
+                height={isMobile ? 250 : 500}
+                src={result.image}
+                alt="preview"
+                style={{ marginTop: isMobile ? "8px" : "16px" }}
+              />
+            </Box>
+          ) : (
+            <Typography variant={isMobile ? "body2" : "body1"}>
+              Loading...
+            </Typography>
+          )}
         </PerfectScrollbar>
       </DemoPaper>
     </div>

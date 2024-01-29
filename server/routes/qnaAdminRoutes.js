@@ -736,9 +736,16 @@ router.delete("/delete/topic/:topicId", async (req, res) => {
   }
 });
 
-router.get("/get/first/topic", async (req, res) => {
+router.get("/get/first/topic/:topicCode", async (req, res) => {
+  const { topicCode } = req.params;
+
   try {
-    const firstTopic = await Topic.findOne(); // Fetch the first document from the Topic collection
+    // Find the topic with the specified topicCode
+    const firstTopic = await Topic.findOne({ topicCode });
+
+    if (!firstTopic) {
+      return res.status(404).json({ error: "Topic not found" });
+    }
     res.json(firstTopic);
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -749,7 +756,6 @@ router.get("/get/first/topic", async (req, res) => {
 router.get("/get/aggregatedResults/:username", async (req, res) => {
   try {
     const { username } = req.params;
-    console.log("Username found", username);
 
     // Find the document with the specified username
     const result = await UserResult.findOne({ username });
@@ -760,7 +766,6 @@ router.get("/get/aggregatedResults/:username", async (req, res) => {
 
     // Extract and send the aggregated results to the frontend
     const aggregatedResults = result.aggregatedResults || [];
-    console.log("aggregatedResults", aggregatedResults);
     res.json(aggregatedResults);
   } catch (error) {
     console.error("Error fetching aggregated results:", error);
