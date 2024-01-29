@@ -12,10 +12,13 @@ const User = require("./models/User");
 const app = express();
 const PORT = 3001;
 
-mongoose.connect("mongodb://localhost:27017/store", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://sai:Fgx9tXOa8lnsE1DE@7dlivingcluster.g7tl9dh.mongodb.net/store",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 app.use(bodyParser.json({ limit: "50mb" }));
 
