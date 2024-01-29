@@ -45,7 +45,7 @@ function Questions({ state, dispatch }) {
     };
 
     fetchData();
-  }, [state.questionIds]);
+  }, [state.questionIds, dispatch]);
 
   const handleAnswerChange = (questionId, answer) => {
     setSelectedAnswers((prevAnswers) => ({
@@ -55,38 +55,45 @@ function Questions({ state, dispatch }) {
   };
 
   const handleSaveAnswers = async () => {
+    console.log("state.categoryQuestionNumber", state.categoryQuestionNumber);
     // Check if all questions are answered
     const unansweredQuestions = qnas.filter((qna) => !selectedAnswers[qna._id]);
 
-    if (unansweredQuestions.length > 0) {
-      toast.error("Please answer all questions before submitting.");
-      return;
-    }
+    // if (unansweredQuestions.length > 0) {
+    //   toast.error("Please answer all questions before submitting.");
+    //   return;
+    // }
 
-    const results = [];
+    const userResults = {
+      username: user.username,
+      userresults: [
+        {
+          categoryid: state.categoryQuestionNumber, // Assuming this is the category ID
+          questions: Object.entries(selectedAnswers).map(
+            ([questionId, answerId]) => {
+              const qna = qnas.find((qna) => qna._id === questionId);
+              const selectedAnswer = qna.answers.find(
+                (answer) => answer.answer === answerId
+              );
 
-    for (const [questionId, answerId] of Object.entries(selectedAnswers)) {
-      const qna = qnas.find((qna) => qna._id === questionId);
-      const selectedAnswer = qna.answers.find(
-        (answer) => answer.answer === answerId
-      );
-
-      results.push({
-        questionId: questionId,
-        answerId: selectedAnswer._id,
-        results: selectedAnswer.results.map((result) => ({
-          result: result.result,
-          value: result.value,
-        })),
-      });
-    }
-
-    const resultsJSON = JSON.stringify(results);
+              return {
+                questionid: questionId,
+                answerid: selectedAnswer._id,
+                results: selectedAnswer.results.map((result) => ({
+                  result: result.result,
+                  value: result.value,
+                })),
+              };
+            }
+          ),
+        },
+      ],
+    };
 
     try {
       const response = await axios.post(
         "http://localhost:3001/api/category/post/user/result",
-        { username: user.username, result: JSON.parse(resultsJSON) }
+        userResults
       );
 
       if (response.status === 200) {

@@ -169,49 +169,136 @@ router.get("/get/categorygroup/length", async (req, res) => {
 
 router.post("/post/user/result", async (req, res) => {
   try {
-    const { username, result } = req.body;
-
-    // Calculate aggregated results
-    const aggregatedResults = {};
-
-    result.forEach(({ results }) => {
-      results.forEach(({ result, value }) => {
-        if (!aggregatedResults[result]) {
-          aggregatedResults[result] = 0;
-        }
-        aggregatedResults[result] += value;
-      });
-    });
-
-    // Transform aggregatedResults into an array of objects
-    const aggregatedResultsArray = Object.keys(aggregatedResults).map(
-      (resultName) => ({
-        resultName,
-        totalScore: [...aggregatedResults[resultName].toString()].reduce(
-          (acc, digit) => acc + parseInt(digit),
-          0
-        ),
-      })
-    );
+    const { username, userresults } = req.body;
 
     // Find the existing user result
-    const existingUserResult = await UserResult.findOne({ username });
+    let existingUserResult = await UserResult.findOne({ username });
 
     if (existingUserResult) {
-      // If the user already exists, append the new results and aggregated results
-      existingUserResult.userresults.push(...result);
-      existingUserResult.aggregatedResults.push(...aggregatedResultsArray);
+      // Update existing user results if categoryid, questionid, and answerid already exist
+      userresults.forEach(({ categoryid, questions }) => {
+        const existingCategoryIndex = existingUserResult.userresults.findIndex(
+          (userResult) => userResult.categoryid === categoryid
+        );
+
+        if (existingCategoryIndex !== -1) {
+          questions.forEach(({ questionid, answerid, results }) => {
+            const existingQuestionIndex = existingUserResult.userresults[
+              existingCategoryIndex
+            ].questions.findIndex(
+              (question) =>
+                question.questionid === questionid &&
+                question.answerid === answerid
+            );
+
+            if (existingQuestionIndex !== -1) {
+              results.forEach(({ result, value }) => {
+                const existingResultIndex = existingUserResult.userresults[
+                  existingCategoryIndex
+                ].questions[existingQuestionIndex].results.findIndex(
+                  (existingResult) => existingResult.result === result
+                );
+                if (existingResultIndex === -1) {
+                  existingUserResult.userresults[
+                    existingCategoryIndex
+                  ].questions[existingQuestionIndex].results.push({
+                    result,
+                    value,
+                  });
+                }
+              });
+            } else {
+              existingUserResult.userresults[
+                existingCategoryIndex
+              ].questions.push({
+                questionid,
+                answerid,
+                results,
+              });
+            }
+          });
+        } else {
+          existingUserResult.userresults.push({
+            categoryid,
+            questions,
+          });
+        }
+      });
+
+      // Recalculate aggregated results
+      const aggregatedResults = userresults.reduce(
+        (accumulator, currentValue) => {
+          currentValue.questions.forEach(({ results }) => {
+            results.forEach(({ result, value }) => {
+              if (!accumulator[result]) {
+                accumulator[result] = 0;
+              }
+              accumulator[result] += value;
+            });
+          });
+          return accumulator;
+        },
+        {}
+      );
+
+      // Transform aggregatedResults into an array of objects
+      const aggregatedResultsArray = Object.keys(aggregatedResults).map(
+        (resultName) => ({
+          resultName,
+          totalScore: aggregatedResults[resultName],
+        })
+      );
+
+      // Update existing aggregatedResults
+      existingUserResult.userresults.forEach((userResult) => {
+        userResult.aggregatedResults = aggregatedResultsArray;
+      });
+
       await existingUserResult.save();
       res.status(200).json({ message: "User results updated successfully." });
     } else {
-      // If the user doesn't exist, create a new user
+      // Calculate aggregated results for new user
+      const aggregatedResults = userresults.reduce(
+        (accumulator, currentValue) => {
+          currentValue.questions.forEach(({ results }) => {
+            results.forEach(({ result, value }) => {
+              if (!accumulator[result]) {
+                accumulator[result] = 0;
+              }
+              accumulator[result] += value;
+            });
+          });
+          return accumulator;
+        },
+        {}
+      );
+
+      console.log("aggregatedResults", aggregatedResults);
+
+      // Transform aggregatedResults into an array of objects
+      const aggregatedResultsArray = Object.keys(aggregatedResults).map(
+        (resultName) => ({
+          resultName,
+          totalScore: aggregatedResults[resultName],
+        })
+      );
+
+      console.log("aggregatedResultsArray", aggregatedResultsArray);
+
+      // Create new user with userresults and aggregatedResults
+      // Create new user with userresults and aggregatedResults
       const newUserResult = new UserResult({
         username,
-        userresults: result,
-        aggregatedResults: aggregatedResultsArray,
+        userresults: userresults.map(({ categoryid, questions }) => ({
+          categoryid,
+          questions,
+          aggregatedResults: aggregatedResultsArray, // Assign aggregatedResultsArray to each userresults object
+        })),
       });
+      console.log("newUserResult", newUserResult);
+
       await newUserResult.save();
-      res.status(200).json({ message: "User results saved successfully." });
+      res.status(200).json({ message: "New user results saved successfully." });
     }
   } catch (error) {
     console.error("Error saving user results:", error);

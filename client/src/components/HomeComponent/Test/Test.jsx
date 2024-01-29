@@ -29,7 +29,7 @@ const initialState = {
   categoryGroupLength: 0,
   categoryLength: 0,
   subCategoryLength: 0,
-  questionNumber: 0,
+  categoryQuestionNumber: 0,
   eachQuestionIds: [],
   lastQuestion: false,
   activePrevious: false,
@@ -72,8 +72,8 @@ const reducer = (state, action) => {
       return { ...state, categoryLength: action.payload };
     case "set_subcategory_length":
       return { ...state, subCategoryLength: action.payload };
-    case "set_question_number":
-      return { ...state, questionNumber: action.payload };
+    case "set_category_question_number":
+      return { ...state, categoryQuestionNumber: action.payload };
     case "set_active_previous":
       return { ...state, activePrevious: action.payload };
     case "set_active_finish":

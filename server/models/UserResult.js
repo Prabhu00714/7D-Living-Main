@@ -5,9 +5,9 @@ const resultSchema = new mongoose.Schema({
   value: Number,
 });
 
-const userresultsSchema = new mongoose.Schema({
-  questionId: String,
-  answerId: String,
+const questionSchema = new mongoose.Schema({
+  questionid: String,
+  answerid: String,
   results: [resultSchema],
 });
 
@@ -16,10 +16,15 @@ const aggregatedResultSchema = new mongoose.Schema({
   totalScore: Number,
 });
 
+const userresultsSchema = new mongoose.Schema({
+  categoryid: String,
+  questions: [questionSchema],
+  aggregatedResults: [aggregatedResultSchema],
+});
+
 const userresultSchema = new mongoose.Schema({
   username: String,
   userresults: [userresultsSchema],
-  aggregatedResults: [aggregatedResultSchema],
 });
 
 const UserResult = mongoose.model("UserResult", userresultSchema, "UserResult");

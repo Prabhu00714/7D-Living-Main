@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Paper, Typography, Box, useMediaQuery } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -10,19 +11,29 @@ function Category({ state, dispatch }) {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("eachCategoryIds", state.eachCategoryIds);
       try {
+        dispatch({
+          type: "set_category_question_number",
+          payload: state.eachCategoryIds,
+        });
         const response = await axios.get(
           `http://localhost:3001/api/category/get/first/category/${state.eachCategoryIds}`
         );
         setCategoryData(response.data);
 
         if (response.data.categories && response.data.categories.length > 0) {
+          // Filter subcategories and questions from categories
           const subcategories = response.data.categories.filter(
             (category) => category.subCategoryId
           );
-          const hasSubcategories = subcategories.length > 0;
 
-          if (hasSubcategories) {
+          const questions = response.data.categories.filter(
+            (category) => category.questionId
+          );
+
+          if (subcategories.length > 0) {
+            // If there are subcategories, update state accordingly
             dispatch({
               type: "set_subcategory_length",
               payload: subcategories.length,
@@ -39,17 +50,19 @@ function Category({ state, dispatch }) {
               type: "set_subcategory_number",
               payload: 0,
             });
-          } else {
+          } else if (questions.length > 0) {
+            // If there are questions but no subcategories, update state for questions
             dispatch({
               type: "set_common_type",
               payload: "questions",
             });
             dispatch({
               type: "set_question_ids",
-              payload: response.data.categories,
+              payload: questions,
             });
           }
         } else {
+          // If no categories found, set active finish to true
           dispatch({
             type: "set_active_finish",
             payload: true,
