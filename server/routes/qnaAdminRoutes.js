@@ -698,6 +698,7 @@ router.post("/post/topic/edit/:itemId", async (req, res) => {
     // Create the update data object based on the modelType
     const updateData = {
       prompt: req.body.prompt,
+      topicCode: req.body.code,
       topicHeading: req.body.header,
       topicDescription: req.body.description,
       topicImage: req.body.image,
@@ -736,17 +737,35 @@ router.delete("/delete/topic/:topicId", async (req, res) => {
   }
 });
 
-router.get("/get/first/topic/:topicCode", async (req, res) => {
-  const { topicCode } = req.params;
+router.get("/get/first/topic/:topicCodes", async (req, res) => {
+  let { topicCodes } = req.params;
+
+  // Parse the JSON string into an array
+  topicCodes = JSON.parse(topicCodes);
+
+  // Remove any non-alphanumeric characters and spaces from each topic code
+  topicCodes = topicCodes.map((topicCode) => topicCode.replace(/\W+/g, " "));
 
   try {
-    // Find the topic with the specified topicCode
-    const firstTopic = await Topic.findOne({ topicCode });
+    const topics = [];
 
-    if (!firstTopic) {
-      return res.status(404).json({ error: "Topic not found" });
+    // Iterate over each topic code and fetch data for each code
+    for (const topicCode of topicCodes) {
+      const topic = await Topic.findOne({ topicCode });
+
+      if (!topic) {
+        console.log(`Topic with code ${topicCode} not found`);
+        continue; // Continue to the next iteration if topic is not found
+      }
+
+      topics.push(topic);
     }
-    res.json(firstTopic);
+
+    if (topics.length === 0) {
+      return res.status(404).json({ error: "No topics found" });
+    }
+
+    res.json({ topics });
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -764,14 +783,22 @@ router.get("/get/aggregatedResults/:username", async (req, res) => {
       return res.status(404).json({ error: "Username not found" });
     }
 
-    // Extract and send the aggregated results to the frontend
-    const aggregatedResults = result.userresults.reduce((acc, curr) => {
-      acc.push(...curr.aggregatedResults);
-      return acc;
-    }, []);
-    console.log("aggregatedResults", aggregatedResults);
+    // Create an array to store the structured data
+    const structuredData = [];
 
-    res.json(aggregatedResults);
+    // Iterate through user results to extract and organize aggregated results
+    result.userresults.forEach(({ categoryId, aggregatedResults }) => {
+      // Create an object for each category ID and its aggregated results
+      const categoryData = {
+        categoryId: categoryId.toString(),
+        aggregatedResults: aggregatedResults,
+      };
+
+      // Push the category data to the structured array
+      structuredData.push(categoryData);
+    });
+
+    res.json(structuredData);
   } catch (error) {
     console.error("Error fetching aggregated results:", error);
     res.status(500).json({ error: "Internal server error" });

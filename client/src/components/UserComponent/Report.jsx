@@ -32,14 +32,10 @@ const Report = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
 
   const [aggregatedResults, setAggregatedResults] = useState([]);
-  const [result, setResult] = useState({
-    header: "",
-    description: "",
-    image: "",
-  });
-  const [mostOccurringResult, setMostOccurringResult] = useState("");
+  const [result, setResult] = useState([]);
 
   const [conditions, setConditions] = useState("");
+  const [categoryMostOccurring, setCategoryMostOccurring] = useState({});
 
   useEffect(() => {
     if (user) {
@@ -51,67 +47,67 @@ const Report = () => {
           const data = response.data;
           setAggregatedResults(data);
 
-          // Finding the result with the highest total score
-          let maxScore = -1;
-          let mostOccurring = "";
-          for (const result of data) {
-            if (result.totalScore > maxScore) {
-              maxScore = result.totalScore;
-              mostOccurring = result.resultName;
-            } else if (result.totalScore === maxScore) {
-              mostOccurring += result.resultName;
-            }
-          }
-          setMostOccurringResult(mostOccurring);
+          const categoryMostOccurringData = {};
+          data.forEach((category) => {
+            let totalScore = 0;
+            category.aggregatedResults.forEach((result) => {
+              totalScore += result.totalScore;
+            });
 
-          // Handle conditions after setting mostOccurringResult
-          if (mostOccurring === "V") {
-            setConditions("V");
-          } else if (mostOccurring === "P") {
-            setConditions("P");
-          } else if (mostOccurring === "K") {
-            setConditions("K");
-          } else if (mostOccurring === "VP" || mostOccurring === "PV") {
-            if (mostOccurring === "PV") {
-              setConditions("VP");
-            } else setConditions("VP");
-          } else if (mostOccurring === "VK" || mostOccurring === "KV") {
-            if (mostOccurring === "KV") {
-              setConditions("VK");
-            } else setConditions("VK");
-          } else if (mostOccurring === "PK" || mostOccurring === "KP") {
-            if (mostOccurring === "KP") {
-              setConditions("PK");
-            } else setConditions("PK");
-          } else if (
-            mostOccurring === "VPK" ||
-            mostOccurring === "VKP" ||
-            mostOccurring === "PVK" ||
-            mostOccurring === "PKV" ||
-            mostOccurring === "KVP" ||
-            mostOccurring === "KPV"
-          ) {
-            if (
-              mostOccurring === "VKP" ||
-              mostOccurring === "PVK" ||
-              mostOccurring === "PKV" ||
-              mostOccurring === "KVP" ||
-              mostOccurring === "KPV"
-            ) {
-              setConditions("VPK");
-            } else setConditions("K");
-          }
+            const mostOccurringData = {};
+            category.aggregatedResults.forEach((result) => {
+              const percentage = (result.totalScore / totalScore) * 100;
+              mostOccurringData[result.resultName] = {
+                totalScore: result.totalScore,
+                percentage: percentage.toFixed(2), // Round percentage to two decimal places
+              };
+            });
 
-          // Now make the second axios call
+            categoryMostOccurringData[category.categoryId] = mostOccurringData;
+          });
+          setCategoryMostOccurring(categoryMostOccurringData);
+
+          const MARGIN = 3; // Margin of 2-3 points
+
+          const categoryIds = Object.keys(categoryMostOccurringData);
+          const conditionsData = {};
+          categoryIds.forEach((categoryId) => {
+            const mostOccurringData = categoryMostOccurringData[categoryId];
+            const sortedResults = Object.keys(mostOccurringData).sort(
+              (a, b) =>
+                mostOccurringData[b].percentage -
+                mostOccurringData[a].percentage
+            );
+
+            let conditions = "";
+            const highestPercentage =
+              mostOccurringData[sortedResults[0]].percentage;
+            sortedResults.forEach((resultName, index) => {
+              if (
+                Math.abs(
+                  mostOccurringData[resultName].percentage - highestPercentage
+                ) <= MARGIN
+              ) {
+                conditions += index === 0 ? resultName : `, ${resultName}`;
+              }
+            });
+
+            conditionsData[categoryId] = conditions;
+          });
+
+          setConditions(conditionsData);
+
+          // Fetch data based on conditions
+          const topicCodes = Object.values(conditionsData);
           axios
-            .get(`http://localhost:3001/api/qna/get/first/topic/${conditions}`)
+            .get(
+              `http://localhost:3001/api/qna/get/first/topic/${JSON.stringify(
+                topicCodes
+              )}`
+            )
             .then((response) => {
               const data = response.data;
-              setResult({
-                header: data.topicHeading,
-                description: data.topicDescription,
-                image: data.topicImage,
-              });
+              setResult(data.topics);
             })
             .catch((error) => {
               console.error("Error fetching data:", error);
@@ -121,7 +117,7 @@ const Report = () => {
           console.error("Error fetching data:", error);
         });
     }
-  }, [user, mostOccurringResult, conditions]);
+  }, [user]);
 
   const containerStyle = {
     marginLeft: isMobile ? 0 : 50,
@@ -135,31 +131,33 @@ const Report = () => {
       <DemoPaper square={false} elevation={12}>
         <PerfectScrollbar options={{ wheelPropagation: false }}>
           {result ? (
-            <Box>
-              <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
-                {result.header}
-              </Typography>
-              <Typography
-                variant={isMobile ? "body2" : "body1"}
-                style={{
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  textAlign: "center",
-                  marginRight: "10px",
-                }}
-                paragraph
-                dangerouslySetInnerHTML={{
-                  __html: result.description,
-                }}
-              />
-              <img
-                width={isMobile ? 250 : 500}
-                height={isMobile ? 250 : 500}
-                src={result.image}
-                alt="preview"
-                style={{ marginTop: isMobile ? "8px" : "16px" }}
-              />
-            </Box>
+            result.map((topic, index) => (
+              <Box key={index}>
+                <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
+                  {topic.topicHeading}
+                </Typography>
+                <Typography
+                  variant={isMobile ? "body2" : "body1"}
+                  style={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    textAlign: "center",
+                    marginRight: "10px",
+                  }}
+                  paragraph
+                  dangerouslySetInnerHTML={{
+                    __html: topic.topicDescription,
+                  }}
+                />
+                <img
+                  width="60%"
+                  height="50%"
+                  src={topic.topicImage}
+                  alt="preview"
+                  style={{ marginTop: isMobile ? "8px" : "16px" }}
+                />
+              </Box>
+            ))
           ) : (
             <Typography variant={isMobile ? "body2" : "body1"}>
               Loading...

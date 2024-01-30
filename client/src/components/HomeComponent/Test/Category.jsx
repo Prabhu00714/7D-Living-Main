@@ -11,7 +11,6 @@ function Category({ state, dispatch }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("eachCategoryIds", state.eachCategoryIds);
       try {
         dispatch({
           type: "set_category_question_number",
