@@ -9,6 +9,7 @@ import Categories from "./AdminComponent/Categories/Categories";
 import QaEditor from "./AdminComponent/QA/QaEditor";
 import Topic from "./AdminComponent/Topic/Topic";
 import Users from "./AdminComponent/Users";
+import Questions from "./AdminComponent/Questions/Questions";
 
 const Admin = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -16,6 +17,7 @@ const Admin = () => {
   const [newQna, setNewQna] = useState("");
   const [newTopic, setNewTopic] = useState("");
   const [newUsers, setNewUsers] = useState("");
+  const [newQuestions, setNewQuestions] = useState("");
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [isMobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [getCategory, setGetCategory] = useState("");
@@ -28,6 +30,7 @@ const Admin = () => {
       setNewQna("");
       setNewUsers("");
       setNewTopic("");
+      setNewQuestions("");
     } else if (category === "new qna") {
       setNewQna(category);
       setNewCategory("");
@@ -35,6 +38,7 @@ const Admin = () => {
       setNewTopic("");
       // setSelectedComponent(category);
       setNewUsers("");
+      setNewQuestions("");
     } else if (category === "new topic") {
       setNewTopic(category);
       setNewQna("");
@@ -42,8 +46,17 @@ const Admin = () => {
       setGetCategory("");
       // setSelectedComponent(category);
       setNewUsers("");
+      setNewQuestions("");
     } else if (category === "new users") {
       setNewUsers(category);
+      setNewTopic("");
+      setNewQna("");
+      setNewCategory("");
+      setGetCategory("");
+      setNewQuestions("");
+    } else if (category === "new questions") {
+      setNewQuestions(category);
+      setNewUsers("");
       setNewTopic("");
       setNewQna("");
       setNewCategory("");
@@ -95,6 +108,7 @@ const Admin = () => {
         {newQna && <QaEditor />}
         {newTopic && <Topic />}
         {newUsers && <Users />}
+        {newQuestions && <Questions />}
       </div>
     </motion.div>
   );

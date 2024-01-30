@@ -121,6 +121,40 @@ const SideBarList = ({ onSelectCategory, getCategory }) => {
 
         <ListItemButton
           onClick={() => {
+            onSelectCategory("new questions");
+            setSelectedCategory("new questions");
+          }}
+          selected={selectedCategory === "new questions"}
+          sx={{
+            minHeight: 48,
+            justifyContent: "initial",
+            px: 2.5,
+            backgroundColor:
+              selectedCategory === "new questions"
+                ? "rgba(0, 0, 0, 0.8)"
+                : "inherit",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.1)",
+            },
+          }}
+        >
+          <ListItemText
+            primary={
+              <Typography
+                variant="body1"
+                style={{
+                  fontFamily: "YourFont",
+                  fontSize: "20px",
+                }}
+              >
+                Questions List
+              </Typography>
+            }
+          />
+        </ListItemButton>
+
+        <ListItemButton
+          onClick={() => {
             onSelectCategory("new topic");
             setSelectedCategory("new topic");
           }}
