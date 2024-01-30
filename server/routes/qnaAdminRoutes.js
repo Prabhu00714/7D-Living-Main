@@ -765,7 +765,12 @@ router.get("/get/aggregatedResults/:username", async (req, res) => {
     }
 
     // Extract and send the aggregated results to the frontend
-    const aggregatedResults = result.aggregatedResults || [];
+    const aggregatedResults = result.userresults.reduce((acc, curr) => {
+      acc.push(...curr.aggregatedResults);
+      return acc;
+    }, []);
+    console.log("aggregatedResults", aggregatedResults);
+
     res.json(aggregatedResults);
   } catch (error) {
     console.error("Error fetching aggregated results:", error);

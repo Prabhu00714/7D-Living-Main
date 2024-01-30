@@ -183,13 +183,14 @@ router.post("/post/user/result", async (req, res) => {
 
         if (existingCategory) {
           questions.forEach(({ questionId, answerId, results }) => {
-            const existingQuestion = existingCategory.questions.find(
+            const existingQuestionIndex = existingCategory.questions.findIndex(
               (question) => question.questionId.toString() === questionId
             );
 
-            if (existingQuestion) {
-              // Overwrite existing question's results
-              existingQuestion.results = results;
+            if (existingQuestionIndex !== -1) {
+              // Update existing question's results
+              existingCategory.questions[existingQuestionIndex].results =
+                results;
             } else {
               // Push new question
               existingCategory.questions.push({
@@ -199,73 +200,38 @@ router.post("/post/user/result", async (req, res) => {
               });
             }
           });
+
+          // Recalculate aggregated results for the category
+          existingCategory.aggregatedResults = calculateAggregatedResults(
+            existingCategory.questions
+          );
         } else {
-          // Push new category with all questions
+          // Push new category with all questions and aggregated results
           existingUserResult.userresults.push({
             categoryId,
             questions,
-            aggregatedResults: [],
+            aggregatedResults: calculateAggregatedResults(questions),
           });
         }
       });
 
-      // Recalculate aggregated results
-      const aggregatedResults = {};
-      existingUserResult.userresults.forEach(({ questions }) => {
-        questions.forEach(({ results }) => {
-          results.forEach(({ result, value }) => {
-            if (!aggregatedResults[result]) {
-              aggregatedResults[result] = 0;
-            }
-            aggregatedResults[result] += value;
-          });
-        });
-      });
-
-      // Transform aggregatedResults into an array of objects
-      const aggregatedResultsArray = Object.keys(aggregatedResults).map(
-        (resultName) => ({
-          resultName,
-          totalScore: aggregatedResults[resultName],
-        })
-      );
-
-      // Update existing aggregatedResults
+      // Recalculate aggregated results for the entire user
       existingUserResult.userresults.forEach((userResult) => {
-        userResult.aggregatedResults = aggregatedResultsArray;
+        userResult.aggregatedResults = calculateAggregatedResults(
+          userResult.questions
+        );
       });
 
       await existingUserResult.save();
       res.status(200).json({ message: "User results updated successfully." });
     } else {
       // If no existing user result found, create a new one
-      const aggregatedResults = {};
-      userresults.forEach(({ questions }) => {
-        questions.forEach(({ results }) => {
-          results.forEach(({ result, value }) => {
-            if (!aggregatedResults[result]) {
-              aggregatedResults[result] = 0;
-            }
-            aggregatedResults[result] += value;
-          });
-        });
-      });
-
-      // Transform aggregatedResults into an array of objects
-      const aggregatedResultsArray = Object.keys(aggregatedResults).map(
-        (resultName) => ({
-          resultName,
-          totalScore: aggregatedResults[resultName],
-        })
-      );
-
-      // Create new user with userresults and aggregatedResults
       const newUserResult = new UserResult({
         username,
         userresults: userresults.map(({ categoryId, questions }) => ({
           categoryId,
           questions,
-          aggregatedResults: aggregatedResultsArray,
+          aggregatedResults: calculateAggregatedResults(questions),
         })),
       });
 
@@ -277,5 +243,28 @@ router.post("/post/user/result", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// Function to calculate aggregated results for a set of questions
+function calculateAggregatedResults(questions) {
+  const aggregatedResults = {};
+
+  questions.forEach(({ results }) => {
+    results.forEach(({ result, value }) => {
+      if (!aggregatedResults[result]) {
+        aggregatedResults[result] = 0;
+      }
+      aggregatedResults[result] += value;
+    });
+  });
+
+  // Transform aggregatedResults into an array of objects
+  return Object.keys(aggregatedResults).map((resultName) => ({
+    resultName,
+    totalScore: [...aggregatedResults[resultName].toString()].reduce(
+      (acc, digit) => acc + parseInt(digit),
+      0
+    ),
+  }));
+}
 
 module.exports = router;
