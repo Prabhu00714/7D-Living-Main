@@ -214,6 +214,10 @@ const AddEditTopicModal = ({ state, dispatch, onAddItem, isMobile }) => {
                 ["bold", "italic", "underline"],
                 [{ list: "ordered" }, { list: "bullet" }],
                 ["link"],
+                [{ header: "1" }, { header: "2" }],
+                [{ color: [] }, { background: [] }],
+                [{ align: [] }],
+                [{ size: ["small", false, "large", "huge"] }],
               ],
             }}
           />

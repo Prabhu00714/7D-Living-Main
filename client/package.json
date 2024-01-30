@@ -24,6 +24,7 @@
     "react-confirm-alert": "^3.0.6",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
     "react-loader-spinner": "^6.1.6",
     "react-loading-skeleton": "^3.3.1",
     "react-markdown": "^9.0.1",
