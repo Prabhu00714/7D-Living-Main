@@ -748,9 +748,16 @@ router.get("/get/first/topic/:topicCodes", async (req, res) => {
 
   try {
     const topics = [];
+    const uniqueTopicCodes = new Set();
 
     // Iterate over each topic code and fetch data for each code
     for (const topicCode of topicCodes) {
+      // Skip duplicate topic codes
+      if (uniqueTopicCodes.has(topicCode)) {
+        console.log(`Duplicate topic code skipped: ${topicCode}`);
+        continue;
+      }
+
       const topic = await Topic.findOne({ topicCode });
 
       if (!topic) {
@@ -759,6 +766,7 @@ router.get("/get/first/topic/:topicCodes", async (req, res) => {
       }
 
       topics.push(topic);
+      uniqueTopicCodes.add(topicCode);
     }
 
     if (topics.length === 0) {
