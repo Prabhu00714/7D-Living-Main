@@ -15,6 +15,7 @@ const CategoryGroupList = ({ state, dispatch }) => {
         );
         setItems(response.data);
       } catch (error) {
+        setItems("");
         console.error("Error fetching categories:", error);
       }
     };

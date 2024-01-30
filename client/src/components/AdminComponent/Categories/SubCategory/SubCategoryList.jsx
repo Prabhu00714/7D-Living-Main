@@ -17,6 +17,8 @@ const SubCategoryList = ({ state, dispatch }) => {
           setItems(response.data);
         } else if (!state.selectedCategoryItem) {
           setItems("");
+        } else {
+          setItems("");
         }
       } catch (error) {
         console.error("Error fetching categories:", error);

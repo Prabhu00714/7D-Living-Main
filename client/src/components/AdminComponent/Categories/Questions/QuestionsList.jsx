@@ -23,6 +23,8 @@ const QuestionsList = ({ state, dispatch }) => {
           setItems("");
         } else if (!state.selectedSubCategoryItem) {
           setItems("");
+        } else {
+          setItems("");
         }
       } catch (error) {
         console.error("Error fetching categories:", error);

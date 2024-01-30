@@ -147,7 +147,7 @@ const SideBarList = ({ onSelectCategory, getCategory }) => {
                   fontSize: "20px",
                 }}
               >
-                Questions List
+                Delete Questions
               </Typography>
             }
           />

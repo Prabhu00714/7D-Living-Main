@@ -480,6 +480,35 @@ router.delete("/delete/categorygroup/:categorygroupId", async (req, res) => {
   }
 });
 
+router.delete("/delete/each/question/:questionId", async (req, res) => {
+  try {
+    const questionId = req.params.questionId;
+
+    // Delete from Qna collection
+    await QNA.findByIdAndDelete(questionId);
+
+    // Delete from Category collection
+    await Category.updateMany(
+      { "categories.questionId": questionId },
+      { $pull: { categories: { questionId: questionId } } }
+    );
+
+    // Delete from SubCategory collection
+    await SubCategory.updateMany(
+      { "questions.questionId": questionId },
+      { $pull: { questions: { questionId: questionId } } }
+    );
+
+    res.status(200).json({
+      message:
+        "Question and associated records in Categories and Subcategories deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting question:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 router.get("/get/all/category", async (req, res) => {
   try {
     const result = await Category.find({});
