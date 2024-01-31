@@ -1,59 +1,12 @@
 const express = require("express");
-
-const QuestionAnswer = require("../models/QuestionAnswer");
-const CategoryGroup = require("../models/CategoryGroup");
-const Category = require("../models/Category");
-const SubCategory = require("../models/SubCategory");
-const QNA = require("../models/QNA");
-const Topic = require("../models/Topic");
-const UserResult = require("../models/UserResult");
-
 const router = express.Router();
 
-router.post("/update/each/category/qna", async (req, res) => {
-  try {
-    const jsonData = req.body;
-
-    // Assuming the categoryId is passed in the request body
-    const categoryId = jsonData.categoryId;
-
-    // Find and update the existing document by categoryId
-    const updatedCategory = await QuestionAnswer.findOneAndUpdate(
-      { _id: categoryId },
-      jsonData,
-      { new: true, upsert: true } // Create a new document if it doesn't exist
-    );
-
-    res
-      .status(200)
-      .json({ message: "Data updated successfully!", updatedCategory });
-  } catch (error) {
-    console.error("Error updating data:", error);
-    res.status(500).json({ error: "Failed to update data" });
-  }
-});
-
-router.delete("/delete/each/category/qna/:categoryId", async (req, res) => {
-  try {
-    const categoryId = req.params.categoryId;
-
-    // Check if the category exists
-    const existingCategory = await QuestionAnswer.findById(categoryId);
-    if (!existingCategory) {
-      return res.status(404).json({ error: "Category not found" });
-    }
-
-    // Delete the category and its associated questions
-    await existingCategory.deleteOne();
-
-    res.status(200).json({ message: "Category deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting category:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// new structure codes
+const CategoryGroup = require("../Models/CategoryGroup");
+const Category = require("../Models/Category");
+const SubCategory = require("../Models/SubCategory");
+const QNA = require("../Models/QNA");
+const Topic = require("../Models/Topic");
+const UserResult = require("../Models/UserResult");
 
 router.get("/get/all/categorygroup", async (req, res) => {
   try {

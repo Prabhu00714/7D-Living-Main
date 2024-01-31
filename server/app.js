@@ -7,7 +7,6 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-const User = require("./models/User");
 
 const app = express();
 const PORT = 3001;
@@ -93,13 +92,19 @@ app.get(
   }
 );
 
-const qnaAdminRoutes = require("./routes/qnaAdminRoutes");
-const CategoryRoutes = require("./routes/CategoryRoutes");
-const SignUpRoutes = require("./routes/SignUpRoutes");
+const qnaAdminRoutes = require("./src/Routes/qnaAdminRoutes");
+const CategoryRoutes = require("./src/Routes/CategoryRoutes");
+const SignUpRoutes = require("./src/Routes/SignUpRoutes");
 
 app.use("/api/qna", qnaAdminRoutes);
 app.use("/api/category", CategoryRoutes);
 app.use("/api/loginsignup", SignUpRoutes);
+
+process.on("SIGINT", () => {
+  mongoose.connection.close(); // Remove the callback
+  console.log("MongoDB connection closed.");
+  process.exit(0);
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
